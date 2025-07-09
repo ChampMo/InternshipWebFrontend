@@ -65,6 +65,7 @@ export default function Signin() {
                                 progress: undefined,
                                 theme: "light",
                                 });
+
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
   setLoading(true)
@@ -77,6 +78,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     if (result.token !== undefined ) {
       localStorage.setItem('token', result.token)
       localStorage.setItem('login', 'true')
+      localStorage.setItem('userId', result.user.userId)
       router.push('/')
     } else if ('message' in result && result.message === 'Invalid email') {
       notifyInvalidemail()
@@ -552,6 +554,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   className="pl-4 w-full text-xl outline-0 mb-1 placeholder:text-gray-400" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  placeholder='Enter your new password'
                   required />
                   <div className='cursor-pointer absolute right-2' onClick={() => setTypePassword(!typePassword)}>
                     {typePassword ?
@@ -569,6 +572,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   className="pl-4 w-full text-xl outline-0 mb-1 placeholder:text-gray-400" 
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder='Confirm your new password'
                   required />
                   <div className='cursor-pointer absolute right-2' onClick={() => setTypePassword2(!typePassword2)}>
                     {typePassword2 ?
