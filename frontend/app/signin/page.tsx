@@ -24,7 +24,7 @@ export default function Signin() {
   const [statePage, setStatePage] = useState(0) // 0: Sign In, 1: Forgot Password, 2: Verify OTP, 3: Reset Password
   const router = useRouter()
 
-  const { notifyError } = useToast()
+  const { notifySuccess, notifyError } = useToast()
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,6 +40,7 @@ export default function Signin() {
         localStorage.setItem('token', result.token)
         localStorage.setItem('login', 'true')
         localStorage.setItem('userId', result.user.userId)
+        notifySuccess('Sign In successfully');
         router.push('/')
       } else if ('message' in result && result.message === 'Invalid email') {
         notifyError('Invalid email.')
