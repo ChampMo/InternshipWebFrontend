@@ -1,7 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { Icon } from '@iconify/react'
+import React, { useEffect, useState } from 'react'
 
-import { useToast } from '@/context/ToastContext'
+function CyberNews() {
+
+
+  return (
+    <div>
+      <h1>CyberNews</h1>
+      
+    </div>
+  )
+}
+
+export default CyberNews
