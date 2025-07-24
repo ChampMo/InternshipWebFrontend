@@ -24,9 +24,9 @@ const Sidebar: React.FC<SidebarProps> = ({pageName}) => {
 
 
     return (
-        <aside className='bg-miniblue w-80 h-screen shadow-lg rounded-r-3xl flex flex-col'>
-            <header className='p-4 h-40'>
-                <div className='text-xl bitcount-prop-single' >Cyber Command</div>
+        <aside className='bg-miniblue w-80 h-screen shadow-lg rounded-r-3xl flex flex-col pb-10'>
+            <header className='p-4 h-40 items-center flex justify-center'>
+                <div className='text-4xl orbitron text-center' >Cyber<br/>Command</div>
             </header>
             <div className='px-4 py-2'>
                 <div className='text-sm text-gray-400'>Product</div>
@@ -68,6 +68,9 @@ const Sidebar: React.FC<SidebarProps> = ({pageName}) => {
                     ))}
                 </div>
             </nav>
+            <div 
+            onClick={()=>{localStorage.removeItem('token'), window.location.href = '/'}}
+            className='text-lg w-40 px-8 py-3 text-red-400 mt-auto hover:cursor-pointer'>Log out</div>
         </aside>
     );
 };

@@ -52,6 +52,12 @@ body {
     animation: scroll-left 20s linear infinite;
   }
 }
+.orbitron {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
 
 .bitcount-prop-single {
   font-family: "Bitcount Prop Single", system-ui;
