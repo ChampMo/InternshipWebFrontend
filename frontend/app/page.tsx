@@ -22,9 +22,10 @@ export default function Home() {
 
   return (
     <>
-        <div className='w-80 gap-5 flex flex-col items-center justify-center h-screen mx-auto'>
+        <div className='w-80 gap-3 flex flex-col items-center justify-center h-screen mx-auto'>
           <Link href={'/signin'} className='w-80 h-20 flex bg-primary1 rounded-3xl text-amber-100 cursor-pointer p-3'>Sign In</Link>
-          <div className='w-80 h-20 flex text-red-400 rounded-3xl cursor-pointer p-3' onClick={()=>localStorage.removeItem('token')}>Logout</div>
+          <Link href={'/cyber-news'} className='w-80 h-20 flex bg-primary1 rounded-3xl text-amber-100 cursor-pointer p-3'>Cyber News</Link>
+          <div className='w-80 h-20 flex text-red-400 border-red-400 border rounded-3xl cursor-pointer p-3' onClick={()=>localStorage.removeItem('token')}>Logout</div>
         </div>
     </>
   );
