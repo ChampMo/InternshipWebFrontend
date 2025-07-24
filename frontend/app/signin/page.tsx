@@ -90,7 +90,7 @@ export default function Signin() {
       if (containerRef.current) {
         const width = containerRef.current.clientWidth
         const target = statePage * width
-        smoothScrollTo(containerRef.current, target, 500)
+        smoothScrollTo(containerRef.current, target, 300)
       }
     }
 
@@ -121,7 +121,7 @@ export default function Signin() {
         {/* sign in */}
         <div 
         ref={containerRef}
-        className={`flex overflow-hidden border-4 border-primary1 rounded-4xl shadow-lg bg-white w-[500] z-10 duration-600 ${statePage === 0 ? 'h-[600]' : statePage === 1 ? 'h-[400]':statePage === 2 ? 'h-[450]':'h-[600]'} ${onStartPage ? 'opacity-100 ' : 'opacity-0'}`}>
+        className={`flex overflow-hidden border-4 border-primary1 rounded-4xl shadow-lg bg-white w-[500] z-10 duration-600 ${statePage === 0 ? 'h-[600]' : statePage === 1 ? 'h-[400]':statePage === 2 ? 'h-[480]':'h-[600]'} ${onStartPage ? 'opacity-100 ' : 'opacity-0'}`}>
           <div className={`flex flex-col p-10 py-14 items-center justify-center gap-4 w-full shrink-0 mp-10 ${statePage === 0 ? 'opacity-100' : 'opacity-0'} duration-800`}>
             {statePage === 0 &&
             <>
