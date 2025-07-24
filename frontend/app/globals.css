@@ -1,9 +1,15 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100..400&display=swap');
+
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
   --primary1: #007EE5;
+  --primary2: #D2ECFF;
 }
 
 @theme {
@@ -13,6 +19,7 @@
   --font-mono: var(--font-geist-mono);
   --color-primary1: var(--primary1);
   --color-miniblue: #F2F9FE;
+  --color-primary2: var(--primary2);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,13 +27,15 @@
     --background: #0a0a0a;
     --foreground: #ededed;
     --primary1: #007EE5;
+    --primary2: #D2ECFF;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
+
 }
 
 @layer utilities {
@@ -42,5 +51,30 @@ body {
   .animate-scroll-left {
     animation: scroll-left 20s linear infinite;
   }
+}
+.orbitron {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.bitcount-prop-single {
+  font-family: "Bitcount Prop Single", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0,
+    "CRSV" 0.5,
+    "ELSH" 0,
+    "ELXP" 0;
+}
+
+.playwrite-hu {
+  font-family: "Playwrite HU", cursive;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
