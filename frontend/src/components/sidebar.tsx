@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link'
-import { useParams } from 'next/navigation';
 import '@/app/globals.css'; // Ensure global styles are applied
 
 interface SidebarProps {
@@ -14,17 +13,16 @@ const Sidebar: React.FC<SidebarProps> = ({pageName}) => {
         { name: 'TI Tech Intelligence', path: '/ti-tech-intelligence' },
     ];
     const menuAdmin = [
-        { name: 'User Management', path: '/user-management' },
-        { name: 'Token Management', path: '/token-management' },
-        { name: 'Cyber News Management', path: '/cyber-news-management' },
-        { name: 'Settings', path: '/settings' },
+        { name: 'User Management', path: '/admin/user-management' },
+        { name: 'Token Management', path: '/admin/token-management' },
+        { name: 'Cyber News Management', path: '/admin/cyber-news-management' },
+        { name: 'Settings', path: '/admin/settings' },
     ];
 
-    const params = useParams()
 
 
     return (
-        <aside className='bg-miniblue w-80 h-screen shadow-lg rounded-r-3xl flex flex-col pb-10'>
+        <aside className='bg-miniblue w-80 h-screen shadow-lg rounded-r-3xl flex flex-col pb-10 shrink-0'>
             <header className='p-4 h-40 items-center flex justify-center'>
                 <div className='text-4xl orbitron text-center' >Cyber<br/>Command</div>
             </header>
