@@ -22,8 +22,8 @@ export default function DefultButton({
       type="submit"
       disabled={loading}
       onClick={onClick}
-      className={`group text-white h-12 rounded-lg text-lg mt-10 w-full ${
-        active ? 'bg-primary1 cursor-pointer' : 'bg-gray-400'
+      className={`group text-white h-12 rounded-xl text-lg w-full ${
+        active ? 'bg-gradient-to-r from-[rgb(32,144,236)] to-[#007EE5] cursor-pointer' : 'bg-gray-400'
       } transition-all duration-300 ease-in-out relative overflow-hidden`}
     >
       <GlareHover

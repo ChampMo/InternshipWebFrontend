@@ -9,7 +9,7 @@ import { useToast } from '@/src/context/toast-context'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { on } from 'events';
-import SubmitButton from '@/src/components/ui/SubmitButton'
+import DefultButton from '@/src/components/ui/defultButton';
 import BgSignin from '@/src/components/bgSignin'
 import ForgotPassword from '@/src/components/forgotPassword'
 
@@ -128,7 +128,7 @@ export default function Signin() {
               <div className="text-4xl text-primary1 font-bold">Sign In</div>
               <form 
                 onSubmit={handleSubmit}
-                className="flex flex-col gap-6 mt-14 w-full h-full">
+                className="flex flex-col gap-6 mt-10 w-full h-full">
                 <div className='text-gray-500 text-lg'>Email</div>
                 <div className='border-b-2 border-primary1 w-full flex items-center '>
                   <Icon icon="ic:round-email" width="30" height="30" 
@@ -136,7 +136,7 @@ export default function Signin() {
                   color={`${!email?'#ABABAB':'#007EE5'}`} />
                   <input 
                   type="email" 
-                  className="pl-4 w-full text-xl outline-0 mb-1 placeholder:text-gray-400" 
+                  className="pl-4 w-full text-lg outline-0 mb-1 placeholder:text-gray-400" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder='Enter your email'
@@ -151,7 +151,7 @@ export default function Signin() {
                   color={`${!password?'#ABABAB':'#007EE5'}`} />
                   <input 
                   type={`${typePassword ?"password": "text"}`} 
-                  className="pl-4 w-full text-xl outline-0 mb-1 placeholder:text-gray-400" 
+                  className="pl-4 w-full text-lg outline-0 mb-1 placeholder:text-gray-400" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder='Enter your password'
@@ -162,10 +162,10 @@ export default function Signin() {
                     :<Icon icon="iconamoon:eye-off-duotone" width="28" height="28" color='#ABABAB'/>}
                   </div>
                 </div>
-                <div className="text-blue-500 ml-auto cursor-pointer" onClick={()=>{setStatePage(1), setPassword('')}}> Forgot Password? </div>
-                <SubmitButton active={!!email && !!password} loading={loading}>
+                <div className="text-blue-500 ml-auto cursor-pointer mb-8" onClick={()=>{setStatePage(1), setPassword('')}}> Forgot Password? </div>
+                <DefultButton active={!!email && !!password} loading={loading}>
                   Sign In
-                </SubmitButton>
+                </DefultButton>
               </form>
             </>}
           </div>

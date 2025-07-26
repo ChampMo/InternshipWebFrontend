@@ -15,6 +15,22 @@ export const CreateAccount = async (
   return result
 }
 
+export const ReCreateAccount = async (
+  data: { email: string, role: string, company: string }
+): Promise<{ message: string }> => {
+  const response = await fetch(`${Port.BASE_URL}/resignup`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+
+  const result = await response.json()
+  return result
+}
+
+
 
 export const GetRole = async (
 ): Promise<{ message: string }> => {

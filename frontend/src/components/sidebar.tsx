@@ -22,7 +22,7 @@ const Sidebar: React.FC<SidebarProps> = ({pageName}) => {
 
 
     return (
-        <aside className='bg-miniblue w-80 h-screen shadow-lg rounded-r-3xl flex flex-col pb-10 shrink-0'>
+        <aside className='bg-primary3 w-80 h-screen shadow-lg rounded-r-3xl flex flex-col pb-10 shrink-0'>
             <header className='p-4 h-40 items-center flex justify-center'>
                 <div className='text-4xl orbitron text-center' >Cyber<br/>Command</div>
             </header>
