@@ -5,17 +5,21 @@ import { useRouter } from 'next/navigation'
 import { Icon } from '@iconify/react'
 import Sidebar from '@/src/components/sidebar'
 import Dropdown from '@/src/components/ui/dropDown'
-import { CreateAccount, ReCreateAccount, GetRole } from '@/src/modules/userManagement';
+import { CreateAccount, ReCreateAccount, GetRole, GetAccount, UpdateAccount, DeleteAccount, GetCompany } from '@/src/modules/userManagement';
 import DefultButton from '@/src/components/ui/defultButton'
 import { useToast } from '@/src/context/toast-context'
 import DataTable from '@/src/components/dataTable'
 import PopUp from '@/src/components/ui/popUp'
+import GlareHover from '@/src/lib/GlareHover/GlareHover'
+
 
 interface AccountItem {
-    id: string;
+    id: number;
     email: string;
-    role: string;
-    company: string;
+    roleId: string;
+    roleName: string;
+    companyId: string;
+    companyName: string;
     userId: string;
     createDate: string;
 }
@@ -32,11 +36,20 @@ interface Header {
     render?: (value: any, item: any) => React.ReactNode;
 }
 
+interface roleItems {
+  roleId: string;
+  roleName: string;
+}
+
+interface companyItems {
+  companyId: string;
+  companyName: string;
+}
 
 function UserManagement() {
     const [createEmail, setCreateEmail] = useState('')
     const [createRole, setCreateRole] = useState('')
-    const [createCompany, setCreateCompany] = useState('Test Company')
+    const [createCompany, setCreateCompany] = useState('')
     const [accounts, setAccounts] = useState<any>({
         email: '',
         role: '',
@@ -45,14 +58,18 @@ function UserManagement() {
     const [loading, setLoading] = useState(false)
     const [loading2, setLoading2] = useState(false)
     const [statusCreateAccount, setStatusCreateAccount] = useState('')
+
+    const [allUser, setAllUser] = useState<AccountItem[]>([]);
     const [searchTerm, setSearchTerm] = useState('')
     const [roleFilter, setRoleFilter] = useState('All');
 
-    const [roleItems, setRoleItems] = useState<string[]>([])
-    const [companyItems, setCompanyItems] = useState<string[]>([])
+    const [roleItems, setRoleItems] = useState<roleItems[]>([])
+    const [companyItems, setCompanyItems] = useState<companyItems[]>([])
     const [isVisiblePopUp, setIsVisiblePopUp] = useState(false)
-    const [editItemOld, setEditItemOld] = useState<DataItem | null>(null)
-    const [editItem, setEditItem] = useState<DataItem | null>(null)
+    const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = useState(false)
+    const [editItemOld, setEditItemOld] = useState<AccountItem | null>(null)
+    const [editItem, setEditItem] = useState<AccountItem | null>(null)
+    const [deleteItem, setDeleteItem] = useState<AccountItem | null>(null)
     
 
     const { notifySuccess, notifyError, notifyInfo } = useToast()
@@ -76,24 +93,51 @@ function UserManagement() {
     }, []);
 
     useEffect(() => {
+      const fetchData = async () => {
+          try {
+          const result = await GetRole()
+          const companyResult = await GetCompany()
+          if (result && Array.isArray(result)) {
+              const roles = result.map((role: any) => role);
+              setRoleItems(roles);
+              console.log('Roles fetched successfully:', roles);
+          }
+          if (companyResult && Array.isArray(companyResult)) {
+              const companies = companyResult.map((company: any) => company);
+              setCompanyItems(companies);
+              console.log('Companies fetched successfully:', companies);
+          }
+          const userResult = await GetAccount()
 
-        const fetchData = async () => {
-            try {
-            const result = await GetRole()
-            if (result && Array.isArray(result)) {
-                const roles = result.map((role: any) => role.roleName);
-                setRoleItems(roles);
-                console.log('Roles fetched successfully:', roles);
-            } else {
-                console.error('Unexpected response format:', result)
-            }
-            } catch (err: any) {
+          if (userResult && Array.isArray(userResult)) {
+                const users = userResult.map((user: any, index) => ({
+                  id: userResult.length - index,
+                  email: user.email,
+                  companyId: user.companyId,
+                  companyName: user.companyName,
+                  userId: user.userId,
+                  roleId: user.roleId,
+                  roleName: user.roleName,
+                  createDate: new Date(user.createdAt).toLocaleDateString('en-GB', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: '2-digit'
+                  })
+                }));
+                const sortedRoleremoved = users.filter(user => user.roleName === 'Role has been removed');
+                const sortedCompanyremoved = users.filter(user => user.roleName === 'Company has been removed');
+                const sortedUsers = users.filter(user => user.roleName !== 'Role has been removed' || user.companyName !== 'Company has been removed');
+                setAllUser([...sortedRoleremoved, ...sortedCompanyremoved, ...sortedUsers].reverse());
+
+              console.log('Users fetched successfully:', users);
+          }
+          } catch (err: any) {
             console.error('Error fetching roles:', err)
-        }
-        }
+          }
+      }
 
-        fetchData();
-    }, [])
+      fetchData();
+    }, [loading, loading2]);
 
     useEffect(() => {
         if (accounts.email && contentRef.current) {
@@ -133,7 +177,7 @@ function UserManagement() {
                 })
                 setCreateEmail('')
                 setCreateRole('')
-                setCreateCompany('Test Company')
+                setCreateCompany('')
             } else {
                 setAccounts({
                     email: createEmail,
@@ -197,8 +241,17 @@ function UserManagement() {
         },
         { 
           label: 'Company', 
-          key: 'company',
-          cellClassName: 'font-medium'
+          key: 'companyName',
+          render: (value) => {
+            const colors: Record<string, string> = {
+              "Company has been removed" : 'bg-red-600 text-white shrink-0 text-center rounded-md px-2.5 py-1',
+            };
+            return (
+              <div className={`font-medium text-sm ${colors[value] || ''}`}>
+                {value}
+              </div>
+            );
+          }
         },
         { 
           label: 'User ID', 
@@ -211,93 +264,91 @@ function UserManagement() {
         },
         { 
           label: 'Role', 
-          key: 'role',
+          key: 'roleName',
           render: (value) => {
             const colors: Record<string, string> = {
               'Admin': 'bg-red-100 text-red-800 border-red-200',
+              'Role has been removed': 'bg-red-600 text-white shrink-0 text-center',
             };
             return (
-              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
+              <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
                 {value}
-              </span>
+              </div>
             );
           }
         },
         { 
           label: 'Create Date', 
           key: 'createDate',
-          render: (value) => new Date(value).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          })
+          render: (value) => 
+            <span className="text-sm">
+              {value}
+            </span>
         }
     ];
-    const data: AccountItem[] = [
-        {
-          id: '1',
-          email: 'john.doe@techcorp.com',
-          company: 'TechCorp Solutions',
-          userId: 'USR001',
-          role: 'Admin',
-          createDate: '2024-01-15'
-        },
-        {
-          id: '2',
-          email: 'sarah.wilson@innovate.co',
-          company: 'Innovate Co.',
-          userId: 'USR002',
-          role: 'User',
-          createDate: '2024-01-20'
-        },
-        {
-          id: '3',
-          email: 'mike.johnson@dataflow.io',
-          company: 'DataFlow Systems',
-          userId: 'USR003',
-          role: 'Manager',
-          createDate: '2024-02-05'
-        },
-        {
-          id: '4',
-          email: 'emma.brown@cyberdef.net',
-          company: 'CyberDefense Inc.',
-          userId: 'USR004',
-          role: 'User',
-          createDate: '2024-02-12'
-        },
-        {
-          id: '5',
-          email: 'alex.chen@securetech.com',
-          company: 'SecureTech Ltd.',
-          userId: 'USR005',
-          role: 'Admin',
-          createDate: '2024-02-18'
-        },
-        {
-          id: '6',
-          email: 'alex.chen@securetech.com',
-          company: 'SecureTech Ltd.',
-          userId: 'USR005',
-          role: 'Admin',
-          createDate: '2024-02-18'
-        }
-      ];
 
-    const handleView = (item: DataItem, index: number): void => {
+    const handleView = (item: AccountItem, index: number): void => {
         console.log('View:', item);
     };
     
-    const handleEdit = (item: DataItem, index: number): void => {
+    const handleEdit = (item: AccountItem, index: number): void => {
       setIsVisiblePopUp(true);
       setEditItemOld(item);
       setEditItem(item);
       console.log('Edit:', item);
     };
 
-    const handleDelete = (item: DataItem, index: number): void => {
+    const handleDelete = (item: AccountItem, index: number): void => {
+      setIsVisiblePopUpDelete(true);
+      setDeleteItem(item);
       console.log('Delete:', item);
     };
+
+    const isDifferent = (item1: AccountItem | null, item2: AccountItem | null): boolean => {
+        if (!item1 || !item2) return false;
+        return item1.companyName !== item2.companyName || item1.roleName !== item2.roleName;
+    };
+
+    const handleEditAccount = async () => {
+      console.log('Edit Account:', editItem);
+        if (!editItem) return;
+        try {
+            setLoading2(true);
+            const result = await UpdateAccount({
+                userId: editItem.userId,
+                roleId: roleItems.find(role => role.roleName === editItem.roleName)?.roleId || '',
+                companyId: companyItems.find(company => company.companyName === editItem.companyName)?.companyId || ''
+            });
+            if (result && result.message === 'User updated successfully') {
+                notifySuccess('User updated successfully');
+                setIsVisiblePopUp(false);
+            } else {
+                notifyError('Failed to update user');
+            }
+        } catch (error) {
+        } finally {
+            setLoading2(false);
+        }
+    }
+
+    const handleDeleteAccount = async (userId: string) => {
+        try {
+            setLoading2(true);
+            const result = await DeleteAccount({userId});
+            if (result && result.message === 'User deleted successfully') {
+                notifySuccess('User deleted successfully');
+            } else {
+                notifyError('Failed to delete user');
+            }
+        } catch (error) {
+            console.error('Error deleting account:', error);
+            notifyError('Failed to delete user, please try again later');
+        } finally {
+            setIsVisiblePopUpDelete(false);
+            setDeleteItem(null);
+            setLoading2(false);
+        }
+    }
 
 
   return (
@@ -315,10 +366,10 @@ function UserManagement() {
                     className={`text-lg border  bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${createEmail?'border-primary1':'border-gray-300'}`}
                     placeholder='Enter email'/>
                     <div className=' grow-0 z-40 w-full'>
-                        <Dropdown items={roleItems} placeholder='Select Role' setValue={setCreateRole} value={createRole} haveIcon={false}/>
+                        <Dropdown items={roleItems.map(item => item.roleName)} placeholder='Select Role' setValue={setCreateRole} value={createRole} haveIcon={false}/>
                     </div>
                     <div className=' grow-0 z-30 w-full'>
-                        <Dropdown items={companyItems} placeholder='Select Company' setValue={setCreateCompany} value={createCompany} haveIcon={false}/>
+                        <Dropdown items={companyItems.map(item => item.companyName)} placeholder='Select Company' setValue={setCreateCompany} value={createCompany} haveIcon={false}/>
                     </div>
                 </div>
                 <div className='w-60 mt-8'>
@@ -343,10 +394,10 @@ function UserManagement() {
                               ${statusCreateAccount === 'Failed to create account' || statusCreateAccount === 'Email already registered' || statusCreateAccount === '' ? 'border-red-400 from-[#fef0f0] to-[#fecccc]' : 'border-green-400 from-[#ebfcf4] to-[#d3fae6]'}`}>
                                 
                                 {statusCreateAccount === 'Failed to create account' || statusCreateAccount === 'Email already registered' || statusCreateAccount === ''
-                                ?<div className=' text-red-500 flex items-center gap-2 shrink-0'>
+                                ?<div className=' text-red-500 flex items-center gap-2 shrink-0 w-96'>
                                     <Icon icon="mdi:cross-circle" width="30" height="30" />Failed to create account please try again!
                                 </div>
-                                :<div className=' flex items-center gap-2 text-green-500 shrink-0'>
+                                :<div className=' flex items-center gap-2 text-green-500 shrink-0 w-70'>
                                     <Icon icon="lets-icons:check-fill" width="30" height="30" />Create account successfully.
                             </div>}
                             </div>
@@ -359,10 +410,10 @@ function UserManagement() {
                                 ${statusCreateAccount === 'Email sent successfully'  ?'border-green-400 from-[#ebfcf4] to-[#d3fae6]':  'border-red-400 from-[#fef0f0] to-[#fecccc]' }`}>
                                   
                                   {statusCreateAccount === 'Email sent successfully' 
-                                  ?<div className=' text-green-500 flex items-center gap-2 shrink-0'>
+                                  ?<div className=' text-green-500 flex items-center gap-2 shrink-0 w-70'>
                                       <Icon icon="lets-icons:check-fill" width="30" height="30" />Email sent successfully.
                                   </div>
-                                  :<div className=' flex items-center gap-2 text-red-500 shrink-0'>
+                                  :<div className=' flex items-center gap-2 text-red-500 shrink-0 w-96'>
                                       <Icon icon="mdi:cross-circle" width="30" height="30" />Failed to send email please try again!
                               </div>}
                               </div>
@@ -391,14 +442,13 @@ function UserManagement() {
                       <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
                       <input 
                       type='text'
-                      key={searchTerm}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' placeholder='Search by email, company, user id'/>
                     </div>
                     <div className='w-48 z-40 relative'>
                       <Icon icon="mingcute:filter-line" width="24" height="24" className={` absolute left-2 top-2 z-40 ${roleFilter ==='All'?'text-gray-400':'text-primary1'}`}/>
-                      <Dropdown items={roleItems} placeholder='Select Role' setValue={setRoleFilter} value={roleFilter==='All'?'':roleFilter} haveIcon={true}/>
+                      <Dropdown items={roleItems.map(item => item.roleName)} placeholder='Select Role' setValue={setRoleFilter} value={roleFilter==='All'?'':roleFilter} haveIcon={true}/>
                     </div>
                     {(roleFilter !== 'All' || searchTerm !== '') && <Icon icon="maki:cross" width="30" height="30" className='h-10 text-red-500 cursor-pointer' onClick={()=>{setRoleFilter('All'), setSearchTerm('')}} />}
                     {/* <div className='text-gray-500 font-bold flex items-end gap-2 cursor-pointer'>Edit<Icon icon="tabler:pencil" width="24" height="24" className='mb-1' /></div> */}
@@ -406,11 +456,11 @@ function UserManagement() {
                 <div className='mt-5 mb-8'>
                     <DataTable
                         headers={headers}
-                        data={data}
+                        data={allUser}
                         searchKeys={['email', 'company', 'userId']}
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
-                        roleKey="role"
+                        roleKey="roleName"
                         roleFilter={roleFilter}
                         setRoleFilter={setRoleFilter}
                         showRoleFilter={false}
@@ -449,31 +499,31 @@ function UserManagement() {
                   <div className=''>{editItem?.createDate}</div>
                 </div>
               </div>
-              <div className=' mt-6 flex flex-col gap-3'>
+              <div className=' mt-6 flex flex-col gap-3 z-40'>
                 <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Company</div>
                 <Dropdown
-                  items={companyItems}
+                  items={companyItems.map(item => item.companyName)}
                   placeholder="Select Company"
                   setValue={(value) =>
                     setEditItem((prev) =>
-                      prev ? { ...prev, company: value } : null
+                      prev ? { ...prev, companyName: value } : null
                     )
                   }
-                  value={editItem?.company || ''}
+                  value={editItem?.companyName === 'Company has been removed' ? '' : editItem?.companyName || ''}
                   haveIcon={false}
                 />
               </div>
               <div className=' mt-6 flex flex-col gap-3'>
                 <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>User Role</div>
                 <Dropdown
-                  items={roleItems}
+                  items={roleItems.map(item => item.roleName)}
                   placeholder="Select Role"
                   setValue={(value) =>
                     setEditItem((prev) =>
-                      prev ? { ...prev, role: value } : null
+                      prev ? { ...prev, roleName: value  } : null
                     )
                   }
-                  value={editItem?.role || ''}
+                  value={editItem?.roleName === 'Role has been removed' ? '' : editItem?.roleName || ''}
                   haveIcon={false}
                 />
               </div>
@@ -482,9 +532,70 @@ function UserManagement() {
                 <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setIsVisiblePopUp(false)}}>
                   Cancel
                 </div>
-                <DefultButton onClick={()=>{}} active={editItemOld !== editItem} loading={false}>
+                <DefultButton 
+                onClick={isDifferent(editItemOld, editItem)?()=>{handleEditAccount()}:()=>{}} 
+                active={isDifferent(editItemOld, editItem)} loading={loading2}>
                   Update User
                 </DefultButton>
+              </div>
+            </div>
+          </div>
+        </PopUp>
+        <PopUp
+        isVisible={isVisiblePopUpDelete}
+        setIsVisible={setIsVisiblePopUpDelete}
+        onClose={() => setIsVisiblePopUpDelete(false)}>
+          <div>
+            <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-8'>
+              <div className='text-xl text-white flex gap-2 items-end'><Icon icon="tabler:pencil" width="30" height="30" className='mb-1' /> Delete User Account</div>
+              <div className=' text-white'>Are you sure you want to delete this user account?</div>
+            </div>
+            <div className='flex flex-col px-8 pt-8 pb-6'>
+              <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
+                <div className='flex justify-between items-center'>
+                  <div className='text-sm text-gray-500'>User Id:</div>
+                  <div className=''>{deleteItem?.userId}</div>
+                </div>
+                <div className='flex justify-between items-center'>
+                  <div className='text-sm text-gray-500'>Email Address:</div>
+                  <div className='py-1 px-3 rounded-lg bg-gray-300'>{deleteItem?.email}</div>
+                </div>
+                
+                <div className='flex justify-between items-center'>
+                  <div className='text-sm text-gray-500'>Company</div>
+                  <div className=''>{deleteItem?.companyName}</div>
+                </div>
+                <div className='flex justify-between items-center'>
+                  <div className='text-sm text-gray-500'>User Role:</div>
+                  <div className={`${deleteItem?.roleName ==='Role has been removed'?'text-red-500':''}`}>{deleteItem?.roleName}</div>
+                </div>
+                <div className='flex justify-between items-center'>
+                  <div className='text-sm text-gray-500'>Created Date:</div>
+                  <div className=''>{deleteItem?.createDate}</div>
+                </div>
+              </div>
+              <div className='border-b border-gray-200 mt-10 mb-5'/>
+              <div className='flex gap-5'>
+                <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setIsVisiblePopUpDelete(false)}}>
+                  Cancel
+                </div>
+                <button
+                  disabled={loading}
+                  onClick={() => deleteItem?.userId && handleDeleteAccount(deleteItem.userId)}
+                  className={`group text-white h-12 rounded-xl text-lg w-full bg-gradient-to-r from-[#ec1c26] to-[#e7000b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden`}
+                >
+                  <GlareHover
+                    glareColor="#ffffff"
+                    glareOpacity={0.3}
+                    glareAngle={-30}
+                    glareSize={300}
+                    transitionDuration={800}
+                    playOnce={false}
+                  ><div className="m-auto flex items-center gap-2">
+                    Delete Account
+                    </div>
+                  </GlareHover>
+                </button>
               </div>
             </div>
           </div>

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Icon } from '@iconify/react';
 import { useState, useRef, useEffect } from 'react';
-import SubmitButton from '@/src/components/ui/SubmitButton';
 import DefultButton from '@/src/components/ui/defultButton';
 import { useToast } from '@/src/context/toast-context';
 import { sendOTP, verifyOTP, resetPassword } from '@/src/modules/signin'; // Update with your actual API import

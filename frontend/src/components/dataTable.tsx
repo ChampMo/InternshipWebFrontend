@@ -14,15 +14,25 @@ interface DataItem {
     id: string | number; // Define the structure of your data items
     [key: string]: any; // Allow additional properties
 }
+interface AccountItem {
+  id: number;
+  email: string;    
+  roleId: string;
+  roleName: string;
+  companyId: string;
+  companyName: string;
+  userId: string;
+  createDate: string;
+}
 
 interface DataTableProps {
     headers: Header[];
     data: DataItem[];
     searchKeys: string[];
     itemsPerPage?: number;
-    onView?: (item: DataItem, index: number) => void;
-    onEdit?: (item: DataItem, index: number) => void;
-    onDelete?: (item: DataItem, index: number) => void;
+    onView?: (item: AccountItem, index: number) => void;
+    onEdit?: (item: AccountItem, index: number) => void;
+    onDelete?: (item: AccountItem, index: number) => void;
     showActions?: boolean;
     showSearch?: boolean;
     showPagination?: boolean;

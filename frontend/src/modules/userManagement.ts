@@ -30,11 +30,66 @@ export const ReCreateAccount = async (
   return result
 }
 
+export const GetAccount = async (
+): Promise<{ message: string }> => {
+  const response = await fetch(`${Port.BASE_URL}/user`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })
+
+  const result = await response.json()
+  return result
+}
+
+export const UpdateAccount = async (
+  data: { userId:string, roleId: string, companyId: string }
+): Promise<{ message: string }> => {
+  const response = await fetch(`${Port.BASE_URL}/user`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+
+  const result = await response.json()
+  return result
+}
+
+export const DeleteAccount = async (
+  data: { userId:string }
+): Promise<{ message: string }> => {
+  const response = await fetch(`${Port.BASE_URL}/user`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+
+  const result = await response.json()
+  return result
+}
 
 
 export const GetRole = async (
 ): Promise<{ message: string }> => {
   const response = await fetch(`${Port.BASE_URL}/user/role`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })
+
+  const result = await response.json()
+  return result
+}
+
+export const GetCompany = async (
+): Promise<{ message: string }> => {
+  const response = await fetch(`${Port.BASE_URL}/user/company`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'

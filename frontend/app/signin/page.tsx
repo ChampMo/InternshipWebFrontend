@@ -40,8 +40,9 @@ export default function Signin() {
         localStorage.setItem('token', result.token)
         localStorage.setItem('login', 'true')
         localStorage.setItem('userId', result.user.userId)
+        localStorage.setItem('role', result.user.role)
         notifySuccess('Sign In successfully');
-        router.push('/')
+        router.push('/jira-dashboard')
       } else if ('message' in result && result.message === 'Invalid email') {
         notifyError('Invalid email.')
       } else if ('message' in result && result.message === 'Invalid password') {

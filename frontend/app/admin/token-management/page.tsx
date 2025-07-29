@@ -9,9 +9,11 @@ function TokenManagement() {
 
 
   return (
-    <div className='flex'>
+    <div className='flex w-full h-screen'>
       <Sidebar pageName={'Token Management'}/>
-      <h1>Token Management</h1>
+      <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
+        <div className='playwrite-hu'>TokenManagement</div>
+      </div>
 
     </div>
   )
