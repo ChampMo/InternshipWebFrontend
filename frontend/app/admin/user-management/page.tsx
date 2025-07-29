@@ -6,11 +6,13 @@ import { Icon } from '@iconify/react'
 import Sidebar from '@/src/components/sidebar'
 import Dropdown from '@/src/components/ui/dropDown'
 import { CreateAccount, ReCreateAccount, GetRole, GetAccount, UpdateAccount, DeleteAccount, GetCompany } from '@/src/modules/userManagement';
+
 import DefultButton from '@/src/components/ui/defultButton'
 import { useToast } from '@/src/context/toast-context'
 import DataTable from '@/src/components/dataTable'
 import PopUp from '@/src/components/ui/popUp'
 import GlareHover from '@/src/lib/GlareHover/GlareHover'
+import { usePermissions } from '@/src/context/permission-context'
 
 
 interface AccountItem {
@@ -77,6 +79,17 @@ function UserManagement() {
     const contentRef = useRef<HTMLDivElement>(null)
     const [maxHeight, setMaxHeight] = useState('0px')
     const [width, setWidth] = useState(0)
+
+
+    const { permissions, refreshPermissions } = usePermissions()
+  
+    useEffect(() => {
+        if (permissions && !permissions.admin) {
+            window.location.href = '/'
+        }
+    }, [permissions])
+
+
     useEffect(() => {
         const handleResize = () => {
             if (contentRef.current) {
@@ -322,6 +335,7 @@ function UserManagement() {
             if (result && result.message === 'User updated successfully') {
                 notifySuccess('User updated successfully');
                 setIsVisiblePopUp(false);
+                refreshPermissions(); // Refresh permissions after updating user
             } else {
                 notifyError('Failed to update user');
             }
@@ -352,8 +366,7 @@ function UserManagement() {
 
 
   return (
-    <div className='flex w-full h-screen'>
-        <Sidebar pageName={'User Management'}/>
+    <>
         <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
             <div className=' font-bold text-2xl'>Create account</div>
             <div className='w-auto flex flex-col p-5 mt-4 rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#D2ECFF] border border-gray-200 max-w-[1000px]'>
@@ -513,7 +526,7 @@ function UserManagement() {
                   haveIcon={false}
                 />
               </div>
-              <div className=' mt-6 flex flex-col gap-3'>
+              <div className=' mt-6 flex flex-col gap-3 z-30'>
                 <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>User Role</div>
                 <Dropdown
                   items={roleItems.map(item => item.roleName)}
@@ -546,7 +559,7 @@ function UserManagement() {
         setIsVisible={setIsVisiblePopUpDelete}
         onClose={() => setIsVisiblePopUpDelete(false)}>
           <div>
-            <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-8'>
+            <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[#a10f16] to-[#ca000a] px-8'>
               <div className='text-xl text-white flex gap-2 items-end'><Icon icon="tabler:pencil" width="30" height="30" className='mb-1' /> Delete User Account</div>
               <div className=' text-white'>Are you sure you want to delete this user account?</div>
             </div>
@@ -600,7 +613,7 @@ function UserManagement() {
             </div>
           </div>
         </PopUp>
-    </div>
+      </>
 
   )
 }

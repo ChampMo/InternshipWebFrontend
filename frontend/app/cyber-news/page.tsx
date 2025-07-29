@@ -4,16 +4,20 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Icon } from '@iconify/react'
 import Sidebar from '@/src/components/sidebar'
+import { usePermissions } from "@/src/context/permission-context";
 
 function CyberNews() {
+  const { permissions } = usePermissions()
 
+  useEffect(() => {
+      const token = localStorage.getItem("token")
+      if (token && permissions && !permissions.cyberNews) {
+          window.location.href = '/'
+      }
+  }, [permissions])
 
   return (
-    <div className='flex'>
-      <Sidebar pageName={'Cyber News'}/>
       <h1>CyberNews</h1>
-      
-    </div>
   )
 }
 

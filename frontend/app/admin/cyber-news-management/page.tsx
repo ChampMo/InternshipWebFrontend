@@ -2,17 +2,22 @@
 
 import React, { useEffect, useState } from 'react'
 import Sidebar from '@/src/components/sidebar'
+import { usePermissions } from '@/src/context/permission-context'
 
 function CyberNewsManagement() {
 
+  const { permissions } = usePermissions()
+
+  useEffect(() => {
+      if (permissions && !permissions.admin) {
+          window.location.href = '/'
+      }
+  }, [permissions])
 
   return (
-    <div className='flex w-full h-screen'>
-      <Sidebar pageName={'Cyber News Management'}/>
       <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
         <div className='playwrite-hu'>CyberNewsManagement</div>
       </div>
-    </div>
   )
 }
 

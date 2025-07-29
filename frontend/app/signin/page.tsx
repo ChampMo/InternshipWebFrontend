@@ -12,7 +12,8 @@ import { on } from 'events';
 import DefultButton from '@/src/components/ui/defultButton';
 import BgSignin from '@/src/components/bgSignin'
 import ForgotPassword from '@/src/components/forgotPassword'
-
+import { GetPermissions } from '@/src/modules/permission';
+import { usePermissions } from "@/src/context/permission-context";
 
 export default function Signin() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -23,7 +24,7 @@ export default function Signin() {
   const [loading, setLoading] = useState(false)
   const [statePage, setStatePage] = useState(0) // 0: Sign In, 1: Forgot Password, 2: Verify OTP, 3: Reset Password
   const router = useRouter()
-
+  const { refreshPermissions } = usePermissions()
   const { notifySuccess, notifyError } = useToast()
 
 
@@ -40,9 +41,19 @@ export default function Signin() {
         localStorage.setItem('token', result.token)
         localStorage.setItem('login', 'true')
         localStorage.setItem('userId', result.user.userId)
-        localStorage.setItem('role', result.user.role)
         notifySuccess('Sign In successfully');
-        router.push('/jira-dashboard')
+        await refreshPermissions() 
+        
+        const permissions = await GetPermissions(result.user.userId)
+        if (permissions.jira) {
+          router.push('/jira-dashboard')
+        }else if (permissions.cyberNews) {
+          router.push('/cyber-news')
+        }else if(permissions.ti) {
+          router.push('/ti-tech-intelligence')
+        }else if(permissions.admin) {
+          router.push('/admin/user-management')
+        }
       } else if ('message' in result && result.message === 'Invalid email') {
         notifyError('Invalid email.')
       } else if ('message' in result && result.message === 'Invalid password') {
@@ -118,7 +129,7 @@ export default function Signin() {
   return (
       <>
         
-      <div className='flex items-center justify-center h-screen bg-background font-sans'>
+      <div className='flex items-center justify-center h-screen bg-background font-sans w-full'>
         {/* sign in */}
         <div 
         ref={containerRef}

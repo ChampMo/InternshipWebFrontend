@@ -2,17 +2,22 @@
 
 import React, { useEffect, useState } from 'react'
 import Sidebar from '@/src/components/sidebar'
+import { usePermissions } from '@/src/context/permission-context'
 
 function Settings() {
 
+    const { permissions } = usePermissions()
+  
+    useEffect(() => {
+        if (permissions && !permissions.admin) {
+            window.location.href = '/'
+        }
+    }, [permissions])
 
   return (
-    <div className='flex w-full h-screen'>
-      <Sidebar pageName={'Settings'}/>
       <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
         <div className='playwrite-hu'>Settings</div>
       </div>
-    </div>
   )
 }
 
