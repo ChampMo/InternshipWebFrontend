@@ -307,7 +307,7 @@ function UserManagement() {
             <div className=' font-bold text-2xl'>Create account</div>
             <div className='w-auto flex flex-col p-5 mt-4 rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#D2ECFF] border border-gray-200 max-w-[1000px]'>
                 
-                <div className=' flex gap-5 z-30'>
+                <div className=' flex gap-5 z-50'>
                     <input 
                     type='email'
                     value={createEmail}
@@ -398,7 +398,7 @@ function UserManagement() {
                     </div>
                     <div className='w-48 z-40 relative'>
                       <Icon icon="mingcute:filter-line" width="24" height="24" className={` absolute left-2 top-2 z-40 ${roleFilter ==='All'?'text-gray-400':'text-primary1'}`}/>
-                      <Dropdown items={roleItems} placeholder='Select Role' setValue={setRoleFilter} value={roleFilter==='All'?'':roleFilter} haveIcon={true}/>
+                      <div className='z-20'><Dropdown items={roleItems} placeholder='Select Role' setValue={setRoleFilter} value={roleFilter==='All'?'':roleFilter} haveIcon={true}/></div>
                     </div>
                     {(roleFilter !== 'All' || searchTerm !== '') && <Icon icon="maki:cross" width="30" height="30" className='h-10 text-red-500 cursor-pointer' onClick={()=>{setRoleFilter('All'), setSearchTerm('')}} />}
                     {/* <div className='text-gray-500 font-bold flex items-end gap-2 cursor-pointer'>Edit<Icon icon="tabler:pencil" width="24" height="24" className='mb-1' /></div> */}

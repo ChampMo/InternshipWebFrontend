@@ -44,7 +44,7 @@ export default function Dropdown({
     }
 
     return (  
-        <div className='relative z-30' ref={dropdownRef}>
+        <div className='relative' ref={dropdownRef}>
             
             <div className={`absolute bg-white border-t-0 pt-2 border-primary1 rounded-b-lg mt-2 w-full right-0 duration-200 ${state ? `${items.length == 1 || items.length == 0 ? 'h-12  overflow-hidden':items.length == 2? 'h-22':items.length == 3? 'h-33':items.length == 4? 'h-43': 'h-53'} overflow-auto shadow-lg border top-7` : 'h-0 overflow-hidden top-0'}`}>
                 {items.map((item, index) => (
