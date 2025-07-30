@@ -38,8 +38,6 @@ export default function CyberNewsDetailPage() {
   if (!newsDetail) return <div className="text-gray-500 text-center">ไม่พบข่าวสำหรับรหัสนี้</div>;
 
   return (
-    <div className="flex w-full h-screen">
-      <Sidebar />
       <div className=' pt-10 px-10'>
         <div className="flex i gap-x-2 mb-2">
           <div
@@ -90,6 +88,5 @@ export default function CyberNewsDetailPage() {
           dangerouslySetInnerHTML={{ __html: newsDetail.content ?? '' }}
         />
       </div>
-    </div>
   );
 }

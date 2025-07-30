@@ -8,7 +8,7 @@ import Sidebar from '@/src/components/sidebar'
 import Port from '@/port';
 import { usePermissions } from "@/src/context/permission-context";
 
-function CyberNews() {
+export default function CyberNews() {
   const [newsDetail, setNewsDetail] = useState<any[]>([]);
   const [filteredNews, setFilteredNews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,8 +54,6 @@ function CyberNews() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className='flex w-full h-screen'>
-      <Sidebar />
       <div className='pt-10 px-10 w-full'>
         <div className='flex justify-between items-center mb-6'>
           <h1 className="text-2xl font-bold">CyberNews</h1>
@@ -86,6 +84,5 @@ function CyberNews() {
           )}
         </div>
       </div>
-    </div>
   );
 }

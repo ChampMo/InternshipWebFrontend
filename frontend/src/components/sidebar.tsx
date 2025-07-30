@@ -46,14 +46,8 @@ const Sidebar: React.FC = () => {
         }
     }, [permissions])
 
-    if (pathname !== '/jira-dashboard'
-        && pathname !== '/cyber-news'
-        && pathname !== '/ti-tech-intelligence'
-        && pathname !== '/admin/user-management'
-        && pathname !== '/admin/token-management'
-        && pathname !== '/admin/cyber-news-management'
-        && pathname !== '/admin/settings'
-    ) return null;
+    if (!['/jira-dashboard', '/cyber-news', '/ti-tech-intelligence', '/admin/user-management', '/admin/token-management', '/admin/cyber-news-management', '/admin/settings']
+        .some(route => pathname.startsWith(route))) return null;
     return (
         <aside className='bg-primary3 w-80 h-screen shadow-lg rounded-r-3xl flex flex-col pb-10 shrink-0'>
             <header className='p-4 h-40 items-center flex justify-center'>
@@ -69,7 +63,7 @@ const Sidebar: React.FC = () => {
                         item.havePermission && <React.Fragment key={item.path}>
                             <Link
                                 href={item.path}
-                                className={`text-lg px-8 py-3 rounded-r-lg duration-200 ${pathname === item.path ? 'bg-primary1 text-white' : ' hover:bg-primary2'}`}>
+                                className={`text-lg px-8 py-3 rounded-r-lg duration-200 ${pathname.startsWith(item.path) ? 'bg-primary1 text-white' : ' hover:bg-primary2'}`}>
                                 {item.name}
                             </Link>
                             {index !== menuItems.length - 1 && (
