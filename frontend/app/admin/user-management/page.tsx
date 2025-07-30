@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation'
 import { Icon } from '@iconify/react'
 import Sidebar from '@/src/components/sidebar'
 import Dropdown from '@/src/components/ui/dropDown'
-import { CreateAccount, ReCreateAccount, GetRole, GetAccount, UpdateAccount, DeleteAccount, GetCompany } from '@/src/modules/userManagement';
+import { CreateAccount, ReCreateAccount, GetAccount, UpdateAccount, DeleteAccount } from '@/src/modules/account';
+import { GetRole } from '@/src/modules/role';
+import { GetCompany } from '@/src/modules/company';
 
 import DefultButton from '@/src/components/ui/defultButton'
 import { useToast } from '@/src/context/toast-context'

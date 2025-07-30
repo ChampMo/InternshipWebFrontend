@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import LetterGlitch from '@/src/lib/LetterGlitch/LetterGlitch';
-import { signin as signinApi, sendOTP, verifyOTP, resetPassword } from '@/src/modules/signin';
+import { signin as signinApi, sendOTP, verifyOTP, resetPassword } from '@/src/modules/auth';
 import { Icon } from "@iconify/react";
 import { ClipLoader } from "react-spinners";
 import { useToast } from '@/src/context/toast-context'
