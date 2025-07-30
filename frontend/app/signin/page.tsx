@@ -2,17 +2,18 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import LetterGlitch from '@/src/lib/LetterGlitch/LetterGlitch';
-import { signin as signinApi, sendOTP, verifyOTP, resetPassword } from '@/src/modules/signin';
+import { signin as signinApi, sendOTP, verifyOTP, resetPassword } from '@/src/modules/auth';
 import { Icon } from "@iconify/react";
 import { ClipLoader } from "react-spinners";
 import { useToast } from '@/src/context/toast-context'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { on } from 'events';
-import SubmitButton from '@/src/components/ui/SubmitButton'
+import DefultButton from '@/src/components/ui/defultButton';
 import BgSignin from '@/src/components/bgSignin'
 import ForgotPassword from '@/src/components/forgotPassword'
-
+import { GetPermissions } from '@/src/modules/permission';
+import { usePermissions } from "@/src/context/permission-context";
 
 export default function Signin() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -23,7 +24,7 @@ export default function Signin() {
   const [loading, setLoading] = useState(false)
   const [statePage, setStatePage] = useState(0) // 0: Sign In, 1: Forgot Password, 2: Verify OTP, 3: Reset Password
   const router = useRouter()
-
+  const { refreshPermissions } = usePermissions()
   const { notifySuccess, notifyError } = useToast()
 
 
@@ -41,7 +42,18 @@ export default function Signin() {
         localStorage.setItem('login', 'true')
         localStorage.setItem('userId', result.user.userId)
         notifySuccess('Sign In successfully');
-        router.push('/')
+        await refreshPermissions() 
+        
+        const permissions = await GetPermissions(result.user.userId)
+        if (permissions.jira) {
+          router.push('/jira-dashboard')
+        }else if (permissions.cyberNews) {
+          router.push('/cyber-news')
+        }else if(permissions.ti) {
+          router.push('/ti-tech-intelligence')
+        }else if(permissions.admin) {
+          router.push('/admin/user-management')
+        }
       } else if ('message' in result && result.message === 'Invalid email') {
         notifyError('Invalid email.')
       } else if ('message' in result && result.message === 'Invalid password') {
@@ -117,7 +129,7 @@ export default function Signin() {
   return (
       <>
         
-      <div className='flex items-center justify-center h-screen bg-background font-sans'>
+      <div className='flex items-center justify-center h-screen bg-background font-sans w-full'>
         {/* sign in */}
         <div 
         ref={containerRef}
@@ -128,7 +140,7 @@ export default function Signin() {
               <div className="text-4xl text-primary1 font-bold">Sign In</div>
               <form 
                 onSubmit={handleSubmit}
-                className="flex flex-col gap-6 mt-14 w-full h-full">
+                className="flex flex-col gap-6 mt-10 w-full h-full">
                 <div className='text-gray-500 text-lg'>Email</div>
                 <div className='border-b-2 border-primary1 w-full flex items-center '>
                   <Icon icon="ic:round-email" width="30" height="30" 
@@ -136,7 +148,7 @@ export default function Signin() {
                   color={`${!email?'#ABABAB':'#007EE5'}`} />
                   <input 
                   type="email" 
-                  className="pl-4 w-full text-xl outline-0 mb-1 placeholder:text-gray-400" 
+                  className="pl-4 w-full text-lg outline-0 mb-1 placeholder:text-gray-400" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder='Enter your email'
@@ -151,7 +163,7 @@ export default function Signin() {
                   color={`${!password?'#ABABAB':'#007EE5'}`} />
                   <input 
                   type={`${typePassword ?"password": "text"}`} 
-                  className="pl-4 w-full text-xl outline-0 mb-1 placeholder:text-gray-400" 
+                  className="pl-4 w-full text-lg outline-0 mb-1 placeholder:text-gray-400" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder='Enter your password'
@@ -162,10 +174,10 @@ export default function Signin() {
                     :<Icon icon="iconamoon:eye-off-duotone" width="28" height="28" color='#ABABAB'/>}
                   </div>
                 </div>
-                <div className="text-blue-500 ml-auto cursor-pointer" onClick={()=>{setStatePage(1), setPassword('')}}> Forgot Password? </div>
-                <SubmitButton active={!!email && !!password} loading={loading}>
+                <div className="text-blue-500 ml-auto cursor-pointer mb-8" onClick={()=>{setStatePage(1), setPassword('')}}> Forgot Password? </div>
+                <DefultButton active={!!email && !!password} loading={loading}>
                   Sign In
-                </SubmitButton>
+                </DefultButton>
               </form>
             </>}
           </div>

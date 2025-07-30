@@ -9,6 +9,7 @@ export interface User {
   userId: string
   name: string
   email: string
+  role: any
 }
 
 export interface SigninResponse {

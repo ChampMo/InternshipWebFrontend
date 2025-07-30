@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react'
 import CyberNewsCard from '@/src/components/CyberNewsCard'
 import Sidebar from '@/src/components/sidebar'
 import Port from '@/port';
+import { usePermissions } from "@/src/context/permission-context";
 
 function CyberNews() {
   const [newsDetail, setNewsDetail] = useState<any[]>([]);
@@ -13,6 +14,15 @@ function CyberNews() {
   const [loading, setLoading] = useState(true);
   const [deatailID, setDetailID] = useState<string | null>(null); 
   const [searchTerm, setSearchTerm] = useState('');
+
+  const { permissions } = usePermissions()
+
+  useEffect(() => {
+      const token = localStorage.getItem("token")
+      if (token && permissions && !permissions.cyberNews) {
+          window.location.href = '/'
+      }
+  }, [permissions])
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -79,5 +89,3 @@ function CyberNews() {
     </div>
   );
 }
-
-export default CyberNews;

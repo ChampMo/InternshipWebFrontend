@@ -2,23 +2,23 @@
 
 import React, { useEffect, useState } from 'react'
 import Sidebar from '@/src/components/sidebar'
-import { usePermissions } from "@/src/context/permission-context";
+import { usePermissions } from '@/src/context/permission-context'
 
-function JiraDashboard() {
+function CyberNewsManagement() {
+
   const { permissions } = usePermissions()
-  const token = localStorage.getItem("token")
 
   useEffect(() => {
-      if (permissions && !permissions.jira || !token) {
+      if (permissions && !permissions.admin) {
           window.location.href = '/'
       }
   }, [permissions])
 
   return (
       <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
-        <div className='playwrite-hu'>JiraDashboard</div>
+        <div className='playwrite-hu'>CyberNewsManagement</div>
       </div>
   )
 }
 
-export default JiraDashboard
+export default CyberNewsManagement
