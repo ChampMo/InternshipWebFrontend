@@ -10,6 +10,7 @@
   --foreground: #171717;
   --primary1: #007EE5;
   --primary2: #D2ECFF;
+  --primary3: #F2F9FE;
 }
 
 @theme {
@@ -18,18 +19,18 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-primary1: var(--primary1);
-  --color-miniblue: #F2F9FE;
   --color-primary2: var(--primary2);
+  --color-primary3: var(--primary3);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
     --primary1: #007EE5;
     --primary2: #D2ECFF;
   }
-}
+} */
 
 body {
   background: var(--background);

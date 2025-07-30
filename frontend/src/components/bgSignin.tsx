@@ -15,7 +15,7 @@ const bgSignin: React.FC<BgSigninProps> = ({ onStartPage }) => {
               <div className='w-10/12 h-full bg-primary1 opacity-50 rounded-4xl absolute  translate-y-14'></div>
               <div className='w-10/12 h-full bg-primary1 opacity-80 rounded-4xl absolute translate-x-20'></div>
             </div>
-            <div className='w-10/12 shrink-0 h-full bg-miniblue rounded-4xl -translate-x-10 overflow-hidden'>
+            <div className='w-10/12 shrink-0 h-full bg-primary3 rounded-4xl -translate-x-10 overflow-hidden'>
               <LetterGlitch
                 glitchColors={['#E1F3FF', '#D2ECFF', '#B2DFFF']} // example colors, adjust as needed
                 glitchSpeed={50}
@@ -26,7 +26,7 @@ const bgSignin: React.FC<BgSigninProps> = ({ onStartPage }) => {
             </div>
           </div>
           <div className={`w-full h-screen flex gap-20 duration-1000 ${onStartPage ? ' translate-x-0' : '-translate-x-30'}`}>
-            <div className='w-10/12 shrink-0 h-full bg-miniblue rounded-4xl overflow-hidden'>
+            <div className='w-10/12 shrink-0 h-full bg-primary3 rounded-4xl overflow-hidden'>
               <LetterGlitch
                 glitchColors={['#E1F3FF', '#D2ECFF', '#B2DFFF']} // example colors, adjust as needed
                 glitchSpeed={50}

@@ -4,26 +4,26 @@ import { ClipLoader } from 'react-spinners'
 import { Icon } from '@iconify/react'
 import GlareHover from '@/src/lib/GlareHover/GlareHover' // 🔁 แก้ path ให้ถูกต้อง
 
-interface SubmitButtonProps {
+interface DefultButtonProps {
   active: boolean
   loading: boolean
   onClick?: () => void
   children?: React.ReactNode
 }
 
-export default function SubmitButton({
+export default function DefultButton({
   active,
   loading,
   onClick,
   children
-}: SubmitButtonProps) {
+}: DefultButtonProps) {
   return (
     <button
       type="submit"
       disabled={loading}
       onClick={onClick}
-      className={`group text-white h-14 rounded-lg text-xl mt-10 ${
-        active ? 'bg-primary1 cursor-pointer' : 'bg-gray-400'
+      className={`group text-white h-12 rounded-xl text-lg w-full ${
+        active ? 'bg-gradient-to-r from-[rgb(32,144,236)] to-[#007EE5] cursor-pointer' : 'bg-gray-400'
       } transition-all duration-300 ease-in-out relative overflow-hidden`}
     >
       <GlareHover

@@ -1,9 +1,9 @@
 import React from 'react'
 import { Icon } from '@iconify/react';
 import { useState, useRef, useEffect } from 'react';
-import SubmitButton from '@/src/components/ui/SubmitButton';
+import DefultButton from '@/src/components/ui/defultButton';
 import { useToast } from '@/src/context/toast-context';
-import { sendOTP, verifyOTP, resetPassword } from '@/src/modules/signin'; // Update with your actual API import
+import { sendOTP, verifyOTP, resetPassword } from '@/src/modules/auth'; // Update with your actual API import
 
 interface ForgotPasswordProps {
     statePage: number;
@@ -190,21 +190,21 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                 onSubmit={handleSendOTP}
                 className="flex flex-col w-full h-auto mt-5 gap-3">
                 <div className='text-gray-500 text-lg w-full'>Email</div>
-                  <div className='border-b-2 border-primary1 w-full flex items-center'>
+                  <div className='border-b-2 border-primary1 w-full flex items-center mb-10'>
                     <Icon icon="ic:round-email" width="30" height="30" 
                     className='mb-1' 
                     color={`${!email?'#ABABAB':'#007EE5'}`} />
                     <input 
                     type="email" 
-                    className="pl-4 w-full text-xl outline-0 mb-1" 
+                    className="pl-4 w-full text-lg outline-0 mb-1" 
                     value={email}
                     placeholder='Enter your email'
                     onChange={(e) => setEmail(e.target.value)}
                     required />
                   </div>
-                  <SubmitButton active={!!email} loading={loading}>
+                  <DefultButton active={!!email} loading={loading}>
                     Continue
-                  </SubmitButton>
+                  </DefultButton>
               </form>
               
               
@@ -237,10 +237,10 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                     />
                   ))}
                 </div>
-                <div className={`ml-auto ${countDown == 0 ?'text-blue-500 cursor-pointer ':'text-gray-500'}`} onClick={countDown == 0 ? () => setStatePage(1):() => {} }>{countDown == 0 ? '':countDown} Resend OTP </div>
-                <SubmitButton active={otp.join('').length === 6} loading={loading}>
+                <div className={`ml-auto mb-8 ${countDown == 0 ?'text-blue-500 cursor-pointer ':'text-gray-500'}`} onClick={countDown == 0 ? () => setStatePage(1):() => {} }>{countDown == 0 ? '':countDown} Resend OTP </div>
+                <DefultButton active={otp.join('').length === 6} loading={loading}>
                   Verify
-                </SubmitButton>
+                </DefultButton>
               </form>
               
               <div className='text-blue-500 mt-4 cursor-pointer' onClick={()=>handleReset()}> Back to Sign In </div>
@@ -264,7 +264,7 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                   color={`${!password?'#ABABAB':'#007EE5'}`} />
                   <input 
                   type={`${typePassword ?"password": "text"}`} 
-                  className="pl-4 w-full text-xl outline-0 mb-1 placeholder:text-gray-400" 
+                  className="pl-4 w-full text-lg outline-0 mb-1 placeholder:text-gray-400" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder='Enter your new password'
@@ -282,7 +282,7 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                   color={`${!confirmPassword?'#ABABAB':'#007EE5'}`} />
                   <input 
                   type={`${typePassword2 ?"password": "text"}`} 
-                  className="pl-4 w-full text-xl outline-0 mb-1 placeholder:text-gray-400" 
+                  className="pl-4 w-full text-lg outline-0 mb-1 placeholder:text-gray-400" 
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder='Confirm your new password'
@@ -293,7 +293,7 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                     :<Icon icon="iconamoon:eye-off-duotone" width="28" height="28" color='#ABABAB'/>}
                   </div>
                 </div>
-                <div>
+                <div className='mb-5'>
                   <div className={`text-sm flex flex-row items-center gap-2 ${passwordsMatch ? 'text-green-600' : 'text-gray-400'}`}>
                     <Icon icon="stash:circle-dot-duotone" width="20" height="20" color={`${passwordsMatch ?'#00C90A':'#ABABAB'}`} className=' shrink-0'/>
                     Passwords do match.
@@ -307,9 +307,9 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                     {'Least 1 special characters. !@#$%^&*(),.?":{}|<>'}
                   </div>
                 </div>
-                <SubmitButton active={!!email && !!password && !!confirmPassword && !!passwordsMatch && !!longEnough && !!hasSpecialChar} loading={loading}>
+                <DefultButton active={!!email && !!password && !!confirmPassword && !!passwordsMatch && !!longEnough && !!hasSpecialChar} loading={loading}>
                   Reset Password
-                </SubmitButton>
+                </DefultButton>
               </form>
               
               <div className='text-blue-500 cursor-pointer mt-2' onClick={()=>handleReset()}> Back to Sign In </div>
