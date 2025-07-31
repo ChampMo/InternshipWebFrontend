@@ -64,7 +64,7 @@ export default function CyberNews() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' placeholder='Search by date, title, tag'/>
-            </div>
+          </div>
         </div>
         <div className='border-t border-gray-300 mb-5 w-full '></div>
         <div className="flex flex-col gap-4">
