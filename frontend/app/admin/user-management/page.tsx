@@ -36,6 +36,7 @@ interface Header {
     label: string;
     width?: string | number;
     className?: string;
+    sortable?: boolean;
     cellClassName?: string;
     render?: (value: any, item: any) => React.ReactNode;
 }
@@ -73,7 +74,7 @@ function UserManagement() {
     const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = useState(false)
     const [editItemOld, setEditItemOld] = useState<AccountItem | null>(null)
     const [editItem, setEditItem] = useState<AccountItem | null>(null)
-    const [deleteItem, setDeleteItem] = useState<AccountItem | null>(null)
+    const [deleteItem, setDeleteItem] = useState<AccountItem[] | null>(null)
     
 
     const { notifySuccess, notifyError, notifyInfo } = useToast()
@@ -239,6 +240,7 @@ function UserManagement() {
           label: 'No.',
           key: 'id',
           width: '80px',
+          sortable: true,
           render: (value) => (
             <span className=" px-2.5 py-1 rounded-md font-mono text">
               {value}
@@ -248,6 +250,7 @@ function UserManagement() {
         { 
           label: 'Email', 
           key: 'email',
+          sortable: true,
           render: (value) => (
             <div className="flex items-center gap-3">
               <span className="font-medium">{value}</span>
@@ -257,6 +260,7 @@ function UserManagement() {
         { 
           label: 'Company', 
           key: 'companyName',
+          sortable: true,
           render: (value) => {
             const colors: Record<string, string> = {
               "Company has been removed" : 'bg-red-600 text-white shrink-0 text-center rounded-md px-2.5 py-1',
@@ -271,6 +275,7 @@ function UserManagement() {
         { 
           label: 'User ID', 
           key: 'userId',
+          sortable: true,
           render: (value) => (
             <span className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-sm">
               {value}
@@ -280,9 +285,10 @@ function UserManagement() {
         { 
           label: 'Role', 
           key: 'roleName',
+          sortable: true,
           render: (value) => {
             const colors: Record<string, string> = {
-              'Admin': 'bg-red-100 text-red-800 border-red-200',
+              'Admin': 'bg-orange-100 text-orange-800 border-orange-200',
               'Role has been removed': 'bg-red-600 text-white shrink-0 text-center',
             };
             return (
@@ -295,6 +301,7 @@ function UserManagement() {
         { 
           label: 'Create Date', 
           key: 'createDate',
+          sortable: true,
           render: (value) => 
             <span className="text-sm">
               {value}
@@ -313,7 +320,7 @@ function UserManagement() {
       console.log('Edit:', item);
     };
 
-    const handleDelete = (item: AccountItem, index: number): void => {
+    const handleDelete = (item: AccountItem[]): void => {
       setIsVisiblePopUpDelete(true);
       setDeleteItem(item);
       console.log('Delete:', item);
@@ -347,15 +354,17 @@ function UserManagement() {
         }
     }
 
-    const handleDeleteAccount = async (userId: string) => {
+    const handleDeleteAccount = async (item: AccountItem[]) => {
         try {
             setLoading2(true);
-            const result = await DeleteAccount({userId});
+          await Promise.all(item.map(async (user: AccountItem) => {
+            const result = await DeleteAccount({ userId: user.userId });
             if (result && result.message === 'User deleted successfully') {
-                notifySuccess('User deleted successfully');
+                notifySuccess(`${user.email}     User deleted successfully`);
             } else {
                 notifyError('Failed to delete user');
             }
+          }));
         } catch (error) {
             console.error('Error deleting account:', error);
             notifyError('Failed to delete user, please try again later');
@@ -371,7 +380,7 @@ function UserManagement() {
     <>
         <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
             <div className=' font-bold text-2xl'>Create account</div>
-            <div className='w-auto flex flex-col p-5 mt-4 rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#D2ECFF] border border-gray-200 max-w-[1000px]'>
+            <div className='w-auto flex flex-col p-5 mt-4 rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] border border-gray-200 max-w-[1000px]'>
                 
                 <div className=' flex gap-5 z-50'>
                     <input 
@@ -472,7 +481,7 @@ function UserManagement() {
                     <DataTable
                         headers={headers}
                         data={allUser}
-                        searchKeys={['email', 'company', 'userId']}
+                        searchKeys={['email', 'companyName', 'userId']}
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
                         roleKey="roleName"
@@ -481,9 +490,10 @@ function UserManagement() {
                         showRoleFilter={false}
                         itemsPerPage={5}
                         showSearch ={false}
-                        // onView={handleView}
+                        // onMultiSelect={handleView}
+                        onBulkDelete={handleDelete}
                         onEdit={handleEdit}
-                        onDelete={handleDelete}
+                        onDelete={true}
                         />
                 </div>
                 
@@ -565,29 +575,48 @@ function UserManagement() {
               <div className='text-xl text-white flex gap-2 items-end'><Icon icon="tabler:pencil" width="30" height="30" className='mb-1' /> Delete User Account</div>
               <div className=' text-white'>Are you sure you want to delete this user account?</div>
             </div>
+            <p className="text-gray-700 px-8 pt-5 text-lg flex gap-1">
+                There are<span className="font-semibold text-red-600">{deleteItem?.length ?? 0}</span> item{(deleteItem?.length ?? 0) > 1 ? 's' : ''} that will be deleted.
+              </p>
             <div className='flex flex-col px-8 pt-8 pb-6'>
-              <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
-                <div className='flex justify-between items-center'>
-                  <div className='text-sm text-gray-500'>User Id:</div>
-                  <div className=''>{deleteItem?.userId}</div>
-                </div>
-                <div className='flex justify-between items-center'>
-                  <div className='text-sm text-gray-500'>Email Address:</div>
-                  <div className='py-1 px-3 rounded-lg bg-gray-300'>{deleteItem?.email}</div>
-                </div>
-                
-                <div className='flex justify-between items-center'>
-                  <div className='text-sm text-gray-500'>Company</div>
-                  <div className=''>{deleteItem?.companyName}</div>
-                </div>
-                <div className='flex justify-between items-center'>
-                  <div className='text-sm text-gray-500'>User Role:</div>
-                  <div className={`${deleteItem?.roleName ==='Role has been removed'?'text-red-500':''}`}>{deleteItem?.roleName}</div>
-                </div>
-                <div className='flex justify-between items-center'>
-                  <div className='text-sm text-gray-500'>Created Date:</div>
-                  <div className=''>{deleteItem?.createDate}</div>
-                </div>
+            {/* <div className=' max-h-80 overflow-y-auto gap-4 flex flex-col'>
+              {deleteItem && deleteItem.map((item, index) => (
+                <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
+                  <div className='flex justify-between items-center'>
+                    <div className='text-sm text-gray-500'>User Id:</div>
+                    <div className=''>{item?.userId}</div>
+                  </div>
+                  <div className='flex justify-between items-center'>
+                    <div className='text-sm text-gray-500'>Email Address:</div>
+                    <div className='py-1 px-3 rounded-lg bg-gray-300'>{item?.email}</div>
+                  </div>
+                  
+                  <div className='flex justify-between items-center'>
+                    <div className='text-sm text-gray-500'>Company</div>
+                    <div className=''>{item?.companyName}</div>
+                  </div>
+                  <div className='flex justify-between items-center'>
+                    <div className='text-sm text-gray-500'>User Role:</div>
+                    <div className={`${item?.roleName ==='Role has been removed'?'text-red-500':''}`}>{item?.roleName}</div>
+                  </div>
+                  <div className='flex justify-between items-center'>
+                    <div className='text-sm text-gray-500'>Created Date:</div>
+                    <div className=''>{item?.createDate}</div>
+                  </div>
+                </div>))}
+              </div> */}
+              <div className=' max-h-85 overflow-y-auto gap-4 flex flex-col'>
+                {deleteItem && deleteItem.map((item, index) => (
+                <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
+                  <div className='flex justify-between items-center'>
+                    <div className='text-sm text-gray-500'>Email Address:</div>
+                    <div className='py-1 px-3 rounded-lg bg-gray-300'>{item?.email}</div>
+                  </div>
+                  <div className='flex justify-between items-center'>
+                    <div className='text-sm text-gray-500'>Company</div>
+                    <div className=''>{item?.companyName}</div>
+                  </div>
+                </div>))}
               </div>
               <div className='border-b border-gray-200 mt-10 mb-5'/>
               <div className='flex gap-5'>
@@ -595,8 +624,8 @@ function UserManagement() {
                   Cancel
                 </div>
                 <button
-                  disabled={loading}
-                  onClick={() => deleteItem?.userId && handleDeleteAccount(deleteItem.userId)}
+                  disabled={loading2}
+                  onClick={() => deleteItem && handleDeleteAccount(deleteItem)}
                   className={`group text-white h-12 rounded-xl text-lg w-full bg-gradient-to-r from-[#ec1c26] to-[#e7000b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden`}
                 >
                   <GlareHover

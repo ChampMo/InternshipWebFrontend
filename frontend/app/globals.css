@@ -11,6 +11,11 @@
   --primary1: #007EE5;
   --primary2: #D2ECFF;
   --primary3: #F2F9FE;
+  --critical: #FF0000;
+  --high: #FF9000;
+  --medium: #FFCC00;
+  --low: #00C90A;
+  --total: #4397E2;
 }
 
 @theme {
@@ -21,6 +26,11 @@
   --color-primary1: var(--primary1);
   --color-primary2: var(--primary2);
   --color-primary3: var(--primary3);
+  --color-critical: var(--critical);
+  --color-high: var(--high);
+  --color-medium: var(--medium);
+  --color-low: var(--low);
+  --color-total: var(--total);
 }
 
 /* @media (prefers-color-scheme: dark) {
