@@ -175,7 +175,7 @@ export default function Signin() {
                   </div>
                 </div>
                 <div className="text-blue-500 ml-auto cursor-pointer mb-8" onClick={()=>{setStatePage(1), setPassword('')}}> Forgot Password? </div>
-                <DefultButton active={!!email && !!password} loading={loading}>
+                <DefultButton active={!!email && !!password} loading={loading} highCustom={'h-12'} >
                   Sign In
                 </DefultButton>
               </form>

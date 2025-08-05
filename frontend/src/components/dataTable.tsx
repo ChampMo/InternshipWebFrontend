@@ -39,7 +39,7 @@ interface SortConfig {
 interface DataTableProps {
     headers: Header[];
     data: DataItem[];
-    searchKeys: string[];
+    searchKeys?: string[];
     itemsPerPage?: number;
     onView?: (item: AccountItem, index: number) => void;
     onEdit?: (item: AccountItem, index: number) => void;

@@ -202,7 +202,7 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                     onChange={(e) => setEmail(e.target.value)}
                     required />
                   </div>
-                  <DefultButton active={!!email} loading={loading}>
+                  <DefultButton active={!!email} loading={loading} highCustom={'h-12'}>
                     Continue
                   </DefultButton>
               </form>
@@ -238,7 +238,7 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                   ))}
                 </div>
                 <div className={`ml-auto mb-8 ${countDown == 0 ?'text-blue-500 cursor-pointer ':'text-gray-500'}`} onClick={countDown == 0 ? () => setStatePage(1):() => {} }>{countDown == 0 ? '':countDown} Resend OTP </div>
-                <DefultButton active={otp.join('').length === 6} loading={loading}>
+                <DefultButton active={otp.join('').length === 6} loading={loading} highCustom={'h-12'}>
                   Verify
                 </DefultButton>
               </form>
@@ -307,7 +307,7 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                     {'Least 1 special characters. !@#$%^&*(),.?":{}|<>'}
                   </div>
                 </div>
-                <DefultButton active={!!email && !!password && !!confirmPassword && !!passwordsMatch && !!longEnough && !!hasSpecialChar} loading={loading}>
+                <DefultButton active={!!email && !!password && !!confirmPassword && !!passwordsMatch && !!longEnough && !!hasSpecialChar} loading={loading} highCustom={'h-12'}>
                   Reset Password
                 </DefultButton>
               </form>

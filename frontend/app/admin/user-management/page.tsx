@@ -309,9 +309,6 @@ function UserManagement() {
         }
     ];
 
-    const handleView = (item: AccountItem, index: number): void => {
-        console.log('View:', item);
-    };
     
     const handleEdit = (item: AccountItem, index: number): void => {
       setIsVisiblePopUp(true);
@@ -380,9 +377,11 @@ function UserManagement() {
     <>
         <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
             <div className=' font-bold text-2xl'>Create account</div>
-            <div className='w-auto flex flex-col p-5 mt-4 rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] border border-gray-200 max-w-[1000px]'>
+            <div className='w-auto flex flex-col p-5 mt-4 rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] border border-gray-200 max-w-[1300px]'>
                 
-                <div className=' flex gap-5 z-50'>
+                <form 
+                onSubmit={!!createEmail && !!createRole && !!createCompany ? handleCreateAccount : undefined}
+                className=' flex gap-5 z-50 lg:flex-nowrap flex-wrap'>
                     <input 
                     type='email'
                     value={createEmail}
@@ -395,21 +394,22 @@ function UserManagement() {
                     <div className=' grow-0 z-30 w-full'>
                         <Dropdown items={companyItems.map(item => item.companyName)} placeholder='Select Company' setValue={setCreateCompany} value={createCompany} haveIcon={false}/>
                     </div>
-                </div>
-                <div className='w-60 mt-8'>
-                    <DefultButton onClick={!!createEmail && !!createRole && !!createCompany ? handleCreateAccount : undefined} active={!!createEmail && !!createRole && !!createCompany} loading={loading}>
+                    <div className='grow-0 w-full'>
+                    <DefultButton active={!!createEmail && !!createRole && !!createCompany} loading={loading}>
                         Create Account
                     </DefultButton>
-                </div>
+                    </div>
+                </form>
+                
                 <div ref={contentRef}
-                    className="overflow-hidden transition-all duration-500 max-w-[950px]"
+                    className="overflow-hidden transition-all duration-500 max-w-[1300px]"
                     style={{ maxHeight }}>
                     <div className={`w-full flex flex-col gap-5 mt-8 mb-1 rounded-lg shadow-sm p-4 bg-white`}>
                         <div className='text-lg font-bold text-gray-700'>Account Details</div>
                         <div className='w-full flex justify-between flex-wrap gap-5'>
-                            <div className='text-lg text-gray-500 flex gap-2'>Email: <div className='text-lg text-gray-800'>{accounts.email}</div></div>
-                            <div className='text-lg text-gray-500 flex gap-2'>Role: <div className='text-lg text-gray-800'>{accounts.role}</div></div>
-                            <div className='text-lg text-gray-500 flex gap-2'>Company: <div className='text-lg text-gray-800 '>{accounts.company}</div></div>
+                            <div className='text-lg text-gray-500 flex gap-2 grow'>Email: <div className='text-lg text-gray-800'>{accounts.email}</div></div>
+                            <div className='text-lg text-gray-500 flex gap-2 grow'>Role: <div className='text-lg text-gray-800'>{accounts.role}</div></div>
+                            <div className='text-lg text-gray-500 flex gap-2 grow'>Company: <div className='text-lg text-gray-800 '>{accounts.company}</div></div>
                         </div>
                         <div className='w-full flex'>
                           <div className='flex flex-col shrink-0'>
@@ -461,7 +461,7 @@ function UserManagement() {
             </div>
             <div className=' flex flex-col w-full'>
                 <div className=' font-bold text-2xl mt-8'>User</div>
-                <div className='w-full flex items-center gap-5 mt-3'>
+                <div className='w-full flex items-center gap-5 mt-4'>
                     <div className={`text-lg border rounded-xl h-10 w-96 relative flex items-center gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
                       <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
                       <input 
@@ -506,7 +506,7 @@ function UserManagement() {
         onClose={() => setIsVisiblePopUp(false)}>
           <div>
             <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-8'>
-              <div className='text-xl text-white flex gap-2 items-end'><Icon icon="tabler:pencil" width="30" height="30" className='mb-1' /> Edit User Account</div>
+              <div className='text-xl text-white flex gap-2 items-end'><Icon icon="streamline-ultimate:bin-1" width="30" height="30" className='mb-1' /> Edit User Account</div>
               <div className=' text-white'>Update user role and company information</div>
             </div>
             <div className='flex flex-col px-8 pt-8 pb-6'>
@@ -560,7 +560,7 @@ function UserManagement() {
                 <DefultButton 
                 onClick={isDifferent(editItemOld, editItem)?()=>{handleEditAccount()}:()=>{}} 
                 active={isDifferent(editItemOld, editItem)} loading={loading2}>
-                  Update User
+                  Update Account
                 </DefultButton>
               </div>
             </div>

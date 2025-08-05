@@ -8,6 +8,8 @@ interface DefultButtonProps {
   active: boolean
   loading: boolean
   onClick?: () => void
+  iconHover?: boolean
+  highCustom?: string
   children?: React.ReactNode
 }
 
@@ -15,6 +17,8 @@ export default function DefultButton({
   active,
   loading,
   onClick,
+  iconHover = true,
+  highCustom = 'h-10',
   children
 }: DefultButtonProps) {
   return (
@@ -22,7 +26,7 @@ export default function DefultButton({
       type="submit"
       disabled={loading}
       onClick={onClick}
-      className={`group text-white h-12 rounded-xl text-lg w-full ${
+      className={`group text-white ${highCustom} rounded-xl text-lg w-full ${
         active ? 'bg-gradient-to-r from-[rgb(32,144,236)] to-[#007EE5] cursor-pointer' : 'bg-gray-400'
       } transition-all duration-300 ease-in-out relative overflow-hidden`}
     >
@@ -34,7 +38,7 @@ export default function DefultButton({
         transitionDuration={800}
         playOnce={false}
       >
-        <div className="m-auto flex items-center gap-2">
+        <div className={`m-auto flex items-center justify-center  ${active ? 'hover:gap-2' : ''}`}>
           {children ?? 'Continue'}
           {loading ? (
             <ClipLoader
@@ -45,7 +49,7 @@ export default function DefultButton({
               color="#ffffff"
             />
           ) : (
-            <Icon
+            iconHover &&<Icon
               icon="icon-park-solid:right-two"
               className={`${!active ? 'w-0' : 'w-0 group-hover:w-10'} duration-500`}
               width="30"
