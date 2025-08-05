@@ -38,7 +38,7 @@ export default function DefultButton({
         transitionDuration={800}
         playOnce={false}
       >
-        <div className={`m-auto flex items-center justify-center  ${active ? 'hover:gap-2' : ''}`}>
+        <div className={`m-auto flex items-center justify-center  ${active ? loading ? 'gap-2' : 'hover:gap-2': 'gap-0'} duration-300`}>
           {children ?? 'Continue'}
           {loading ? (
             <ClipLoader

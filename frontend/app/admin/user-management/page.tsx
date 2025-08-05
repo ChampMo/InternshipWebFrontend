@@ -351,10 +351,10 @@ function UserManagement() {
         }
     }
 
-    const handleDeleteAccount = async (item: AccountItem[]) => {
+    const handleDeleteAccount = async (items: AccountItem[]) => {
         try {
             setLoading2(true);
-          await Promise.all(item.map(async (user: AccountItem) => {
+          await Promise.all(items.map(async (user: AccountItem) => {
             const result = await DeleteAccount({ userId: user.userId });
             if (result && result.message === 'User deleted successfully') {
                 notifySuccess(`${user.email}     User deleted successfully`);
