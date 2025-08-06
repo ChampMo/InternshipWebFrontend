@@ -282,7 +282,7 @@ function TokenManagement() {
         setEditPopUp(false);
         setEditToken(null);
       } else {
-          notifyError('Failed to delete token');
+          notifyError('Failed to updated token');
       }
     } catch (error) {
       notifyError('Failed to update token');
@@ -321,6 +321,10 @@ function TokenManagement() {
     return item1 !== item2;
   }
 
+  const isAlreadyInUse = (item: string[], inUseItem: string|null): boolean => {
+    return inUseItem ? item.includes(inUseItem) : false;
+  }
+
 
   return (
       <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
@@ -328,12 +332,28 @@ function TokenManagement() {
       <div className=' p-8 mt-4 rounded-xl duration-500 border border-gray-200 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] shadow-sm lg:w-fit flex lg:flex-row flex-col gap-8 justify-between'>
         <div className='gap-6 flex flex-col'>
           <div className='flex gap-4 lg:items-center lg:flex-row flex-col'>
-            <div className='text-lg font-bold text-gray-600 w-40'>Jira Token</div>
-            <div className='flex lg:w-100 z-40'><Dropdown items={jiraTokens.map(item => item.tokenName)} placeholder='Select Token' setValue={setJiraTokenSelected} value={jiraTokenSelected} haveIcon={false}/></div>
+            <div className='text-lg font-bold text-gray-600 w-40 shrink-0'>Jira Token</div>
+            <div className='flex lg:w-100 z-40 w-full lg:flex-row flex-col justify-between items-center'>
+              <div className={` bg-white rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'lg:w-42 pr-2 pl-4 border opacity-100 h-10' : 'lg:w-0 opacity-0 h-0'}`} >
+                {inUseTokenJira}
+              </div>
+              <Icon icon="ep:right" width="30" height="30" className={`text-primary1 duration-500 lg:rotate-0 rotate-90 ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira)? 'w-10 h-10 lg:my-0 my-3' : 'w-0 h-0'}`} />
+              <div className={`duration-500 w-full ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'lg:w-42' : 'lg:w-100'}`}>
+                <Dropdown items={jiraTokens.map(item => item.tokenName)} placeholder='Select Token' setValue={setJiraTokenSelected} value={jiraTokenSelected} haveIcon={false}/>
+              </div>
+            </div>
           </div>
           <div className='flex gap-4 lg:items-center lg:flex-row flex-col'>
-            <div className='text-lg font-bold text-gray-600 w-40'>TI Token</div>
-            <div className='flex lg:w-100 z-30'><Dropdown items={tiTokens.map(item => item.tokenName)} placeholder='Select Token' setValue={setTiTokenSelected} value={tiTokenSelected} haveIcon={false}/></div>
+            <div className='text-lg font-bold text-gray-600 w-40 shrink-0'>TI Token</div>
+            <div className='flex lg:w-100 z-30 w-full lg:flex-row flex-col justify-between items-center'>
+              <div className={` bg-white rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'lg:w-42 pr-2 pl-4 border opacity-100 h-10' : 'lg:w-0 opacity-0 h-0'}`} >
+                {inUseTokenTI}
+              </div>
+              <Icon icon="ep:right" width="30" height="30" className={`text-primary1 duration-500 lg:rotate-0 rotate-90 ${inuseIsDifferent(tiTokenSelected,inUseTokenTI)? 'w-10 h-10 lg:my-0 my-3' : 'w-0 h-0'}`} />
+              <div className={`duration-500 w-full ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'lg:w-42' : 'lg:w-100'}`}>
+              <Dropdown items={tiTokens.map(item => item.tokenName)} placeholder='Select Token' setValue={setTiTokenSelected} value={tiTokenSelected} haveIcon={false}/>
+              </div>
+            </div>
           </div>
         </div>
         {(inuseIsDifferent(jiraTokenSelected,inUseTokenJira) || inuseIsDifferent(tiTokenSelected,inUseTokenTI))&&<div className='flex h-full w-full lg:w-50 ml-auto lg:ml-0 items-end justify-end'>
@@ -345,7 +365,7 @@ function TokenManagement() {
       <div className='flex w-full justify-between items-center mt-8'>
         <div className=' font-bold text-2xl'>Token Management</div>
         <div className='flex gap-4 items-center'>
-          <div className='w-48 z-40 relative'>
+          <div className='w-48 z-20 relative'>
             <Icon icon="mingcute:filter-line" width="24" height="24" className={` absolute left-2 top-2 z-40 ${typeFilter ==='All'?'text-gray-400':'text-primary1'}`}/>
             <div className='z-20'><Dropdown items={typeItems.map(item => item.typeName)} placeholder='Select Type' setValue={setTypeFilter} value={typeFilter==='All'?'':typeFilter} haveIcon={true}/></div>
           </div>
@@ -383,78 +403,83 @@ function TokenManagement() {
           token: '',
           type: ''
           })}}>
-          <div>
-            <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-8'>
-              <div className='text-xl text-white flex gap-2 items-end'><Icon icon="icon-park-outline:api" width="30" height="30" className='mb-1' /> Create Token</div>
-              <div className=' text-white'>Create a new token</div>
+        <div>
+          <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-8'>
+            <div className='text-xl text-white flex gap-2 items-end'><Icon icon="icon-park-outline:api" width="30" height="30" className='mb-1' /> Create Token</div>
+            <div className=' text-white'>Create a new token</div>
+          </div>
+          <div className='flex flex-col px-8 pt-2 pb-6'>
+            <div className=' mt-6 flex flex-col z-40'>
+              <div className='text-sm text-gray-500 flex items-end gap-2'>
+                <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
+                Name
+              </div>
+              <input 
+                type='text'
+                value={createToken?.name}
+                onChange={(e) => setCreateToken({ ...createToken, name: e.target.value })}
+                className={` border mt-3 bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${createToken?.name?'border-primary1':'border-gray-300'}`}
+                placeholder='Enter name'/>
+              <div className={`ml-auto text-sm text-red-500 h-0 translate-y-1 duration-300 ${isAlreadyInUse( dataToken.map(token => token.name), createToken.name )?'opacity-100':'opacity-0'}`}>This token name is already in use.</div>
             </div>
-            <div className='flex flex-col px-8 pt-2 pb-6'>
-              <div className=' mt-6 flex flex-col gap-3 z-40'>
-                <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Name</div>
-                <input 
-                  type='text'
-                  value={createToken?.name}
-                  onChange={(e) => setCreateToken({ ...createToken, name: e.target.value })}
-                  className={` border  bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${createToken?.name?'border-primary1':'border-gray-300'}`}
-                  placeholder='Enter name'/>
-              </div>
-              <div className=' mt-6 flex flex-col gap-3 z-40'>
-              <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Type</div>
-                  <Dropdown
-                    items={typeToken.map((item: string) => item.toString())}
-                    placeholder="Select Type"
-                    setValue={(value: string) =>
-                    setCreateToken({ ...createToken, type: value })
-                    }
-                    value={createToken?.type === '' ? '' : (createToken?.type as string) || ''}
-                    haveIcon={false}/>
-              </div>
-              <div className=' mt-6 flex flex-col gap-3'>
-                <div className='text-sm text-gray-500 flex justify-between relative'>
-                  <div className='flex items-end gap-2'>
-                    <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
-                    Token
-                  </div>
-                  <div 
-                  onClick={() => {
-                    navigator.clipboard.readText().then(text => {
-                      setCreateToken({ ...createToken, token: text });
-                    })
-                  }}
-                  className='absolute right-0 -top-1 cursor-pointer text-gray-400 flex items-center hover:gap-1 group duration-300 hover:px-2.5 py-0.5 border border-transparent hover:bg-primary3 hover:text-primary1 hover:border-primary2 rounded-2xl hover:shadow'>
-                    <Icon icon="clarity:paste-solid" className='w-7 h-7' />
-                    <div className='w-0 group-hover:w-10 group-hover:opacity-100 opacity-0 overflow-hidden duration-300'>Paste</div>
-                  </div>
+            <div className=' mt-6 flex flex-col gap-3 z-40'>
+            <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Type</div>
+                <Dropdown
+                  items={typeToken.map((item: string) => item.toString())}
+                  placeholder="Select Type"
+                  setValue={(value: string) =>
+                  setCreateToken({ ...createToken, type: value })
+                  }
+                  value={createToken?.type === '' ? '' : (createToken?.type as string) || ''}
+                  haveIcon={false}/>
+            </div>
+            <div className=' mt-6 flex flex-col'>
+              <div className='text-sm text-gray-500 flex justify-between relative'>
+                <div className='flex items-end gap-2'>
+                  <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
+                  Token
                 </div>
-                <textarea 
-                  rows={3}
-                  value={createToken?.token}
-                  onChange={(e) => setCreateToken({ ...createToken, token: e.target.value })}
-                  className={` border resize-none bg-white rounded-xl h-24 pl-4 py-2 pr-1 grow-0 outline-none w-full placeholder ${createToken?.token?'border-primary1':'border-gray-300'}`}
-                  placeholder='Enter token'/>
-              </div>
-              <div className='border-b border-gray-200 mt-8 mb-5'/>
-              <div className='flex gap-5'>
-                <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' 
-                onClick={()=>{
-                  setCreatePopUp(false), 
-                  setCreateToken({
-                    id: 0,
-                    name: '',
-                    token: '',
-                    type: ''
-                    })}}>
-                  Cancel
+                <div 
+                onClick={() => {
+                  navigator.clipboard.readText().then(text => {
+                    setCreateToken({ ...createToken, token: text });
+                  })
+                }}
+                className='absolute right-0 -top-1 cursor-pointer text-gray-400 flex items-center hover:gap-1 group duration-300 hover:px-2.5 py-0.5 border border-transparent hover:bg-primary3 hover:text-primary1 hover:border-primary2 rounded-2xl hover:shadow'>
+                  <Icon icon="clarity:paste-solid" className='w-7 h-7' />
+                  <div className='w-0 group-hover:w-10 group-hover:opacity-100 opacity-0 overflow-hidden duration-300'>Paste</div>
                 </div>
-                <DefultButton 
-                onClick={createToken.name !== '' && createToken.type !== '' && createToken.token !== '' ? handleCreateToken : () => {}} 
-                active={createToken.name !== '' && createToken.type !== '' && createToken.token !== ''} loading={loading}>
-                  Create token
-                </DefultButton>
               </div>
+              <textarea 
+                rows={3}
+                value={createToken?.token}
+                onChange={(e) => setCreateToken({ ...createToken, token: e.target.value })}
+                className={` border resize-none mt-3 bg-white rounded-xl h-24 pl-4 py-2 pr-1 grow-0 outline-none w-full placeholder ${createToken?.token?'border-primary1':'border-gray-300'}`}
+                placeholder='Enter token'/>
+              <div className={`ml-auto text-sm text-red-500 h-0 translate-y-1 duration-300 ${isAlreadyInUse( dataToken.map(token => token.token), createToken.token )?'opacity-100':'opacity-0'}`}>This token is already in use.</div>
+            </div>
+            <div className='border-b border-gray-200 mt-8 mb-5'/>
+            <div className='flex gap-5'>
+              <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' 
+              onClick={()=>{
+                setCreatePopUp(false), 
+                setCreateToken({
+                  id: 0,
+                  name: '',
+                  token: '',
+                  type: ''
+                  })}}>
+                Cancel
+              </div>
+              <DefultButton 
+              onClick={createToken.name !== '' && createToken.type !== '' && createToken.token !== '' && !isAlreadyInUse( dataToken.map(token => token.name), createToken.name ) && !isAlreadyInUse( dataToken.map(token => token.token), createToken.token ) ? handleCreateToken : () => {}} 
+              active={createToken.name !== '' && createToken.type !== '' && createToken.token !== '' && !isAlreadyInUse( dataToken.map(token => token.name), createToken.name ) && !isAlreadyInUse( dataToken.map(token => token.token), createToken.token )} loading={loading}>
+                Create token
+              </DefultButton>
             </div>
           </div>
-        </PopUp>
+        </div>
+      </PopUp>
       <PopUp
         isVisible={editPopUp}
         setIsVisible={setEditPopUp}
@@ -475,15 +500,15 @@ function TokenManagement() {
                   <div className=''>{editToken?.updatedAt}</div>
                 </div>
               </div>
-              <div className=' mt-6 flex flex-col gap-3 z-40'>
+              <div className=' mt-6 flex flex-col z-40'>
                 <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Name</div>
                 <input 
                   type='text'
                   value={editToken?.name}
                   onChange={(e) => setEditToken(editToken ? { ...editToken, name: e.target.value } : null)}
-                  className={` border  bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${editToken?.name?'border-primary1':'border-gray-300'}`}
+                  className={` border mt-3 bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${editToken?.name?'border-primary1':'border-gray-300'}`}
                   placeholder='Enter name'/>
-              </div>
+                <div className={`ml-auto text-sm text-red-500 h-0 translate-y-1 duration-300 ${editToken && editTokenOld && isAlreadyInUse(dataToken.map(token => token.name !== editTokenOld.name ? token.name:'' ), editToken.name) ? 'opacity-100' : 'opacity-0'}`}>This token name is already in use.</div></div>
                 <div className=' mt-6 flex flex-col gap-3 z-40'>
                 <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Type</div>
                 <Dropdown
@@ -493,7 +518,7 @@ function TokenManagement() {
                   setEditToken((prev: TokenItem | null) =>
                     prev ? { ...prev, type: value } : null
                   )}
-                  value={editToken?.type === '' ? '' : (editToken?.type as string) || ''}
+                  value={editToken && editToken.type === '' ? '' : (editToken?.type as string) || ''}
                   haveIcon={false}
                 />
                 </div>
@@ -503,8 +528,8 @@ function TokenManagement() {
                   Cancel
                 </div>
                 <DefultButton 
-                onClick={isDifferent(editTokenOld, editToken)?()=>{handleEditAccount()}:()=>{}} 
-                active={isDifferent(editTokenOld, editToken)} loading={loading}>
+                onClick={isDifferent(editTokenOld, editToken) && !!editToken?.name && !!editTokenOld && !isAlreadyInUse(dataToken.map(token => token.name !== editTokenOld.name ? token.name:'' ), editToken.name) ?()=>{handleEditAccount()}:()=>{}} 
+                active={isDifferent(editTokenOld, editToken) && !!editToken?.name && !!editTokenOld && !isAlreadyInUse(dataToken.map(token => token.name !== editTokenOld.name ? token.name:'' ), editToken.name)} loading={loading}>
                   Update Token
                 </DefultButton>
               </div>

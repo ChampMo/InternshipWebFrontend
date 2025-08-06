@@ -62,5 +62,19 @@ export const resetPassword = async (
   return result
 }
 
+export const resetPasswordByOldPass = async (
+  data: { userId: string, oldPassword: string, password: string }
+): Promise<{ message: string }> => {
+  const response = await fetch(`${Port.BASE_URL}/reset-password/old-pass`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+
+  const result = await response.json()
+  return result
+}
 
 
