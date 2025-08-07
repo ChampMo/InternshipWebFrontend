@@ -209,7 +209,7 @@ const handleDeleteCompany = async (idx: number) => {
 }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 px-10 pt-10">
+    <div className="w-full min-h-screen bg-gray-50 px-10 ">
       <div className="max-w-5xl  pt-8 pb-8">
         <div className="mb-2 px-2">
           <h1 className="text-2xl font-bold mb-1">Settings</h1>
@@ -228,7 +228,10 @@ const handleDeleteCompany = async (idx: number) => {
                 <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
                   {roleItems.length} items
                 </span>
-                <button className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer">
+                <button
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer"
+                  onClick={() => router.push('/admin/settings/addRole')}
+                >
                   <Icon icon="mdi:plus" width={18} />
                   Add Role
                 </button>
@@ -238,9 +241,22 @@ const handleDeleteCompany = async (idx: number) => {
               {roleItems.map((role, idx) => (
                 <div key={idx} className="flex items-center justify-between w-full">
                   <span className="py-1 flex-1 text-gray-800 font-semibold">
-                    {role.name || role.roleName || '-'}
+                  {role.name || role.roleName || '-'}
                   </span>
-                  <Edit className="text-gray-600 cursor-pointer" width={18} />
+                  <button
+                    onClick={() => {
+                      const roleId = role.roleId || role.id || role._id;
+                      if (roleId) {
+                      router.push(`/admin/settings/${roleId}`);
+                      } else {
+                      alert('Role ID not found');
+                      }
+                    }}
+                    className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150 cursor-pointer"
+                    title="Edit"
+                    >
+                    <Edit className="w-4 h-4" />
+                  </button>
                 </div>
               ))}
             </div>
@@ -252,24 +268,24 @@ const handleDeleteCompany = async (idx: number) => {
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <div className="font-bold text-lg">Company</div>
-                <div className="text-sm text-gray-500">Company information</div>
+              <div className="font-bold text-lg">Company</div>
+              <div className="text-sm text-gray-500">Company information</div>
               </div>
+              <div className="flex items-center gap-2">
+              <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+                {companyItems.length} items
+              </span>
               {!isAddingCompany && (
-                <div className="flex items-center gap-2">
-                  <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
-                    {companyItems.length} items
-                  </span>
-                  <button
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer"
-                    onClick={() => setIsAddingCompany(true)}
-                    disabled={isAddingCompany}
-                  >
-                    <Icon icon="mdi:plus" width={18} />
-                    Add Company
-                  </button>
-                </div>
+                <button
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer"
+                onClick={() => setIsAddingCompany(true)}
+                disabled={isAddingCompany}
+                >
+                <Icon icon="mdi:plus" width={18} />
+                Add Company
+                </button>
               )}
+              </div>
             </div>
             <div className="space-y-2">
               {companyItems.map((company, idx) => (
@@ -308,7 +324,7 @@ const handleDeleteCompany = async (idx: number) => {
                           setEditingCompanyIdx(idx)
                           setEditingCompanyName(company.name || company.companyName || '')
                         }}
-                        className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150"
+                        className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150 cursor-pointer"
                         title="Edit"
                       >
                         <Edit className="w-4 h-4" />
@@ -318,7 +334,7 @@ const handleDeleteCompany = async (idx: number) => {
                           setDeleteItem(company)
                           setIsVisiblePopUpDelete(true)
                         }}
-                        className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150"
+                        className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150 cursor-pointer"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -486,7 +502,7 @@ const handleDeleteCompany = async (idx: number) => {
                         setEditingTagIdx(idx)
                         setEditingTagName(tag.name || tag.tagName || '')
                       }}
-                      className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150"
+                      className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150 cursor-pointer"
                       title="Edit"
                     >
                       <Edit className="w-4 h-4" />
@@ -496,7 +512,7 @@ const handleDeleteCompany = async (idx: number) => {
                         setDeleteItem(tag)
                         setIsVisiblePopUpDelete(true)
                       }}
-                      className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150"
+                      className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150 cursor-pointer"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />

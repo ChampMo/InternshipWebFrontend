@@ -222,42 +222,59 @@ useEffect(() => {
       <div className="mt-6 space-y-4">
         <div>
           <label className="font-medium">Summary of information</label>
-          <input
-            type="text"
+          <textarea
             placeholder="Enter Summary of information"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2  max-h-40 overflow-y-auto resize-none "
             value={summary}
             onChange={e => setSummary(e.target.value)}
           />
         </div>
         <div>
           <label className="font-medium">More details</label>
-          <input
-            type="text"
+          <textarea
             placeholder="Enter More details"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 max-h-40 overflow-y-auto resize-none "
             value={details}
-            onChange={e => setDetails(e.target.value)}
+            onChange={e => {
+              setDetails(e.target.value);
+              const el = e.target as HTMLTextAreaElement;
+              el.style.height = 'auto';
+              el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+            }}
+            style={{ minHeight: 40, maxHeight: 160 }}
+            rows={3}
           />
         </div>
         <div>
           <label className="font-medium">Impact of the attack</label>
-          <input
-            type="text"
+          <textarea
             placeholder="Enter Impact of the attack"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 max-h-40 overflow-y-auto resize-none"
             value={impact}
-            onChange={e => setImpact(e.target.value)}
+            onChange={e => {
+              setImpact(e.target.value);
+              const el = e.target as HTMLTextAreaElement;
+              el.style.height = 'auto';
+              el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+            }}
+            style={{ minHeight: 40, maxHeight: 160 }}
+            rows={3}
           />
         </div>
         <div>
           <label className="font-medium">Advice</label>
-          <input
-            type="text"
+          <textarea
             placeholder="Enter Advice"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 max-h-40 overflow-y-auto resize-none"
             value={advice}
-            onChange={e => setAdvice(e.target.value)}
+            onChange={e => {
+              setAdvice(e.target.value);
+              const el = e.target as HTMLTextAreaElement;
+              el.style.height = 'auto';
+              el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+            }}
+            style={{ minHeight: 40, maxHeight: 160 }}
+            rows={3}
           />
         </div>
       </div>
