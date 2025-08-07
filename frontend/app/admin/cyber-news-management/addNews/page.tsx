@@ -4,111 +4,127 @@ import React, { useEffect, useState } from 'react'
 import Sidebar from '@/src/components/sidebar'
 import { usePermissions } from '@/src/context/permission-context'
 import { Icon } from '@iconify/react'
-import Port from '@/port';
 import { useRouter } from 'next/navigation'
 import DefultButton from '@/src/components/ui/defultButton'
 import Dropdown from '@/src/components/ui/dropDown'
+import { GetTag } from '@/src/modules/tag'
+import { getNextNewsId, uploadNewsImage, createCyberNews } from '@/src/modules/cyber-news'
 
 export default function CyberNewsManagement() {
   const { permissions } = usePermissions()
   const router = useRouter()
   const [file, setFile] = useState<File | null>(null)
-  const [newsDetailadmin, setNewsDetailadmin] = useState<any[]>([]);
-  const [deatailIDadmin, setDetailIDadmin] = useState<string | null>(null); 
   const [name, setName] = useState('');
   const [tag, setTag] = useState('');
+  const [tags, setTags] = useState<any[]>([]);
   const [summary, setSummary] = useState('');
   const [details, setDetails] = useState('');
   const [impact, setImpact] = useState('');
   const [advice, setAdvice] = useState('');
   const [loading, setLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+  // ตรวจสอบสิทธิ์
   useEffect(() => {
     if (permissions && !permissions.admin) {
       window.location.href = '/'
     }
   }, [permissions])
 
-  // ดึงข่าวทั้งหมดเพื่อหา NewsID ที่มากที่สุด
-  const getNextNewsId = async () => {
-    try {
-      const res = await fetch(`${Port.BASE_URL}/cybernews`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      const data = await res.json();
-      // หา NewsID ที่มากที่สุด (แปลงเป็นตัวเลขก่อน)
-      const maxId = data.reduce((max: number, item: any) => {
-        const id = parseInt(item.NewsID, 10);
-        return !isNaN(id) && id > max ? id : max;
-      }, 0);
-      return (maxId + 1).toString();
-    } catch {
-      return "1";
-    }
-  };
+  // ดึง tag ทั้งหมด
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const tagList = await GetTag();
+        setTags(Array.isArray(tagList) ? tagList : []);
+      } catch (e) {
+        setTags([]);
+      }
+    };
+    fetchTags();
+  }, []);
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0])
+      const file = e.target.files[0];
+      setFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
-  }
-
-  const handleCreate = async () => {
-  // ตรวจสอบว่ากรอกครบทุกช่องหรือไม่
-  if (
-    !name.trim() ||
-    !tag.trim() ||
-    !summary.trim() ||
-    !details.trim() ||
-    !impact.trim() ||
-    !advice.trim()
-    // ถ้าต้องการบังคับอัปโหลดไฟล์ด้วย ให้เพิ่ม !file
-  ) {
-    alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
-    return;
-  }
-
-  setLoading(true);
-  const nextNewsId = await getNextNewsId();
-
-  const formData = {
-    title: name,
-    tag,
-    Summary: summary,
-    Detail: details,
-    Impact: impact,
-    Advice: advice,
-    NewsID: nextNewsId,
-    // เพิ่ม field อื่นๆ เช่น imageUrl, date, category ตามต้องการ
   };
 
-  try {
-    const res = await fetch(`${Port.BASE_URL}/cybernews`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
-    if (res.ok) {
-      router.push('/admin/cyber-news-management');
-    } else {
-      alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+  // สร้างข่าวใหม่
+  const handleCreate = async () => {
+    if (
+      !name.trim() ||
+      !tag.trim() ||
+      !summary.trim() ||
+      !details.trim() ||
+      !impact.trim() ||
+      !advice.trim() ||
+      !file
+    ) {
+      alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+      return;
     }
-  } catch (e) {
-    alert('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์');
-  }
-  setLoading(false);
-};
 
+    setLoading(true);
+    const nextNewsId = await getNextNewsId();
+
+    // อัปโหลดรูป
+    let imgUrl = '';
+    if (file) {
+      const uploadedImgUrl = await uploadNewsImage(file);
+      imgUrl = uploadedImgUrl ?? '';
+      if (!imgUrl) {
+        alert('อัปโหลดรูปไม่สำเร็จ');
+        setLoading(false);
+        return;
+      }
+    }
+
+    const formData = {
+      title: name,
+      tag,
+      Summary: summary,
+      Detail: details,
+      Impact: impact,
+      Advice: advice,
+      NewsID: nextNewsId,
+      imgUrl,
+    };
+
+    try {
+      const res = await createCyberNews(formData);
+      if (res && !res.error) {
+        router.push('/admin/cyber-news-management');
+      } else {
+        alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+      }
+    } catch (e) {
+      alert('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์');
+    }
+    setLoading(false);
+  };
   return (
-    <div className='w-full h-screen flex flex-col px-10 pt-10 overflow-auto'>
+ <div className='w-full h-screen flex flex-col px-10 pt-10 overflow-auto'>
       <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Cyber News Management</h1>
 
       <div className="flex flex-wrap gap-6">
         {/* Upload box */}
         <div className="border-2 border-dashed border-blue-300 rounded-md p-6 flex flex-col items-center justify-center w-80 h-60">
-          <Icon icon="mdi:image-outline" width={40} className="text-blue-400 mb-2" />
-          <p className="text-blue-400 mb-2">Drag and drop image file to upload</p>
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              alt="preview"
+              className="w-full h-36 object-cover rounded mb-2"
+            />
+          ) : (
+            <>
+              <Icon icon="mdi:image-outline" width={40} className="text-blue-400 mb-2" />
+              <p className="text-blue-400 mb-2">Drag and drop image file to upload</p>
+            </>
+          )}
           <input
             type="file"
             onChange={handleFileChange}
@@ -135,17 +151,18 @@ export default function CyberNewsManagement() {
           <div>
             <label className="font-medium">Tag</label>
             <select
-              className="w-full border border-blue-300 rounded-md px-3 py-2 bg-white text-gray-800"
+              className="w-full border border-blue-300 rounded-md px-3 py-2"
               value={tag}
               onChange={e => setTag(e.target.value)}
             >
-              <option value="">Select Tag</option>
-              <option value="Phishing">Phishing</option>
-              <option value="Malware">Malware</option>
-              <option value="Ransomware">Ransomware</option>
-              <option value="Data Breach">Data Breach</option>
-              <option value="DDoS">DDoS</option>
-              <option value="Other">Other</option>
+              <option value="" disabled hidden>
+                Select Tag
+              </option>
+              {tags.map((t) => (
+                <option key={t.tagId} value={t.tagName}>
+                  {t.tagName}
+                </option>
+              ))}
             </select>
           </div>
         </div>

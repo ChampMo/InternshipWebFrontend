@@ -9,6 +9,8 @@ import { useRouter, useParams } from 'next/navigation'
 import PopUp from '@/src/components/ui/popUp'
 import DefultButton from '@/src/components/ui/defultButton'
 import Dropdown from '@/src/components/ui/dropDown'
+import { GetTag } from '@/src/modules/tag'
+
 
 export default function CyberNewsManagement() {
   const { permissions } = usePermissions()
@@ -129,6 +131,30 @@ const handleDelete = async () => {
   }
   setLoading(false);
 };
+// Tag type
+type Tag = {
+  tagId: string;
+  tagName: string;
+};
+// State for tags
+const [tags, setTags] = useState<Tag[]>([]);
+
+// Fetch tags
+useEffect(() => {
+  const fetchTags = async () => {
+    try {
+      const tagList = await GetTag();
+      if (Array.isArray(tagList)) {
+        setTags(tagList);
+      } else {
+        setTags([]);
+      }
+    } catch (e) {
+      // handle error
+    }
+  };
+  fetchTags();
+}, []);
 
   return (
     <div className='w-full h-screen flex flex-col px-10 pt-10 overflow-auto'>
@@ -172,22 +198,23 @@ const handleDelete = async () => {
               onChange={e => setName(e.target.value)}
             />
           </div>
-          <div>
+            <div>
             <label className="font-medium">Tag</label>
             <select
-              className="w-full border border-blue-300 rounded-md px-3 py-2 bg-white text-gray-800"
+              className="w-full border border-blue-300 rounded-md px-3 py-2"
               value={tag}
               onChange={e => setTag(e.target.value)}
             >
-              <option value="">Select Tag</option>
-              <option value="Phishing">Phishing</option>
-              <option value="Malware">Malware</option>
-              <option value="Ransomware">Ransomware</option>
-              <option value="Data Breach">Data Breach</option>
-              <option value="DDoS">DDoS</option>
-              <option value="Other">Other</option>
+              <option value="" disabled hidden>
+                Select Tag
+              </option>
+              {tags.map((t) => (
+                <option key={t.tagId} value={t.tagName}>
+                  {t.tagName}
+                </option>
+              ))}
             </select>
-          </div>
+            </div>
         </div>
       </div>
 
