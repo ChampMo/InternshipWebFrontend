@@ -38,7 +38,7 @@ export default function CyberNewsDetailPage() {
   if (!newsDetail) return <div className="text-gray-500 text-center">ไม่พบข่าวสำหรับรหัสนี้</div>;
 
   return (
-      <div className="pt-10 flex flex-col items-center">
+      <div className="pt-10 flex flex-col items-center ">
         <div className="w-full max-w-6xl">
           <div className="flex gap-x-2 mb-2">
         <div

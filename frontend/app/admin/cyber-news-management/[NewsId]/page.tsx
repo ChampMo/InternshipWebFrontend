@@ -54,7 +54,7 @@ export default function CyberNewsManagement() {
           setDetails(data.Detail || '');
           setImpact(data.Impact || '');
           setAdvice(data.Advice || '');
-          setImageUrl(data.imageUrl || '');
+          setImageUrl(data.imgUrl || '');
           // setFile หรือ set รูปภาพถ้ามี
         }
       } catch (e) {
