@@ -34,9 +34,11 @@ export default function RootLayout({
           <PermissionsProvider>
           <div className='flex w-full h-screen'>
             <Sidebar/>
-            {children}
+            <div className='flex-1 overflow-auto'>
+              {children}
+            </div>
           </div>
-            
+
           </PermissionsProvider>
         </ToastProvider>
       </body>
