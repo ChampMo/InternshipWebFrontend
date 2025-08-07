@@ -226,7 +226,14 @@ useEffect(() => {
             placeholder="Enter Summary of information"
             className="w-full border border-blue-300 rounded-md px-3 py-2  max-h-40 overflow-y-auto resize-none "
             value={summary}
-            onChange={e => setSummary(e.target.value)}
+            onChange={e => {
+              setSummary(e.target.value);
+              const el = e.target as HTMLTextAreaElement;
+              el.style.height = 'auto';
+              el.style.height = Math.min(el.scrollHeight, 160) + 'px'; // 160px = max-h-40
+            }}
+            style={{ minHeight: 40, maxHeight: 160 }}
+            rows={3}
           />
         </div>
         <div>
