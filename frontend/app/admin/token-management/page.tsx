@@ -188,7 +188,7 @@ function TokenManagement() {
               'Not used': 'bg-gray-400',
             };
             return (
-              <div className={`inline-flex  items-center px-2.5 py-1 rounded-full text-sm gap-2 font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
+              <div className={`inline-flex text-nowrap items-center px-2.5 py-1 rounded-full text-sm gap-2 font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
                 <div className={`${iconColors[value] } w-3 h-3 rounded-full mb-1 shrink-0 `}/>
                 {value}
               </div>
