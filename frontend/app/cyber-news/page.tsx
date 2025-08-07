@@ -53,6 +53,17 @@ export default function CyberNews() {
 
   if (loading) return <div>Loading...</div>;
 
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    return date.toLocaleDateString('th-TH', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
   return (
       <div className='pt-10 px-10 w-full'>
         <div className='flex justify-between items-center mb-6'>
@@ -64,7 +75,7 @@ export default function CyberNews() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' placeholder='Search by date, title, tag'/>
-            </div>
+          </div>
         </div>
         <div className='border-t border-gray-300 mb-5 w-full '></div>
         <div className="flex flex-col gap-4">
@@ -73,10 +84,10 @@ export default function CyberNews() {
               <CyberNewsCard
                 key={news._id}
                 NewsID={news.NewsID}
-                imageUrl={news.imageUrl}
+                imageUrl={news.imgUrl}
                 title={news.title}
-                date={news.date}
-                category={news.category}
+                date={formatDate(news.createdAt)}
+                category={news.tag}
               />
             ))
           ) : (
