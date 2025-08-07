@@ -31,14 +31,14 @@ export const PutCompany = async (
   return result
 }
 export const PostCompany = async (
-  data: { companyName: string }
+  data: { companyName: string; companyKey: string  }
 ): Promise<{ message: string }> => {
   const response = await fetch(`${Port.BASE_URL}/user/company`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ companyName: data.companyName })
+    body: JSON.stringify({ companyName: data.companyName, companyKey: data.companyKey })
   });
 
   const result = await response.json();

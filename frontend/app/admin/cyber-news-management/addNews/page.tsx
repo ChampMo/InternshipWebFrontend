@@ -143,7 +143,7 @@ export default function CyberNewsManagement() {
             <input
               type="text"
               placeholder="Enter Name"
-              className="w-full border border-blue-300 rounded-md px-3 py-2"
+              className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
               value={name}
               onChange={e => setName(e.target.value)}
             />
@@ -151,7 +151,7 @@ export default function CyberNewsManagement() {
           <div>
             <label className="font-medium">Tag</label>
             <select
-              className="w-full border border-blue-300 rounded-md px-3 py-2"
+              className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
               value={tag}
               onChange={e => setTag(e.target.value)}
             >
@@ -175,7 +175,7 @@ export default function CyberNewsManagement() {
           <input
             type="text"
             placeholder="Enter Summary of information"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
             value={summary}
             onChange={e => setSummary(e.target.value)}
           />
@@ -185,7 +185,7 @@ export default function CyberNewsManagement() {
           <input
             type="text"
             placeholder="Enter More details"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
             value={details}
             onChange={e => setDetails(e.target.value)}
           />
@@ -195,7 +195,7 @@ export default function CyberNewsManagement() {
           <input
             type="text"
             placeholder="Enter Impact of the attack"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
             value={impact}
             onChange={e => setImpact(e.target.value)}
           />
@@ -205,7 +205,7 @@ export default function CyberNewsManagement() {
           <input
             type="text"
             placeholder="Enter Advice"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
             value={advice}
             onChange={e => setAdvice(e.target.value)}
           />

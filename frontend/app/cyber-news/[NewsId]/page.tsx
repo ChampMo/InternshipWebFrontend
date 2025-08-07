@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Port from '@/port';
 import { Icon } from '@iconify/react';
-import Sidebar from '@/src/components/sidebar';
 
 export default function CyberNewsDetailPage() {
   const params = useParams();
@@ -33,9 +32,7 @@ export default function CyberNewsDetailPage() {
     fetchNews();
   }, [NewsId]);
 
-  // GUARD
-  if (loading) return <div>Loading...</div>;
-  if (!newsDetail) return <div className="text-gray-500 text-center">ไม่พบข่าวสำหรับรหัสนี้</div>;
+   if (!newsDetail) return null;
 
   // Format date to dd/mm/yyyy (พ.ศ.)
   const formatDate = (dateString: string) => {

@@ -22,6 +22,7 @@ function Settings() {
   const router = useRouter()
   const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = React.useState(false)
   const [deleteItem, setDeleteItem] = React.useState<any>(null)
+  const [newCompanyKey, setNewCompanyKey] = React.useState('');
   useEffect(() => {
     if (permissions && !permissions.admin) {
       window.location.href = '/'
@@ -80,16 +81,17 @@ function Settings() {
   const [newCompany, setNewCompany] = React.useState('')
   const [isCompanyLoading, setIsCompanyLoading] = React.useState(false)
   const handleAddCompany = async () => {
-    if (!newCompany.trim()) return
+    if (!newCompany.trim() || !newCompanyKey.trim()) return
     setIsCompanyLoading(true)
     try {
-      const result = await PostCompany({ companyName: newCompany })
+      const result = await PostCompany({ companyName: newCompany, companyKey: newCompanyKey })
       if (result) {
         const companyResult = await GetCompany()
         if (companyResult && Array.isArray(companyResult)) {
           setCompanyItems(companyResult)
         }
         setNewCompany('')
+        setNewCompanyKey('')
         setIsAddingCompany(false)
       }
     } catch (e) {
@@ -275,14 +277,14 @@ const handleDeleteCompany = async (idx: number) => {
               <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
                 {companyItems.length} items
               </span>
-              {!isAddingCompany && (
+              {!isAddingCompany && editingCompanyIdx === null && (
                 <button
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer"
-                onClick={() => setIsAddingCompany(true)}
-                disabled={isAddingCompany}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer"
+                  onClick={() => setIsAddingCompany(true)}
+                  disabled={isAddingCompany}
                 >
-                <Icon icon="mdi:plus" width={18} />
-                Add Company
+                  <Icon icon="mdi:plus" width={18} />
+                  Add Company
                 </button>
               )}
               </div>
@@ -317,12 +319,20 @@ const handleDeleteCompany = async (idx: number) => {
                   ) : (
                     <>
                       <span className="py-1 flex-1 text-gray-800 font-semibold">
-                      {company.name || company.companyName || '-'}
+                        {company.name || company.companyName || '-'}
+                        {company.companyKey && (
+                          <span className="ml-3 px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs font-mono font-semibold">
+                            {company.companyKey}
+                          </span>
+                        )}
                       </span>
                       <button
                         onClick={() => {
                           setEditingCompanyIdx(idx)
                           setEditingCompanyName(company.name || company.companyName || '')
+                          setIsAddingCompany(false)
+                          setNewCompany('')
+                          setNewCompanyKey('')
                         }}
                         className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150 cursor-pointer"
                         title="Edit"
@@ -343,7 +353,7 @@ const handleDeleteCompany = async (idx: number) => {
                   )}
                 </div>
               ))}
-              {isAddingCompany && (
+              {isAddingCompany && editingCompanyIdx === null && (
                 <div className="flex items-center mt-2">
                   <input
                     type="text"
@@ -352,6 +362,14 @@ const handleDeleteCompany = async (idx: number) => {
                     value={newCompany}
                     onChange={e => setNewCompany(e.target.value)}
                     autoFocus
+                    disabled={isCompanyLoading}
+                  />
+                  <input
+                    type="text"
+                    className="py-2 ml-2 w-48 border border-blue-300 rounded-md px-3 outline-none"
+                    placeholder="Key"
+                    value={newCompanyKey}
+                    onChange={e => setNewCompanyKey(e.target.value)}
                     disabled={isCompanyLoading}
                   />
                   <button
@@ -366,6 +384,7 @@ const handleDeleteCompany = async (idx: number) => {
                     onClick={() => {
                       setIsAddingCompany(false)
                       setNewCompany('')
+                      setNewCompanyKey('')
                     }}
                     disabled={isCompanyLoading}
                   >
@@ -450,7 +469,7 @@ const handleDeleteCompany = async (idx: number) => {
                 <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
                   {tagItems.length} items
                 </span>
-                {!isAddingTag && (
+                {!isAddingTag && editingTagIdx === null && (
                   <button
                     className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer"
                     onClick={() => setIsAddingTag(true)}
@@ -486,6 +505,8 @@ const handleDeleteCompany = async (idx: number) => {
                       onClick={() => {
                         setEditingTagIdx(null)
                         setEditingTagName('')
+                        setIsAddingTag(false)   // เพิ่มบรรทัดนี้
+                        setNewTag('') 
                       }}
                       disabled={isTagLoading}
                     >
@@ -521,7 +542,7 @@ const handleDeleteCompany = async (idx: number) => {
                 )}
               </div>
             ))}
-              {isAddingTag && (
+              {isAddingTag && editingTagIdx === null && (
                 <div className="flex items-center mt-2">
                   <input
                     type="text"

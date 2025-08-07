@@ -51,7 +51,6 @@ export default function CyberNews() {
     setFilteredNews(filtered);
   }, [searchTerm, newsDetail]);
 
-  if (loading) return <div>Loading...</div>;
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';

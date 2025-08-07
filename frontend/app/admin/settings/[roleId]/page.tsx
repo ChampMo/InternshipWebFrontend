@@ -2,9 +2,21 @@
 
 import React, { useState, useEffect } from 'react'
 import { Icon } from '@iconify/react'
-import { PostRole, GetRole, GetRoleById, PutRole } from '@/src/modules/role'
+import { PostRole, GetRole, GetRoleById, PutRole, DeleteRole } from '@/src/modules/role'
 import { useRouter, useParams } from 'next/navigation'
 import router from 'next/dist/shared/lib/router/router'
+import { on } from 'events';
+import PopUp from '@/src/components/ui/popUp'
+
+// Define RoleData type
+type RoleData = {
+  roleName: string
+  cyberNews: boolean
+  jira: boolean
+  ti: boolean
+  admin: boolean
+}
+
 
 const PERMISSIONS = [
   {
@@ -33,6 +45,7 @@ export default function AddRolePage() {
     const router = useRouter()
     const params = useParams()
     const roleId = params.roleId as string
+    const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = useState(false);
 
     const [roleName, setRoleName] = useState('')
     const [permissions, setPermissions] = useState({
@@ -48,49 +61,79 @@ export default function AddRolePage() {
     setPermissions(prev => ({ ...prev, [key]: !prev[key as keyof typeof prev] }))
   }
 
-useEffect(() => {
+  useEffect(() => {
     if (!roleId) return;
     const fetchRoleDetail = async () => {
-        try {
-            const res = await GetRoleById(roleId);
-            if (res && typeof res === 'object') {
-                setRoleName(res.name || '');
-                setPermissions({
-                    cyberNews: !!res.cyberNews,
-                    jira: !!res.jira,
-                    ti: !!res.ti,
-                    admin: !!res.admin
-                });
-            } else {
-                setRoleName('');
-                setPermissions({
-                    cyberNews: false,
-                    jira: false,
-                    ti: false,
-                    admin: false
-                });
-            }
-        } catch (e) {
-            // handle error
+      try {
+        const res = await GetRoleById(roleId);
+        if (res && typeof res === 'object' && res.data) {
+          setRoleName(res.data.roleName || '');
+          setPermissions({
+            cyberNews: !!res.data.cyberNews,
+            jira: !!res.data.jira,
+            ti: !!res.data.ti,
+            admin: !!res.data.admin
+          });
+        } else {
+          setRoleName('');
+          setPermissions({
+            cyberNews: false,
+            jira: false,
+            ti: false,
+            admin: false
+          });
         }
+      } catch (e) {
+        setRoleName('');
+        setPermissions({
+          cyberNews: false,
+          jira: false,
+          ti: false,
+          admin: false
+        });
+      }
     };
     fetchRoleDetail();
-}, [roleId]);
+  }, [roleId]);
 
-const handleSave = async () => {
-    try {
-        await PutRole(roleId, {
-            name: roleName,
-            ...permissions
-        })
-        router.push('/admin/settings')
-    } catch (error) {
-        // handle error if needed
+  const handleSave = async () => {
+    // Validate role name
+    if (!roleName.trim()) {
+      alert('Please enter a role name.');
+      return;
     }
-}
+
+    try {
+      await PutRole(roleId, {
+        roleName: roleName,
+        ...permissions
+      });
+      router.push('/admin/settings');
+    } catch (error) {
+      alert('Failed to update role.');
+    }
+  };
+
+  const handleCancel = () => {
+    router.push('/admin/settings');
+  };
 
 
+  const handleDelete = async () => {
+    if (!roleId) return;
+    setIsVisiblePopUpDelete(true);
+  };
 
+  const handleConfirmDelete = async () => {
+    if (!roleId) return;
+
+    try {
+      await DeleteRole(roleId);
+      router.push('/admin/settings');
+    } catch (error) {
+      alert('Failed to delete role.');
+    }
+  };
 
   return (
     <div className="w-full flex flex-col overflow-auto h-screen px-10">
@@ -154,14 +197,50 @@ const handleSave = async () => {
           <div className="flex justify-end gap-4 mt-10">
             <button
               className="px-8 py-2 border border-red-500 text-red-500 rounded-md hover:bg-red-50 transition-colors duration-200"
+              onClick={handleDelete} // เปิด PopUp
             >
-              Cancel
+              Delete
             </button>
+           <PopUp
+              isVisible={isVisiblePopUpDelete}
+              setIsVisible={setIsVisiblePopUpDelete}
+              onClose={() => setIsVisiblePopUpDelete(false)}
+            >
+              <div className="w-[400px] rounded-t-xl bg-red-700 flex flex-col items-start px-6 pt-6 pb-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <Icon icon="mdi:delete" width="28" height="28" className="text-white" />
+                  <span className="text-2xl font-bold text-white">Delete Role</span>
+                </div>
+                <span className="text-white text-base mb-2">
+                  Are you sure you want to delete this role?
+                </span>
+              </div>
+              <div className="bg-gray-50 px-6 py-4 rounded-b-xl">
+                <div className="mb-4">
+                  <span className="text-gray-600 font-medium">Role Name:</span>
+                  <span className="ml-3 px-3 py-1 bg-gray-200 rounded text-gray-700 font-semibold">{roleName}</span>
+                </div>
+                <div className="flex justify-end gap-4">
+                  <button
+                    className="px-8 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-colors duration-200"
+                    onClick={() => setIsVisiblePopUpDelete(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="px-8 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors duration-200"
+                    onClick={handleConfirmDelete}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </PopUp>
             <button
               className="px-8 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
               onClick={handleSave}
             >
-              Save
+              Update
             </button>
           </div>
         </div>
