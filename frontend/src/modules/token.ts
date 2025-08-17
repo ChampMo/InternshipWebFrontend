@@ -1,7 +1,7 @@
 import Port from '@/port';
 
 export const CreateToken = async (
-    data: { name: string, token: string, type: string }
+    data: { name: string, token: string, type: string, expiryDate: string }
   ): Promise<{ message: string }> => {
     const response = await fetch(`${Port.BASE_URL}/token`, {
       method: 'POST',
@@ -29,7 +29,7 @@ export const GetToken = async (
   }
 
 export const UpdateToken = async (
-    data: { tokenId: string | undefined, name: string | undefined, type: string | undefined }
+    data: { tokenId: string | undefined, name: string | undefined, type: string | undefined, expiryDate: string | undefined }
   ): Promise<{ message: string }> => {
     const response = await fetch(`${Port.BASE_URL}/token`, {
       method: 'PUT',

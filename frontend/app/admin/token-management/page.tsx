@@ -11,8 +11,10 @@ import DefultButton from '@/src/components/ui/defultButton'
 import { useToast } from '@/src/context/toast-context'
 import PopUp from '@/src/components/ui/popUp'
 import { ClipLoader } from 'react-spinners'
+import Calendar from 'react-calendar'
 import GlareHover from '@/src/lib/GlareHover/GlareHover'
 import { CreateToken, GetToken, UpdateToken, DeleteToken, UpdateTokenInuse } from '@/src/modules/token';
+import 'react-calendar/dist/Calendar.css';
 
 interface Header {
     key: string;
@@ -32,6 +34,7 @@ interface TokenItem {
   token: string;
   type: string;
   updatedAt?: string;
+  expiryDate?: string; // Added expiryDate property
 }
 
 function TokenManagement() {
@@ -49,6 +52,7 @@ function TokenManagement() {
     id: 0,
     name: '',
     token: '',
+    expiryDate: '',
     type: '',
   })
   const [createPopUp, setCreatePopUp] = useState(false)
@@ -69,6 +73,7 @@ function TokenManagement() {
   const [loading, setLoading] = useState(false)
   const { notifySuccess, notifyError, notifyInfo } = useToast()
   const [dataToken, setDataToken] = useState<TokenItem[]>([])
+  const [showCalendar, setShowCalendar] = useState(false)
 
   useEffect(() => {
       if (permissions && !permissions.admin) {
@@ -88,16 +93,76 @@ function TokenManagement() {
             status: item.status?'In use': 'Not used',
             token: item.token,
             type: item.type,
+            expiryDate: item.expiryDate ? new Date(item.expiryDate).toLocaleDateString('en-GB') : 'N/A', // Format expiry date
             updatedAt: new Date(item.updatedAt).toLocaleDateString()
           })))
-          setJiraTokens(result.filter((item: TokenItem) => item.type === 'Jira').map((item: TokenItem) => ({
-            tokenId: item.tokenId,
-            tokenName: item.name
-          })))
-          setTiTokens(result.filter((item: TokenItem) => item.type === 'TI').map((item: TokenItem) => ({
-            tokenId: item.tokenId,
-            tokenName: item.name
-          })))
+          // แปลงค่าอะไรก็ได้ -> Date (local) เฉพาะวันที่ (00:00:00)
+          const toLocalDateOnly = (input: unknown): Date | null => {
+            if (!input) return null;
+
+            // ถ้าเป็น Date อยู่แล้ว
+            if (input instanceof Date && !isNaN(input.getTime())) {
+              return new Date(input.getFullYear(), input.getMonth(), input.getDate());
+            }
+
+            if (typeof input === 'string') {
+              const s = input.trim();
+
+              // กรณี dd/mm/yyyy
+              if (s.includes('/')) {
+                const [dd, mm, yyyy] = s.split('/').map(Number);
+                if (!dd || !mm || !yyyy) return null;
+                return new Date(yyyy, mm - 1, dd);
+              }
+
+              // กรณี ISO/อื่น ๆ ให้ปล่อยให้ Date parse
+              const d = new Date(s);
+              if (!isNaN(d.getTime())) {
+                return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+              }
+              return null;
+            }
+
+            return null;
+          };
+
+          const today = (() => {
+            const t = new Date();
+            return new Date(t.getFullYear(), t.getMonth(), t.getDate());
+          })();
+
+          const isActive = (item: TokenItem) => {
+            if (!item.expiryDate) return true; // ถ้าไม่มีวันหมดอายุ ให้ผ่าน (ปรับเป็น false ถ้าต้องการตัดทิ้ง)
+            const expiry = toLocalDateOnly(item.expiryDate);
+            const active = !!expiry && expiry >= today;
+
+            console.log(
+              'item.expiryDate',
+              item.name,
+              item.expiryDate,
+              '-> parsed',
+              expiry,
+              '-- today',
+              today,
+              'isActive',
+              active
+            );
+
+            return active;
+          };
+
+          setJiraTokens(
+            result
+              .filter((item: TokenItem) => item.type === 'Jira' && isActive(item))
+              .map((item: TokenItem) => ({ tokenId: item.tokenId, tokenName: item.name, expiryDate: item.expiryDate }))
+          );
+
+          setTiTokens(
+            result
+              .filter((item: TokenItem) => item.type === 'TI' && isActive(item))
+              .map((item: TokenItem) => ({ tokenId: item.tokenId, tokenName: item.name, expiryDate: item.expiryDate }))
+          );
+
           const JiraToken = result.find((item: TokenItem) => (item.type === 'Jira' && item.status))?.name || ''
           const TiToken = result.find((item: TokenItem) => (item.type === 'TI' && item.status))?.name || ''
           setJiraTokenSelected(JiraToken)
@@ -114,6 +179,7 @@ function TokenManagement() {
 
     fetchTokens()
   }, [loading])
+  console.log('dataToken', dataToken)
 
   const handleSaveToken = async () => {
 
@@ -200,9 +266,9 @@ function TokenManagement() {
           key: 'token',
           sortable: true,
           render: (value) => (
-            <span className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-sm">
+            <div className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-sm w-fit max-w-96 break-words">
               {value}
-            </span>
+            </div>
           )
         },
         { 
@@ -220,7 +286,38 @@ function TokenManagement() {
               </div>
             );
           }
-        },
+        },{
+          label: 'Expiry Date',
+          key: 'expiryDate',
+          sortable: true,
+          render: (value: string) => {
+            // แปลง dd/mm/yyyy → Date
+            const [day, month, year] = value.split('/');
+            const expiry = new Date(Number(year), Number(month) - 1, Number(day));
+        
+            // เอาเวลาของ today เป็น 00:00:00 เพื่อเปรียบเทียบแค่วันที่
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+        
+            const isExpired = expiry < today; // เลยวันแล้ว
+            const isToday = expiry.getTime() === today.getTime(); // วันเดียวกัน
+        
+            return (
+              <span
+                className={`text-sm px-2 py-1 rounded ${
+                  isExpired
+                    ? 'text-red-500 font-semibold'
+                    : isToday
+                    ? 'text-orange-500 font-semibold'
+                    : 'text-gray-700'
+                }`}
+              >
+                {value}
+              </span>
+            );
+          },
+        }
+        ,
         { 
           label: 'Last Updated', 
           key: 'updatedAt',
@@ -236,6 +333,7 @@ function TokenManagement() {
 
 
   const handleEdit = (item: any, index: number) => {
+    console.log('item edit',item)
     setEditToken(item);
     setEditTokenOld(item);
     setEditPopUp(true);
@@ -252,7 +350,7 @@ function TokenManagement() {
     setLoading(true);
     try {
       // Simulate API call to create a new token
-      const result = await CreateToken({ name:createToken.name, token: createToken.token, type: createToken.type })
+      const result = await CreateToken({ name:createToken.name, token: createToken.token, type: createToken.type, expiryDate: createToken.expiryDate || '' });
       if (result && result.message === 'This token is already in use.') {
         notifyError('This token is already in use.')
       }else if (result && result.message === 'Token created successfully') {
@@ -262,7 +360,8 @@ function TokenManagement() {
           id: 0,
           name: '',
           token: '',
-          type: ''
+          expiryDate: '',
+          type: '',
         });
       }
       
@@ -276,7 +375,14 @@ function TokenManagement() {
   const handleEditAccount = async () => {
     setLoading(true);
     try {
-      const result = await UpdateToken({ tokenId: editToken?.tokenId, name: editToken?.name, type: editToken?.type });
+      const [day, month, year] = (editToken?.expiryDate || '').split('/');
+      const formattedExpiryDate = new Date(Number(year), Number(month) - 1, Number(day)).toISOString();
+      const result = await UpdateToken({ 
+        tokenId: editToken?.tokenId, 
+        name: editToken?.name, 
+        type: editToken?.type, 
+        expiryDate: formattedExpiryDate 
+      });
       if (result && result.message === 'Token updated successfully') {
         notifySuccess('Token updated successfully');
         setEditPopUp(false);
@@ -314,7 +420,7 @@ function TokenManagement() {
 
   const isDifferent = (item1: TokenItem | null, item2: TokenItem | null): boolean => {
     if (!item1 || !item2) return false;
-    return item1.type !== item2.type || item1.name !== item2.name;
+    return item1.type !== item2.type || item1.name !== item2.name || item1.expiryDate !== item2.expiryDate;
   };
 
   const inuseIsDifferent = (item1: string, item2: string): boolean => {
@@ -325,6 +431,31 @@ function TokenManagement() {
     return inUseItem ? item.includes(inUseItem) : false;
   }
 
+  const isExpiry = (item: string): boolean => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // reset เวลาเป็น 00:00:00
+  
+    let expiryDate: Date;
+  
+    if (item.includes('/')) {
+      // parse dd/mm/yyyy
+      const [dd, mm, yyyy] = item.split('/').map(Number);
+      expiryDate = new Date(yyyy, mm - 1, dd);
+    } else {
+      // fallback ISO string หรือ Date string
+      expiryDate = new Date(item);
+    }
+  
+    expiryDate.setHours(0, 0, 0, 0); // reset เวลาเป็น 00:00:00
+  
+    console.log('item', item,'expiryDate', expiryDate, 'today', today);
+  
+    return expiryDate < today;
+  };
+  
+
+
+
 
   return (
       <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
@@ -333,26 +464,34 @@ function TokenManagement() {
         <div className='gap-6 flex flex-col'>
           <div className='flex gap-4 lg:items-center lg:flex-row flex-col'>
             <div className='text-lg font-bold text-gray-600 w-40 shrink-0'>Jira Token</div>
-            <div className='flex lg:w-100 z-40 w-full lg:flex-row flex-col justify-between items-center'>
+            <div className='flex lg:w-100 w-full lg:flex-row flex-col justify-between items-center relative'>
               <div className={` bg-white rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'lg:w-42 pr-2 pl-4 border opacity-100 h-10' : 'lg:w-0 opacity-0 h-0'}`} >
                 {inUseTokenJira}
               </div>
+              {isExpiry(dataToken.find(item => item.type==='Jira'&& item.name === jiraTokenSelected)?.expiryDate || '')
+                && <div className={`text-sm text-red-500 absolute top-10 right-0 font-semibold z-10`}>This Jira token is expired.
+              </div>}
               <Icon icon="ep:right" width="30" height="30" className={`text-primary1 duration-500 lg:rotate-0 rotate-90 ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira)? 'w-10 h-10 lg:my-0 my-3' : 'w-0 h-0'}`} />
-              <div className={`duration-500 w-full ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'lg:w-42' : 'lg:w-100'}`}>
-                <Dropdown items={jiraTokens.map(item => item.tokenName)} placeholder='Select Token' setValue={setJiraTokenSelected} value={jiraTokenSelected} haveIcon={false}/>
+              <div className={`duration-500 w-full z-40 ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'lg:w-42' : 'lg:w-100'}`}>
+                <Dropdown items={jiraTokens.map(item => item.tokenName)} placeholder='Select Token' setValue={setJiraTokenSelected} value={jiraTokenSelected} haveIcon={false} isExpired={isExpiry(dataToken.find(item => item.type==='Jira'&& item.name === jiraTokenSelected)?.expiryDate || '')}/>
               </div>
+              
+
             </div>
           </div>
           <div className='flex gap-4 lg:items-center lg:flex-row flex-col'>
             <div className='text-lg font-bold text-gray-600 w-40 shrink-0'>TI Token</div>
-            <div className='flex lg:w-100 z-30 w-full lg:flex-row flex-col justify-between items-center'>
+            <div className='flex lg:w-100 w-full lg:flex-row flex-col justify-between items-center relative'>
               <div className={` bg-white rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'lg:w-42 pr-2 pl-4 border opacity-100 h-10' : 'lg:w-0 opacity-0 h-0'}`} >
                 {inUseTokenTI}
               </div>
               <Icon icon="ep:right" width="30" height="30" className={`text-primary1 duration-500 lg:rotate-0 rotate-90 ${inuseIsDifferent(tiTokenSelected,inUseTokenTI)? 'w-10 h-10 lg:my-0 my-3' : 'w-0 h-0'}`} />
-              <div className={`duration-500 w-full ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'lg:w-42' : 'lg:w-100'}`}>
-              <Dropdown items={tiTokens.map(item => item.tokenName)} placeholder='Select Token' setValue={setTiTokenSelected} value={tiTokenSelected} haveIcon={false}/>
+              <div className={`duration-500 w-full z-30 ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'lg:w-42' : 'lg:w-100'}`}>
+              <Dropdown items={tiTokens.map(item => item.tokenName)} placeholder='Select Token' setValue={setTiTokenSelected} value={tiTokenSelected} haveIcon={false} isExpired={isExpiry(dataToken.find(item => item.type==='TI'&& item.name === tiTokenSelected)?.expiryDate || '')}/>
               </div>
+              {isExpiry(dataToken.find(item => item.type==='TI'&& item.name === tiTokenSelected)?.expiryDate || '')
+                && <div className={`text-sm text-red-500 absolute top-10 right-0 font-semibold`}>This TI token is expired.
+              </div>}
             </div>
           </div>
         </div>
@@ -401,7 +540,8 @@ function TokenManagement() {
           id: 0,
           name: '',
           token: '',
-          type: ''
+          expiryDate: '',
+          type: '',
           })}}>
         <div>
           <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-8'>
@@ -432,6 +572,49 @@ function TokenManagement() {
                   }
                   value={createToken?.type === '' ? '' : (createToken?.type as string) || ''}
                   haveIcon={false}/>
+            </div>
+            <div className=' mt-6 flex flex-col'>
+              <div className='text-sm text-gray-500 flex items-end gap-2'>
+                <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
+                Expire date
+              </div>
+                <div className='relative mt-3 rounded-xl cursor-pointer'>
+                  <input 
+                  type='text'
+                  value={createToken?.expiryDate ? new Date(createToken.expiryDate).toLocaleDateString('en-GB') : ''}
+                  readOnly
+                  className={` border bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${createToken?.expiryDate?'border-primary1':'border-gray-300'}`}
+                  placeholder='Select date'
+                  onClick={() => setShowCalendar(true)}
+                  />
+                  <Icon icon="mdi:calendar" width="24" height="24" className={`text-gray-400 absolute top-2 right-2 ${createToken?.expiryDate?'text-primary1':'text-gray-300'}`} onClick={() => setShowCalendar(true)} />
+                  {showCalendar && (
+                  <div
+                  className="absolute top-12 z-50 w-80"
+                  onClick={(e) => e.stopPropagation()} // Prevent click propagation to parent elements
+                  >
+                  <div className="rounded-2xl border border-gray-200 bg-white shadow-xl p-3 animate-fade-in">
+                    <Calendar
+                    className="custom-calendar"
+                    onChange={(e) => {
+                    if (e && e instanceof Date) {
+                    const adjustedDate = new Date(e.getTime() - e.getTimezoneOffset() * 60000); // Adjust for timezone offset
+                    setCreateToken({ ...createToken, expiryDate: adjustedDate.toISOString().split('T')[0] });
+                    }
+                    setShowCalendar(false);
+                    }}
+                    value={new Date(createToken?.expiryDate || Date.now())}
+                    />
+                  </div>
+                  </div>
+                  )}
+                  {showCalendar && (
+                  <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowCalendar(false)} // Close calendar when clicking outside
+                  />
+                  )}
+                </div>
             </div>
             <div className=' mt-6 flex flex-col'>
               <div className='text-sm text-gray-500 flex justify-between relative'>
@@ -467,13 +650,14 @@ function TokenManagement() {
                   id: 0,
                   name: '',
                   token: '',
-                  type: ''
+                  expiryDate: '',
+                  type: '',
                   })}}>
                 Cancel
               </div>
               <DefultButton 
-              onClick={createToken.name !== '' && createToken.type !== '' && createToken.token !== '' && !isAlreadyInUse( dataToken.map(token => token.name), createToken.name ) && !isAlreadyInUse( dataToken.map(token => token.token), createToken.token ) ? handleCreateToken : () => {}} 
-              active={createToken.name !== '' && createToken.type !== '' && createToken.token !== '' && !isAlreadyInUse( dataToken.map(token => token.name), createToken.name ) && !isAlreadyInUse( dataToken.map(token => token.token), createToken.token )} loading={loading}>
+              onClick={createToken.name !== '' && createToken.type !== '' && createToken.token !== '' && createToken.expiryDate !== '' && !isAlreadyInUse( dataToken.map(token => token.name), createToken.name ) && !isAlreadyInUse( dataToken.map(token => token.token), createToken.token ) ? handleCreateToken : () => {}} 
+              active={createToken.name !== '' && createToken.type !== '' && createToken.token !== '' && createToken.expiryDate !== '' && !isAlreadyInUse( dataToken.map(token => token.name), createToken.name ) && !isAlreadyInUse( dataToken.map(token => token.token), createToken.token )} loading={loading}>
                 Create token
               </DefultButton>
             </div>
@@ -493,7 +677,7 @@ function TokenManagement() {
               <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
                 <div className='flex justify-between items-center'>
                   <div className='text-sm text-gray-500'>Token</div>
-                  <div className='text-sm py-1 px-3 rounded-lg bg-gray-300'>{editToken?.token}</div>
+                  <div className='text-sm py-1 px-3 rounded-lg bg-gray-300 max-w-70 break-words line-clamp-2'>{editToken?.token}</div>
                 </div>
                 <div className='flex justify-between items-center'>
                   <div className='text-sm text-gray-500'>Last Updated:</div>
@@ -522,6 +706,58 @@ function TokenManagement() {
                   haveIcon={false}
                 />
                 </div>
+                <div className=' mt-6 flex flex-col'>
+              <div className='text-sm text-gray-500 flex items-end gap-2'>
+                <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
+                Expire date
+              </div>
+                <div className='relative mt-3 rounded-xl cursor-pointer'>
+                  <input 
+                  type='text'
+                  value={editToken?.expiryDate ? editToken.expiryDate : ''}
+                  readOnly
+                  className={` border bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${editToken?.expiryDate ? 'border-primary1' : 'border-gray-300'}`}
+                  placeholder='Select date'
+                  onClick={() => setShowCalendar(true)}
+                  />
+                  <Icon icon="mdi:calendar" width="24" height="24" className={`text-gray-400 absolute top-2 right-2 ${editToken?.expiryDate ? 'text-primary1' : 'text-gray-300'}`} onClick={() => setShowCalendar(true)} />
+                    {showCalendar && (
+                    <div
+                    className="absolute bottom-12 z-50 w-80"
+                    onClick={(e) => e.stopPropagation()} // Prevent click propagation to parent elements
+                    >
+                    <div className="rounded-2xl border border-gray-200 bg-white shadow-xl p-3 animate-fade-in">
+                    <Calendar
+                    className="custom-calendar"
+                    onChange={(e) => {
+                    if (e && e instanceof Date) {
+                    const day = e.getDate().toString().padStart(2, '0');
+                    const month = (e.getMonth() + 1).toString().padStart(2, '0');
+                    const year = e.getFullYear();
+                    const formattedDate = `${day}/${month}/${year}`;
+                    setEditToken(editToken ? { ...editToken, expiryDate: formattedDate } : null);
+                    }
+                    setShowCalendar(false);
+                    }}
+                    value={(() => {
+                    if (editToken?.expiryDate && editToken.expiryDate !== 'N/A') {
+                      const [day, month, year] = editToken.expiryDate.split('/');
+                      return new Date(Number(year), Number(month) - 1, Number(day));
+                    }
+                    return new Date();
+                    })()}
+                    />
+                    </div>
+                    </div>
+                    )}
+                  {showCalendar && (
+                  <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowCalendar(false)} // Close calendar when clicking outside
+                  />
+                  )}
+                </div>
+            </div>
               <div className='border-b border-gray-200 mt-14 mb-5'/>
               <div className='flex gap-5'>
                 <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setEditPopUp(false)}}>

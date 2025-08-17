@@ -10,6 +10,7 @@ interface DropdownProps {
     setValue?: (value: string) => void
     value?: string
     haveIcon?: boolean
+    isExpired?: boolean
 }
 
 export default function Dropdown({
@@ -17,7 +18,8 @@ export default function Dropdown({
     placeholder,
     setValue,
     value,
-    haveIcon
+    haveIcon,
+    isExpired
 }: DropdownProps) {
 
     const [state, setState] = useState(false)
@@ -63,8 +65,8 @@ export default function Dropdown({
             </div>
             <div 
             onClick={()=>{setState(!state)}}
-            className={`w-full h-10 border bg-white rounded-xl flex justify-between items-center pr-2 pl-4 cursor-pointer relative ${state ?'border-primary1':value === ''?'border-gray-300':'border-primary1'} ${haveIcon?'pl-10':''} ${value !== '' ? '':'text-gray-400'}`} >
-                {value !== '' ? value : placeholder} <Icon icon="mingcute:down-fill" width="24" height="24" className={state ?'text-primary1':value === ''?'text-gray-400':'text-primary1'} />
+            className={`w-full h-10 border bg-white rounded-xl flex justify-between items-center pr-2 pl-4 cursor-pointer relative ${isExpired?'border-red-500 text-red-500':state ?'border-primary1':value === ''?'border-gray-300':'border-primary1'} ${haveIcon?'pl-10':''} ${value !== '' ? '':'text-gray-400'}`} >
+                {value !== '' ? value : placeholder} <Icon icon="mingcute:down-fill" width="24" height="24" className={isExpired?' text-red-500':state ?'text-primary1':value === ''?'text-gray-400':'text-primary1'} />
                 
             </div>
         </div>
