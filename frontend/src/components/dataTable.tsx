@@ -41,10 +41,10 @@ interface DataTableProps {
     data: DataItem[];
     searchKeys?: string[];
     itemsPerPage?: number;
-    onView?: (item: AccountItem, index: number) => void;
-    onEdit?: (item: AccountItem, index: number) => void;
+    onView?: (item: any, index: number) => void;
+    onEdit?: (item: any, index: number) => void;
     onDelete?: boolean;
-    onBulkDelete?: (items: AccountItem[]) => void; // เพิ่ม bulk delete callback
+    onBulkDelete?: (items: any[]) => void; // เพิ่ม bulk delete callback
     showActions?: boolean;
     showSearch?: boolean;
     showPagination?: boolean;
@@ -326,7 +326,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   </div>
                 </th>
               ))}
-              {showActions && (onView || onEdit || onDelete) && (
+              {showActions && ( onEdit || onDelete) && (
                 <th className="text-left py-4 px-6 font-semibold text-gray-900 text-sm">Actions</th>
               )}
             </tr>
@@ -335,11 +335,13 @@ const DataTable: React.FC<DataTableProps> = ({
             {currentData.map((item: DataItem, index) => (
               <tr 
                 key={'id' in item ? item.id : index}
+                onClick={() => onView && onView(item, startIndex + index)}
                 className={`border-b border-gray-100 transition-colors duration-150 ${
                   selectedItems.has(item.id) 
                     ? 'bg-red-50 hover:bg-red-100' 
                     : 'hover:bg-blue-50/70'
-                }`}
+                }
+                ${onView && !showBulkActionsIn ? 'cursor-pointer' : ''}`}
               >
                 {/* Individual Select Checkbox */}
                 {showBulkActionsIn && (
@@ -363,22 +365,14 @@ const DataTable: React.FC<DataTableProps> = ({
                     {renderCellValue(item, header)}
                   </td>
                 ))}
-                {showActions && (onView || onEdit || onDelete) && (
+                {showActions && ( onEdit || onDelete) && (
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-2">
-                      {onView && (
-                        <button 
-                          onClick={() => handleAction(onView, item, startIndex + index)}
-                          className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-150"
-                          title="View"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                      )}
+                      
                       {onEdit && (
                         <button 
                           onClick={() => handleAction(onEdit, item, startIndex + index)}
-                          className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150"
+                          className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150 cursor-pointer"
                           title="Edit"
                         >
                           <Edit className="w-4 h-4" />
@@ -391,7 +385,7 @@ const DataTable: React.FC<DataTableProps> = ({
                             (selectedItems.has(item.id) && selectedItems.size === 1)? setShowBulkActionsIn(false) : setShowBulkActionsIn(true);
                             handleSelectItem(item.id, !selectedItems.has(item.id));
                           }}
-                          className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150"
+                          className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150 cursor-pointer"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
