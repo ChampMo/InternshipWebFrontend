@@ -11,6 +11,7 @@ import DefultButton from '@/src/components/ui/defultButton';
 import { Icon } from '@iconify/react';
 import { resetPasswordByOldPass } from '@/src/modules/auth';
 import { useToast } from '@/src/context/toast-context';
+import { GetToken } from '@/src/modules/token';
 
 interface MenuItem {
     name: string;
@@ -60,6 +61,45 @@ const Sidebar: React.FC = () => {
                 { name: 'TI Tech Intelligence', path: '/ti-tech-intelligence', havePermission: false },
             ])
         }
+        if (permissions && permissions.admin) {
+              const fetchTokens = async () => {
+                try {
+                const result = await GetToken()
+                if (result && Array.isArray(result)) {
+                    const JiraToken = result.find((item) => (item.type === 'Jira' && item.status))?.expiryDate || ''
+
+                    if (JiraToken) {
+                        const today = new Date();
+                        const expiryDate = new Date(JiraToken);
+                        expiryDate.setHours(0, 0, 0, 0); // reset time to 00:00:00
+
+                        if (expiryDate < today) {
+                            notifyError('Jira token has expired. Please update it.')
+                        }
+                    }
+
+                    const TiToken = result.find((item) => (item.type === 'TI' && item.status))?.expiryDate || ''
+
+                    if (TiToken) {
+                        const today = new Date();
+                        const expiryDate = new Date(TiToken);
+                        expiryDate.setHours(0, 0, 0, 0); // reset time to 00:00:00
+
+                        if (expiryDate < today) {
+                            notifyError('TI token has expired. Please update it.')
+                        }
+                    }
+
+                } else {
+                    notifyError('Failed to fetch tokens')
+                }
+                } catch (error) {
+                    notifyError('Failed to fetch tokens')
+                }
+            }
+
+            fetchTokens()
+        }
     }, [permissions])
 
     if (!['/jira-dashboard', '/cyber-news', '/ti-tech-intelligence', '/admin/user-management', '/admin/token-management', '/admin/cyber-news-management', '/admin/settings']
@@ -95,8 +135,8 @@ const Sidebar: React.FC = () => {
 
     return (
         <>
-            <div className='w-70'/>
-            <aside className='bg-primary3 w-70 h-screen shadow-lg rounded-r-3xl flex flex-col pb-10 shrink-0 fixed left-0 z-50'>
+            <div className='w-70 md:flex hidden'/>
+            <aside className='bg-primary3 w-70 h-screen shadow-lg rounded-r-3xl flex-col pb-10 shrink-0 fixed left-0 z-50 md:flex hidden'>
                 <header className='p-4 h-40 items-center flex justify-center'>
                     <div className='text-4xl orbitron text-center' >Cyber<br/>Command</div>
                 </header>
@@ -143,14 +183,14 @@ const Sidebar: React.FC = () => {
                         </div>
                     </nav>
                 </>}
-                <div className='flex flex-col mt-auto px-4 py-2'>
+                {permissions && <div className='flex flex-col mt-auto px-4 py-2'>
                     <div 
                     onClick={()=>{setResetPassPopUp(true)}}
-                    className='text-lg w-50 px-8 py-3 text-gray-400 cursor-pointer hover:text-primary1'>Reset Password</div>
+                    className='text-lg w-50 px-4 py-3 text-gray-400 cursor-pointer hover:text-primary1'>Reset Password</div>
                     <div 
                     onClick={()=>{localStorage.removeItem('token'),localStorage.removeItem('userId') , window.location.href = '/'}}
-                    className='text-lg w-40 px-8 py-3 text-red-400 cursor-pointer'>Log out</div>
-                </div>
+                    className='text-lg w-40 px-4 py-3 text-red-400 cursor-pointer'>Log out</div>
+                </div>}
                 <PopUp
                     isVisible={resetPassPopUp}
                     setIsVisible={setResetPassPopUp}

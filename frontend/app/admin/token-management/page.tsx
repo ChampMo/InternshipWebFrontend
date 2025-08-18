@@ -135,19 +135,6 @@ function TokenManagement() {
             if (!item.expiryDate) return true; // ถ้าไม่มีวันหมดอายุ ให้ผ่าน (ปรับเป็น false ถ้าต้องการตัดทิ้ง)
             const expiry = toLocalDateOnly(item.expiryDate);
             const active = !!expiry && expiry >= today;
-
-            console.log(
-              'item.expiryDate',
-              item.name,
-              item.expiryDate,
-              '-> parsed',
-              expiry,
-              '-- today',
-              today,
-              'isActive',
-              active
-            );
-
             return active;
           };
 
@@ -179,7 +166,7 @@ function TokenManagement() {
 
     fetchTokens()
   }, [loading])
-  console.log('dataToken', dataToken)
+
 
   const handleSaveToken = async () => {
 
@@ -333,7 +320,6 @@ function TokenManagement() {
 
 
   const handleEdit = (item: any, index: number) => {
-    console.log('item edit',item)
     setEditToken(item);
     setEditTokenOld(item);
     setEditPopUp(true);
@@ -448,7 +434,6 @@ function TokenManagement() {
   
     expiryDate.setHours(0, 0, 0, 0); // reset เวลาเป็น 00:00:00
   
-    console.log('item', item,'expiryDate', expiryDate, 'today', today);
   
     return expiryDate < today;
   };
@@ -460,33 +445,33 @@ function TokenManagement() {
   return (
       <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
       <div className=' font-bold text-2xl'>Token in use</div>
-      <div className=' p-8 mt-4 rounded-xl duration-500 border border-gray-200 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] shadow-sm lg:w-fit flex lg:flex-row flex-col gap-8 justify-between'>
+      <div className=' p-8 mt-4 rounded-xl duration-500 border border-gray-200 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] shadow-sm md:w-fit flex md:flex-row flex-col gap-8 justify-between'>
         <div className='gap-6 flex flex-col'>
-          <div className='flex gap-4 lg:items-center lg:flex-row flex-col'>
+          <div className='flex gap-4 md:items-center md:flex-row flex-col'>
             <div className='text-lg font-bold text-gray-600 w-40 shrink-0'>Jira Token</div>
-            <div className='flex lg:w-100 w-full lg:flex-row flex-col justify-between items-center relative'>
-              <div className={` bg-white rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'lg:w-42 pr-2 pl-4 border opacity-100 h-10' : 'lg:w-0 opacity-0 h-0'}`} >
+            <div className='flex md:w-100 w-full md:flex-row flex-col justify-between items-center relative'>
+              <div className={` bg-white rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'md:w-42 pr-2 pl-4 border opacity-100 h-10' : 'md:w-0 opacity-0 h-0'}`} >
                 {inUseTokenJira}
               </div>
               {isExpiry(dataToken.find(item => item.type==='Jira'&& item.name === jiraTokenSelected)?.expiryDate || '')
                 && <div className={`text-sm text-red-500 absolute top-10 right-0 font-semibold z-10`}>This Jira token is expired.
               </div>}
-              <Icon icon="ep:right" width="30" height="30" className={`text-primary1 duration-500 lg:rotate-0 rotate-90 ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira)? 'w-10 h-10 lg:my-0 my-3' : 'w-0 h-0'}`} />
-              <div className={`duration-500 w-full z-40 ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'lg:w-42' : 'lg:w-100'}`}>
+              <Icon icon="ep:right" width="30" height="30" className={`text-primary1 duration-500 md:rotate-0 rotate-90 ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira)? 'w-10 h-10 md:my-0 my-3' : 'w-0 h-0'}`} />
+              <div className={`duration-500 w-full z-40 ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'md:w-42' : 'md:w-100'}`}>
                 <Dropdown items={jiraTokens.map(item => item.tokenName)} placeholder='Select Token' setValue={setJiraTokenSelected} value={jiraTokenSelected} haveIcon={false} isExpired={isExpiry(dataToken.find(item => item.type==='Jira'&& item.name === jiraTokenSelected)?.expiryDate || '')}/>
               </div>
               
 
             </div>
           </div>
-          <div className='flex gap-4 lg:items-center lg:flex-row flex-col'>
+          <div className='flex gap-4 md:items-center md:flex-row flex-col'>
             <div className='text-lg font-bold text-gray-600 w-40 shrink-0'>TI Token</div>
-            <div className='flex lg:w-100 w-full lg:flex-row flex-col justify-between items-center relative'>
-              <div className={` bg-white rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'lg:w-42 pr-2 pl-4 border opacity-100 h-10' : 'lg:w-0 opacity-0 h-0'}`} >
+            <div className='flex md:w-100 w-full md:flex-row flex-col justify-between items-center relative'>
+              <div className={` bg-white rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'md:w-42 pr-2 pl-4 border opacity-100 h-10' : 'md:w-0 opacity-0 h-0'}`} >
                 {inUseTokenTI}
               </div>
-              <Icon icon="ep:right" width="30" height="30" className={`text-primary1 duration-500 lg:rotate-0 rotate-90 ${inuseIsDifferent(tiTokenSelected,inUseTokenTI)? 'w-10 h-10 lg:my-0 my-3' : 'w-0 h-0'}`} />
-              <div className={`duration-500 w-full z-30 ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'lg:w-42' : 'lg:w-100'}`}>
+              <Icon icon="ep:right" width="30" height="30" className={`text-primary1 duration-500 md:rotate-0 rotate-90 ${inuseIsDifferent(tiTokenSelected,inUseTokenTI)? 'w-10 h-10 md:my-0 my-3' : 'w-0 h-0'}`} />
+              <div className={`duration-500 w-full z-30 ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'md:w-42' : 'md:w-100'}`}>
               <Dropdown items={tiTokens.map(item => item.tokenName)} placeholder='Select Token' setValue={setTiTokenSelected} value={tiTokenSelected} haveIcon={false} isExpired={isExpiry(dataToken.find(item => item.type==='TI'&& item.name === tiTokenSelected)?.expiryDate || '')}/>
               </div>
               {isExpiry(dataToken.find(item => item.type==='TI'&& item.name === tiTokenSelected)?.expiryDate || '')
@@ -495,13 +480,13 @@ function TokenManagement() {
             </div>
           </div>
         </div>
-        {(inuseIsDifferent(jiraTokenSelected,inUseTokenJira) || inuseIsDifferent(tiTokenSelected,inUseTokenTI))&&<div className='flex h-full w-full lg:w-50 ml-auto lg:ml-0 items-end justify-end'>
+        {(inuseIsDifferent(jiraTokenSelected,inUseTokenJira) || inuseIsDifferent(tiTokenSelected,inUseTokenTI))&&<div className='flex h-full w-full md:w-50 ml-auto md:ml-0 items-end justify-end'>
           <DefultButton onClick={handleSaveToken} active={inuseIsDifferent(jiraTokenSelected,inUseTokenJira) || inuseIsDifferent(tiTokenSelected,inUseTokenTI)} loading={loading} iconHover={false}>
             save
           </DefultButton>
         </div>}
       </div>
-      <div className='flex w-full justify-between items-center mt-8'>
+      <div className='flex w-full gap-3 md:flex-row flex-col justify-between md:items-center mt-8'>
         <div className=' font-bold text-2xl'>Token Management</div>
         <div className='flex gap-4 items-center'>
           <div className='w-48 z-20 relative'>
@@ -510,7 +495,7 @@ function TokenManagement() {
           </div>
           <div 
           onClick={() => setCreatePopUp(true)}
-          className='text-white bg-primary1 px-8 py-2 rounded-xl cursor-pointer duration-200 hover:bg-[#0071cd]'>
+          className='text-white bg-primary1 px-8 py-2 rounded-xl cursor-pointer duration-200 hover:bg-[#0071cd] shrink-0'>
             Add Token
           </div>
         </div>

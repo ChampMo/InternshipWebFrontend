@@ -66,7 +66,7 @@ function JiraDashboard() {
       const userId = localStorage.getItem('userId') || '';
       const tickets = await getAllJiraTickets(userId);
 
-       
+      console.log('Fetched tickets:', tickets);
 
       setData(
         tickets.map((ticket: any) => {
@@ -85,6 +85,7 @@ function JiraDashboard() {
             incidentName: ticket.summary,
             category: categoryValue, // <-- ส่ง array ไป
             statusTicket: ticket.status,
+            customFields: ticket.customFields,
             createDate: new Date(ticket.created).toLocaleDateString("th-TH", {
               day: "2-digit",
               month: "2-digit",
@@ -128,8 +129,10 @@ const handleViewDetail = (key: string) => {
   setViewDetail(true);
   const ticket = (data ?? []).find((item: any) => item.key === key);
 
-  if (!ticket || !ticket.customFields) return; // ✅ ป้องกัน error
 
+console.log('ticket',ticket);
+  if (!ticket || !ticket.customFields) return; // ✅ ป้องกัน error
+  
   const findField = (fieldName: string) =>
     ticket.customFields.find((f: any) => f.fieldName === fieldName)?.value;
 
@@ -243,7 +246,7 @@ const handleViewDetail = (key: string) => {
         }
     ];
     
-
+  console.log(dataDetail);
 
 
 
@@ -263,13 +266,13 @@ const handleViewDetail = (key: string) => {
         <div className='mt-5 mb-8'>
             {Object.entries(dataDetail).map(([key, value]: [string, string], index: number) => (
             key === 'Cybersecurity Audit Checklist' || key === 'Cause Analysis' || key === 'Resolution Measure / Recommendation' ?
-            <div key={index} className={`mb-2 flex flex-col ${key === 'Cybersecurity Audit Checklist'?'mt-5':'mt-2 '}`}>
+            <div key={key} className={`mb-2 flex flex-col ${key === 'Cybersecurity Audit Checklist'?'mt-5':'mt-2 '}`}>
               <div className='font-bold text-lg'>{key}</div>
-              <div className='text-gray-700 mt-2 pl-2 w-full'>{value}</div>
+              <div className='text-gray-700 mt-2 pl-2 w-full bg-gray-100 rounded-lg py-2'>{value}</div>
             </div>
             : 
-            <>
-              <div key={index} className='mt-2 mb-2 flex justify-between items-center'>
+            <React.Fragment key={key}>
+              <div className='mt-2 mb-2 flex justify-between items-center'>
                 <div className='font-bold text-lg'>{key}</div>
                 <div className={`${{
                   'To Do': 'bg-gray-400',
@@ -283,7 +286,7 @@ const handleViewDetail = (key: string) => {
                 }[value]} ${key === 'Status Ticket' ? 'rounded-md px-2 py-0.5 text-white' :key === 'Priority'?'rounded-full px-2 py-0.5 text-white': 'text-gray-700 '}`}>{value}</div>
               </div>
               <div className=' w-full border-b border-gray-200' />
-            </>
+            </React.Fragment>
             ))}
         </div>
       </>
@@ -307,7 +310,7 @@ const handleViewDetail = (key: string) => {
         <div className='mt-5 mb-8'>
           <DataTable
             headers={headers}
-            data={data}
+            data={data ?? []}
             // searchKeys={['email', 'companyName', 'userId']}
             showRoleFilter={false}
             itemsPerPage={5}

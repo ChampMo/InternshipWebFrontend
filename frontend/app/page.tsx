@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Sidebar from '@/src/components/sidebar'
 
 
+
 export default function Home() {
 
 
@@ -18,7 +19,9 @@ export default function Home() {
         localStorage.removeItem('login');
       }, 5000);
     }
+
   }, []);
+
 
   return (
     <>

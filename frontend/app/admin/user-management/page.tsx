@@ -381,7 +381,7 @@ function UserManagement() {
                 
                 <form 
                 onSubmit={!!createEmail && !!createRole && !!createCompany ? handleCreateAccount : undefined}
-                className=' flex gap-5 z-40 lg:flex-nowrap flex-wrap'>
+                className=' flex gap-5 z-40 md:flex-nowrap flex-wrap'>
                     <input 
                     type='email'
                     value={createEmail}
