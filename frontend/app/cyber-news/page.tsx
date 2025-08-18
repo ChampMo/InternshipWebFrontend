@@ -7,6 +7,7 @@ import CyberNewsCard from '@/src/components/CyberNewsCard'
 import Sidebar from '@/src/components/sidebar'
 import Port from '@/port';
 import { usePermissions } from "@/src/context/permission-context";
+import { getAllCyberNews } from '@/src/modules/cyber-news';
 
 export default function CyberNews() {
   const [newsDetail, setNewsDetail] = useState<any[]>([]);
@@ -26,13 +27,7 @@ export default function CyberNews() {
 
   useEffect(() => {
     const fetchNews = async () => {
-      const response = await fetch(`${Port.BASE_URL}/cybernews`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      const data = await response.json();
+      const data = await getAllCyberNews();
       setNewsDetail(data);
       setLoading(false);
       setDetailID(data[0]?.NewsID);
