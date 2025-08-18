@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { Icon } from '@iconify/react'
 import { usePermissions } from "@/src/context/permission-context";
-import DefultButton from '@/src/components/ui/defultButton'
+
 
 interface ResultRow {
   ip: string
