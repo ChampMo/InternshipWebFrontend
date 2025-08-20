@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
 import '@/app/globals.css'; // Ensure global styles are applied
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 import { usePermissions } from "@/src/context/permission-context";
 import PopUp from '@/src/components/ui/popUp'
@@ -45,6 +45,7 @@ const Sidebar: React.FC = () => {
     const passwordsMatch = newPassword === confirmNewPassword && newPassword !== '' && confirmNewPassword !== ''
     const longEnough = newPassword.length > 6 && confirmNewPassword.length > 6
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword) || /[!@#$%^&*(),.?":{}|<>]/.test(confirmNewPassword)
+    const router = useRouter();
 
     useEffect(() => {
         if (permissions) {

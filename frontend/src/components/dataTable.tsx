@@ -55,6 +55,7 @@ interface DataTableProps {
     roleFilter?: string;
     setRoleFilter?: (role: string) => void;
     showRoleFilter?: boolean;
+    loading?: boolean;
 }
 
 const DataTable: React.FC<DataTableProps> = ({ 
@@ -75,7 +76,8 @@ const DataTable: React.FC<DataTableProps> = ({
   roleKey,
   roleFilter = 'All',
   setRoleFilter,
-  showRoleFilter = false
+  showRoleFilter = false,
+  loading = false,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: null });
@@ -254,6 +256,7 @@ const DataTable: React.FC<DataTableProps> = ({
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       
 
+      
       {/* Search Bar and Role Filter */}
       {(showSearch && searchTerm !== undefined && setSearchTerm) || (showRoleFilter && roleKey && availableRoles.length > 0) ? (
         <div className="p-6 border-b border-gray-200">
@@ -288,7 +291,6 @@ const DataTable: React.FC<DataTableProps> = ({
           </div>
         </div>
       ) : null}
-
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full">
@@ -331,6 +333,7 @@ const DataTable: React.FC<DataTableProps> = ({
               )}
             </tr>
           </thead>
+          {!loading && (
           <tbody>
             {currentData.map((item: DataItem, index) => (
               <tr 
@@ -397,11 +400,12 @@ const DataTable: React.FC<DataTableProps> = ({
               </tr>
             ))}
           </tbody>
+          )}
         </table>
       </div>
 
       {/* Empty State */}
-      {processedData.length === 0 && (
+      {processedData.length === 0 && !loading && (
         <div className="text-center py-12">
           <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-200">
             <Search className="w-6 h-6 text-gray-400" />
@@ -410,6 +414,14 @@ const DataTable: React.FC<DataTableProps> = ({
           <p className="text-gray-500">
             {searchTerm || roleFilter !== 'All' ? 'Try adjusting your search or filter criteria' : 'No data available'}
           </p>
+        </div>
+      )}
+      {loading && (
+        <div className="text-center py-12">
+          <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-200 p-1.5">
+            <Icon icon="ic:round-hourglass-top" width="45" height="45" className="text-gray-300 animate-spin" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Loading...</h3>
         </div>
       )}
 

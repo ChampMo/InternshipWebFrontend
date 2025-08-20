@@ -218,3 +218,15 @@ body {
   background: linear-gradient(180deg, rgb(0,94,170), #007EE5);
   color: #fff;
 }
+
+.chart-wrap :focus,
+.chart-wrap .recharts-wrapper:focus,
+.chart-wrap .recharts-responsive-container:focus,
+.chart-wrap .recharts-surface:focus {
+  outline: none !important;
+}
+
+/* ตัดแถบไฮไลต์บนมือถือ */
+.chart-wrap .recharts-surface {
+  -webkit-tap-highlight-color: transparent;
+}
