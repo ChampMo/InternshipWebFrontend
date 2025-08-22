@@ -158,9 +158,16 @@ useEffect(() => {
 
   return (
     <div className='w-full h-screen flex flex-col px-10 pt-10 overflow-auto'>
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
-        Cyber News Management
-      </h1>
+      <div className="flex items-center gap-x-2 mb-7">
+        <div
+          onClick={() => router.back()}
+          className="cursor-pointer hover:opacity-70 w-fit">
+          <Icon icon="famicons:arrow-back" width="30" height="30" />
+        </div>
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 ">
+          Cyber News Management
+        </h1>
+      </div>
 
       <div className="flex flex-wrap gap-6">
         {/* Upload box */}
@@ -193,7 +200,7 @@ useEffect(() => {
             <input
               type="text"
               placeholder="Enter Name"
-              className="w-full border border-blue-300 rounded-md px-3 py-2"
+              className="w-full border border-blue-300 outline-none rounded-md px-3 py-2"
               value={name}
               onChange={e => setName(e.target.value)}
             />
@@ -201,7 +208,7 @@ useEffect(() => {
             <div>
             <label className="font-medium">Tag</label>
             <select
-              className="w-full border border-blue-300 rounded-md px-3 py-2"
+              className="w-full border border-blue-300 outline-none rounded-md px-3 py-2"
               value={tag}
               onChange={e => setTag(e.target.value)}
             >
@@ -209,7 +216,7 @@ useEffect(() => {
                 Select Tag
               </option>
               {tags.map((t) => (
-                <option key={t.tagId} value={t.tagName}>
+                 <option key={t.tagId} value={t.tagName}>
                   {t.tagName}
                 </option>
               ))}
@@ -222,42 +229,66 @@ useEffect(() => {
       <div className="mt-6 space-y-4">
         <div>
           <label className="font-medium">Summary of information</label>
-          <input
-            type="text"
+          <textarea
             placeholder="Enter Summary of information"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2  max-h-40 overflow-y-auto resize-none outline-none"
             value={summary}
-            onChange={e => setSummary(e.target.value)}
+            onChange={e => {
+              setSummary(e.target.value);
+              const el = e.target as HTMLTextAreaElement;
+              el.style.height = 'auto';
+              el.style.height = Math.min(el.scrollHeight, 160) + 'px'; // 160px = max-h-40
+            }}
+            style={{ minHeight: 40, maxHeight: 160 }}
+            rows={3}
           />
         </div>
         <div>
           <label className="font-medium">More details</label>
-          <input
-            type="text"
+          <textarea
             placeholder="Enter More details"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none"
             value={details}
-            onChange={e => setDetails(e.target.value)}
+            onChange={e => {
+              setDetails(e.target.value);
+              const el = e.target as HTMLTextAreaElement;
+              el.style.height = 'auto';
+              el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+            }}
+            style={{ minHeight: 40, maxHeight: 160 }}
+            rows={3}
           />
         </div>
         <div>
           <label className="font-medium">Impact of the attack</label>
-          <input
-            type="text"
+          <textarea
             placeholder="Enter Impact of the attack"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none"
             value={impact}
-            onChange={e => setImpact(e.target.value)}
+            onChange={e => {
+              setImpact(e.target.value);
+              const el = e.target as HTMLTextAreaElement;
+              el.style.height = 'auto';
+              el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+            }}
+            style={{ minHeight: 40, maxHeight: 160 }}
+            rows={3}
           />
         </div>
         <div>
           <label className="font-medium">Advice</label>
-          <input
-            type="text"
+          <textarea
             placeholder="Enter Advice"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none"
             value={advice}
-            onChange={e => setAdvice(e.target.value)}
+            onChange={e => {
+              setAdvice(e.target.value);
+              const el = e.target as HTMLTextAreaElement;
+              el.style.height = 'auto';
+              el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+            }}
+            style={{ minHeight: 40, maxHeight: 160 }}
+            rows={3}
           />
         </div>
       </div>
@@ -285,23 +316,40 @@ useEffect(() => {
         setIsVisible={setIsVisiblePopUpDelete}
         onClose={() => setIsVisiblePopUpDelete(false)}
       >
-        <div className="p-4">
-          <h2 className="text-lg font-semibold mb-2">Confirm Deletion</h2>
-          <p>Are you sure you want to delete this news article?</p>
+        <div className="w-[400px] rounded-t-xl bg-red-700 flex flex-col items-start px-6 pt-6 pb-4">
+          <div className="flex items-center gap-3 mb-2">
+            <Icon icon="mdi:delete" width="28" height="28" className="text-white" />
+            <span className="text-2xl font-bold text-white">Delete News</span>
+          </div>
+          <span className="text-white text-base mb-2">
+            Are you sure you want to delete this news?
+          </span>
         </div>
-        <div className="flex justify-end p-4">
-          <button
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200"
-            onClick={handleDelete}
-          >
-            Delete
-          </button>
-          <button
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200 ml-2"
-            onClick={() => setIsVisiblePopUpDelete(false)}
-          >
-            Cancel
-          </button>
+        <div className="bg-gray-50 px-6 py-4 rounded-b-xl">
+          <div className="mb-4 flex items-center">
+            <span className="text-gray-600 font-medium flex-shrink-0">News Title:</span>
+            <span
+              className="ml-3 px-3 py-1 bg-gray-200 rounded text-gray-700 font-semibold max-w-[260px] overflow-x-auto whitespace-nowrap scrollbar-hide"
+              style={{ display: 'inline-block' }}
+              title={name}
+            >
+              {name}
+            </span>
+          </div>
+          <div className="flex justify-end gap-4">
+            <button
+              className="px-8 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-colors duration-200"
+              onClick={() => setIsVisiblePopUpDelete(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="px-8 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors duration-200"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </PopUp>
     </div>

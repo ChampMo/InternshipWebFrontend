@@ -49,12 +49,15 @@ function CyberNewsManagement() {
         const formattedData: CyberNewsItem[] = data.map((item: any, index: number) => ({
           id: item.NewsID,
           name: item.title || '-',
-          tag: item.tag || '-',
+          tag: typeof item.tag === 'object' && item.tag !== null
+            ? item.tag.tagId // หรือ item.tag.tagName ถ้าอยากใช้ชื่อ
+            : item.tag || '-',
           createDate: item.createdAt || '-'
         }));
         setNewsDetailadmin(data);
         setAllNews(formattedData);
         setDetailIDadmin(data[0]?.NewsID);
+        console.log(data);
 
         // Fetch tags
         const tagList = await GetTag();
@@ -73,23 +76,17 @@ function CyberNewsManagement() {
     };
     fetchData();
   }, []);
-  const tagIdToName = React.useMemo(() => {
-    const map: Record<string, string> = {};
-    tags.forEach((t: any) => {
-      map[t.tagId] = t.tagName;
-    });
-    return map;
-  }, [tags]);
+
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString;
-    return date.toLocaleDateString('th-TH', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const formattedMonth = month.charAt(0).toUpperCase() + month.slice(1).toLowerCase();
+    const year = date.getFullYear();
+    return `${day} ${formattedMonth} ${year}`;
   };
 
   return (
@@ -143,7 +140,7 @@ function CyberNewsManagement() {
             key: 'tag',
             render: (value: string) => (
               <span className="text-sm">
-                {tagIdToName[value] || value || '-'}
+                {value}
               </span>
             ),
           },

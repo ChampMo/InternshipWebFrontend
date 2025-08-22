@@ -24,12 +24,31 @@ export default function CyberNewsManagement() {
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+  const nameRef = React.useRef<HTMLInputElement>(null);
+  const tagRef = React.useRef<HTMLSelectElement>(null);
+  const summaryRef = React.useRef<HTMLInputElement>(null);
+  const detailsRef = React.useRef<HTMLInputElement>(null);
+  const impactRef = React.useRef<HTMLInputElement>(null);
+  const adviceRef = React.useRef<HTMLInputElement>(null);
+
+
   // ตรวจสอบสิทธิ์
   useEffect(() => {
     if (permissions && !permissions.admin) {
       window.location.href = '/'
     }
   }, [permissions])
+
+  const handleKeyDown = (e: React.KeyboardEvent, nextRef?: React.RefObject<any>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (nextRef && nextRef.current) {
+        nextRef.current.focus();
+      } else {
+        handleCreate();
+      }
+    }
+  };
 
   // ดึง tag ทั้งหมด
   useEffect(() => {
@@ -141,19 +160,23 @@ export default function CyberNewsManagement() {
           <div>
             <label className="font-medium">Name</label>
             <input
+              ref={nameRef}
               type="text"
               placeholder="Enter Name"
-              className="w-full border border-blue-300 rounded-md px-3 py-2"
+              className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
               value={name}
               onChange={e => setName(e.target.value)}
+              onKeyDown={e => handleKeyDown(e, tagRef)}
             />
           </div>
           <div>
             <label className="font-medium">Tag</label>
             <select
-              className="w-full border border-blue-300 rounded-md px-3 py-2"
+              ref={tagRef}
+              className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
               value={tag}
               onChange={e => setTag(e.target.value)}
+              onKeyDown={e => handleKeyDown(e, summaryRef)}
             >
               <option value="" disabled hidden>
                 Select Tag
@@ -173,41 +196,49 @@ export default function CyberNewsManagement() {
         <div>
           <label className="font-medium">Summary of information</label>
           <input
+            ref={summaryRef}
             type="text"
             placeholder="Enter Summary of information"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
             value={summary}
             onChange={e => setSummary(e.target.value)}
+            onKeyDown={e => handleKeyDown(e, detailsRef)}
           />
         </div>
         <div>
           <label className="font-medium">More details</label>
           <input
+            ref={detailsRef}
             type="text"
             placeholder="Enter More details"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
             value={details}
             onChange={e => setDetails(e.target.value)}
+            onKeyDown={e => handleKeyDown(e, impactRef)}
           />
         </div>
         <div>
           <label className="font-medium">Impact of the attack</label>
           <input
+            ref={impactRef}
             type="text"
             placeholder="Enter Impact of the attack"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
             value={impact}
             onChange={e => setImpact(e.target.value)}
+            onKeyDown={e => handleKeyDown(e, adviceRef)}
           />
         </div>
         <div>
           <label className="font-medium">Advice</label>
           <input
+            ref={adviceRef}
             type="text"
             placeholder="Enter Advice"
-            className="w-full border border-blue-300 rounded-md px-3 py-2"
+            className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:border-blue-500"
             value={advice}
             onChange={e => setAdvice(e.target.value)}
+            onKeyDown={e => handleKeyDown(e)}
           />
         </div>
       </div>

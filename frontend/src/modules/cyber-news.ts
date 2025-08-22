@@ -66,3 +66,22 @@ export const getNextNewsId = async () => {
     return "1";
   }
 };
+
+export const fetchCyberNewsDetail = async (
+  newsId: string,
+  setNewsDetail: (data: any) => void,
+  setLoading: (loading: boolean) => void
+) => {
+  setLoading(true);
+  try {
+    const res = await fetch(`${Port.BASE_URL}/detailCybernews/${newsId}`);
+    if (!res.ok) throw new Error('fetch failed');
+    const data = await res.json();
+    setNewsDetail(data);
+  } catch (err) {
+    console.error(err);
+    setNewsDetail(null);
+  } finally {
+    setLoading(false);
+  }
+};
