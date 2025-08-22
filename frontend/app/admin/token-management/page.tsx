@@ -443,14 +443,14 @@ function TokenManagement() {
 
 
   return (
-      <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
-      <div className=' font-bold text-2xl'>Token in use</div>
-      <div className=' p-8 mt-4 rounded-xl duration-500 border border-gray-200 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] shadow-sm md:w-fit flex md:flex-row flex-col gap-8 justify-between'>
+      <div className='w-full flex flex-col overflow-auto h-screen px-4 pt-4 md:px-10 md:pt-10'>
+      <div className=' font-bold text-xl md:text-2xl'>Token in use</div>
+      <div className='p-4 md:p-8 mt-4 rounded-xl duration-500 border border-gray-200 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] shadow-sm md:w-fit flex md:flex-row flex-col gap-8 justify-between'>
         <div className='gap-6 flex flex-col'>
           <div className='flex gap-4 md:items-center md:flex-row flex-col'>
-            <div className='text-lg font-bold text-gray-600 w-40 shrink-0'>Jira Token</div>
+            <div className='md:text-lg font-bold text-gray-600 w-40 shrink-0'>Jira Token</div>
             <div className='flex md:w-100 w-full md:flex-row flex-col justify-between items-center relative'>
-              <div className={` bg-white rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'md:w-42 pr-2 pl-4 border opacity-100 h-10' : 'md:w-0 opacity-0 h-0'}`} >
+              <div className={` bg-white rounded-lg md:rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(jiraTokenSelected,inUseTokenJira) ? 'md:w-42 pr-2 pl-4 border opacity-100 h-10' : 'md:w-0 opacity-0 h-0'}`} >
                 {inUseTokenJira}
               </div>
               {isExpiry(dataToken.find(item => item.type==='Jira'&& item.name === jiraTokenSelected)?.expiryDate || '')
@@ -465,9 +465,9 @@ function TokenManagement() {
             </div>
           </div>
           <div className='flex gap-4 md:items-center md:flex-row flex-col'>
-            <div className='text-lg font-bold text-gray-600 w-40 shrink-0'>TI Token</div>
+            <div className='md:text-lg font-bold text-gray-600 w-40 shrink-0'>TI Token</div>
             <div className='flex md:w-100 w-full md:flex-row flex-col justify-between items-center relative'>
-              <div className={` bg-white rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'md:w-42 pr-2 pl-4 border opacity-100 h-10' : 'md:w-0 opacity-0 h-0'}`} >
+              <div className={` bg-white rounded-lg md:rounded-xl flex items-center border-primary1 overflow-hidden duration-500 text-nowrap w-full ${inuseIsDifferent(tiTokenSelected,inUseTokenTI) ? 'md:w-42 pr-2 pl-4 border opacity-100 h-10' : 'md:w-0 opacity-0 h-0'}`} >
                 {inUseTokenTI}
               </div>
               <Icon icon="ep:right" width="30" height="30" className={`text-primary1 duration-500 md:rotate-0 rotate-90 ${inuseIsDifferent(tiTokenSelected,inUseTokenTI)? 'w-10 h-10 md:my-0 my-3' : 'w-0 h-0'}`} />
@@ -487,7 +487,7 @@ function TokenManagement() {
         </div>}
       </div>
       <div className='flex w-full gap-3 md:flex-row flex-col justify-between md:items-center mt-8'>
-        <div className=' font-bold text-2xl'>Token Management</div>
+        <div className=' font-bold text-xl md:text-2xl'>Token Management</div>
         <div className='flex gap-4 items-center'>
           <div className='w-48 z-20 relative'>
             <Icon icon="mingcute:filter-line" width="24" height="24" className={` absolute left-2 top-2 z-40 ${typeFilter ==='All'?'text-gray-400':'text-primary1'}`}/>
@@ -495,7 +495,7 @@ function TokenManagement() {
           </div>
           <div 
           onClick={() => setCreatePopUp(true)}
-          className='text-white bg-primary1 px-8 py-2 rounded-xl cursor-pointer duration-200 hover:bg-[#0071cd] shrink-0'>
+          className='text-white bg-primary1 px-8 py-2 rounded-lg md:rounded-xl cursor-pointer duration-200 hover:bg-[#0071cd] shrink-0'>
             Add Token
           </div>
         </div>
@@ -529,12 +529,12 @@ function TokenManagement() {
           type: '',
           })}}>
         <div>
-          <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-8'>
+          <div className='md:w-[500px] h-22 md:h-30 rounded-t-xl md:rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-4 md:px-8'>
             <div className='text-xl text-white flex gap-2 items-end'><Icon icon="icon-park-outline:api" width="30" height="30" className='mb-1' /> Create Token</div>
             <div className=' text-white'>Create a new token</div>
           </div>
-          <div className='flex flex-col px-8 pt-2 pb-6'>
-            <div className=' mt-6 flex flex-col z-40'>
+          <div className='flex flex-col px-4 md:px-8 md:pt-2 pb-4 md:pb-6'>
+            <div className='mt-4 md:mt-6 flex flex-col z-40'>
               <div className='text-sm text-gray-500 flex items-end gap-2'>
                 <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
                 Name
@@ -543,11 +543,11 @@ function TokenManagement() {
                 type='text'
                 value={createToken?.name}
                 onChange={(e) => setCreateToken({ ...createToken, name: e.target.value })}
-                className={` border mt-3 bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${createToken?.name?'border-primary1':'border-gray-300'}`}
+                className={` border mt-3 bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${createToken?.name?'border-primary1':'border-gray-300'}`}
                 placeholder='Enter name'/>
               <div className={`ml-auto text-sm text-red-500 h-0 translate-y-1 duration-300 ${isAlreadyInUse( dataToken.map(token => token.name), createToken.name )?'opacity-100':'opacity-0'}`}>This token name is already in use.</div>
             </div>
-            <div className=' mt-6 flex flex-col gap-3 z-40'>
+            <div className=' mt-4 md:mt-6 flex flex-col gap-3 z-40'>
             <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Type</div>
                 <Dropdown
                   items={typeToken.map((item: string) => item.toString())}
@@ -558,7 +558,7 @@ function TokenManagement() {
                   value={createToken?.type === '' ? '' : (createToken?.type as string) || ''}
                   haveIcon={false}/>
             </div>
-            <div className=' mt-6 flex flex-col'>
+            <div className=' mt-4 md:mt-6 flex flex-col'>
               <div className='text-sm text-gray-500 flex items-end gap-2'>
                 <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
                 Expire date
@@ -568,14 +568,14 @@ function TokenManagement() {
                   type='text'
                   value={createToken?.expiryDate ? new Date(createToken.expiryDate).toLocaleDateString('en-GB') : ''}
                   readOnly
-                  className={` border bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${createToken?.expiryDate?'border-primary1':'border-gray-300'}`}
+                  className={` border bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${createToken?.expiryDate?'border-primary1':'border-gray-300'}`}
                   placeholder='Select date'
                   onClick={() => setShowCalendar(true)}
                   />
                   <Icon icon="mdi:calendar" width="24" height="24" className={`text-gray-400 absolute top-2 right-2 ${createToken?.expiryDate?'text-primary1':'text-gray-300'}`} onClick={() => setShowCalendar(true)} />
                   {showCalendar && (
                   <div
-                  className="absolute top-12 z-50 w-80"
+                  className="absolute -top-32 md:top-12 z-50 w-full md:w-80"
                   onClick={(e) => e.stopPropagation()} // Prevent click propagation to parent elements
                   >
                   <div className="rounded-2xl border border-gray-200 bg-white shadow-xl p-3 animate-fade-in">
@@ -601,7 +601,7 @@ function TokenManagement() {
                   )}
                 </div>
             </div>
-            <div className=' mt-6 flex flex-col'>
+            <div className=' mt-4 md:mt-6 flex flex-col'>
               <div className='text-sm text-gray-500 flex justify-between relative'>
                 <div className='flex items-end gap-2'>
                   <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
@@ -622,13 +622,13 @@ function TokenManagement() {
                 rows={3}
                 value={createToken?.token}
                 onChange={(e) => setCreateToken({ ...createToken, token: e.target.value })}
-                className={` border resize-none mt-3 bg-white rounded-xl h-24 pl-4 py-2 pr-1 grow-0 outline-none w-full placeholder ${createToken?.token?'border-primary1':'border-gray-300'}`}
+                className={` border resize-none mt-3 bg-white rounded-lg md:rounded-xl h-18 md:h-24 pl-4 py-2 pr-1 grow-0 outline-none w-full placeholder ${createToken?.token?'border-primary1':'border-gray-300'}`}
                 placeholder='Enter token'/>
               <div className={`ml-auto text-sm text-red-500 h-0 translate-y-1 duration-300 ${isAlreadyInUse( dataToken.map(token => token.token), createToken.token )?'opacity-100':'opacity-0'}`}>This token is already in use.</div>
             </div>
-            <div className='border-b border-gray-200 mt-8 mb-5'/>
+            <div className='border-b border-gray-200 mt-4 md:mt-8 mb-2 md:mb-5'/>
             <div className='flex gap-5'>
-              <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' 
+              <div className='text-gray-400 md:text-lg cursor-pointer border border-gray-300 rounded-lg md:rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' 
               onClick={()=>{
                 setCreatePopUp(false), 
                 setCreateToken({

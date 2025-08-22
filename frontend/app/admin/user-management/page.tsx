@@ -375,18 +375,17 @@ function UserManagement() {
 
   return (
     <>
-        <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
-            <div className=' font-bold text-2xl'>Create account</div>
+        <div className='w-full flex flex-col overflow-auto h-screen px-4 pt-4 md:px-10 md:pt-10'>
+            <div className=' font-bold text-xl md:text-2xl'>Create account</div>
             <div className='w-auto flex flex-col p-5 mt-4 rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] border border-gray-200 max-w-[1300px]'>
                 
-                <form 
-                onSubmit={!!createEmail && !!createRole && !!createCompany ? handleCreateAccount : undefined}
+                <div 
                 className=' flex gap-5 z-40 md:flex-nowrap flex-wrap'>
                     <input 
                     type='email'
                     value={createEmail}
                     onChange={(e) => setCreateEmail(e.target.value)}
-                    className={`text-lg border  bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${createEmail?'border-primary1':'border-gray-300'}`}
+                    className={`md:text-lg border  bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${createEmail?'border-primary1':'border-gray-300'}`}
                     placeholder='Enter email'/>
                     <div className=' grow-0 z-40 w-full'>
                         <Dropdown items={roleItems.map(item => item.roleName)} placeholder='Select Role' setValue={setCreateRole} value={createRole} haveIcon={false}/>
@@ -395,49 +394,49 @@ function UserManagement() {
                         <Dropdown items={companyItems.map(item => item.companyName)} placeholder='Select Company' setValue={setCreateCompany} value={createCompany} haveIcon={false}/>
                     </div>
                     <div className='grow-0 w-full'>
-                    <DefultButton active={!!createEmail && !!createRole && !!createCompany} loading={loading}>
+                    <DefultButton active={!!createEmail && !!createRole && !!createCompany} loading={loading} onClick={!!createEmail && !!createRole && !!createCompany ? handleCreateAccount : undefined}>
                         Create Account
                     </DefultButton>
                     </div>
-                </form>
+                </div>
                 
                 <div ref={contentRef}
                     className="overflow-hidden transition-all duration-500 max-w-[1300px]"
                     style={{ maxHeight }}>
                     <div className={`w-full flex flex-col gap-5 mt-8 mb-1 rounded-lg shadow-sm p-4 bg-white`}>
-                        <div className='text-lg font-bold text-gray-700'>Account Details</div>
+                        <div className='md:text-lg font-bold text-gray-700'>Account Details</div>
                         <div className='w-full flex justify-between flex-wrap gap-5'>
-                            <div className='text-lg text-gray-500 flex gap-2 grow'>Email: <div className='text-lg text-gray-800'>{accounts.email}</div></div>
-                            <div className='text-lg text-gray-500 flex gap-2 grow'>Role: <div className='text-lg text-gray-800'>{accounts.role}</div></div>
-                            <div className='text-lg text-gray-500 flex gap-2 grow'>Company: <div className='text-lg text-gray-800 '>{accounts.company}</div></div>
+                            <div className='md:text-lg text-gray-500 flex gap-2 grow'>Email: <div className='md:text-lg text-gray-800'>{accounts.email}</div></div>
+                            <div className='md:text-lg text-gray-500 flex gap-2 grow'>Role: <div className='md:text-lg text-gray-800'>{accounts.role}</div></div>
+                            <div className='md:text-lg text-gray-500 flex gap-2 grow'>Company: <div className='md:text-lg text-gray-800 '>{accounts.company}</div></div>
                         </div>
                         <div className='w-full flex'>
-                          <div className='flex flex-col shrink-0'>
-                            <div className='text-gray-500'>Status Account: </div>
-                            <div className={`flex items-center text-lg text-gray-500 gap-2 border rounded-xl h-14 mt-2 justify-center bg-gradient-to-r px-4
+                          <div className='flex flex-col shrink-0 w-full md:w-auto'>
+                            <div className='text-gray-500 text-sm md:text'>Status Account: </div>
+                            <div className={`flex items-center md:text-lg text-gray-500 gap-2 border rounded-lg md:rounded-xl h-10 md:h-14 mt-2 justify-center bg-gradient-to-r px-2 md:px-4
                               ${statusCreateAccount === 'Failed to create account' || statusCreateAccount === 'Email already registered' || statusCreateAccount === '' ? 'border-red-400 from-[#fef0f0] to-[#fecccc]' : 'border-green-400 from-[#ebfcf4] to-[#d3fae6]'}`}>
                                 
                                 {statusCreateAccount === 'Failed to create account' || statusCreateAccount === 'Email already registered' || statusCreateAccount === ''
-                                ?<div className=' text-red-500 flex items-center gap-2 shrink-0 w-96'>
+                                ?<div className=' text-red-500 flex items-center gap-2 shrink-0 text-wrap w-full md:w-96'>
                                     <Icon icon="mdi:cross-circle" width="30" height="30" />Failed to create account please try again!
                                 </div>
-                                :<div className=' flex items-center gap-2 text-green-500 shrink-0 w-70'>
+                                :<div className=' flex items-center gap-2 text-green-500 shrink-0 text-wrap w-full md:w-70'>
                                     <Icon icon="lets-icons:check-fill" width="30" height="30" />Create account successfully.
                             </div>}
                             </div>
                           </div>
                         </div>
                         <div className='w-full flex justify-between items-center'>
-                            <div className='flex flex-col shrink-0'>
-                              <div className='text-gray-500'>Status Email: </div>
-                              <div className={`flex items-center text-lg text-gray-500 gap-2 border rounded-xl h-14 mt-2 justify-center bg-gradient-to-r px-4
+                            <div className='flex flex-col shrink-0 w-full md:w-auto'>
+                              <div className='text-gray-500 text-sm md:text'>Status Email: </div>
+                              <div className={`flex items-center md:text-lg text-gray-500 gap-2 border rounded-lg md:rounded-xl h-10 md:h-14 mt-2 justify-center bg-gradient-to-r px-2 md:px-4 w-full
                                 ${statusCreateAccount === 'Email sent successfully'  ?'border-green-400 from-[#ebfcf4] to-[#d3fae6]':  'border-red-400 from-[#fef0f0] to-[#fecccc]' }`}>
                                   
                                   {statusCreateAccount === 'Email sent successfully' 
-                                  ?<div className=' text-green-500 flex items-center gap-2 shrink-0 w-70'>
+                                  ?<div className=' text-green-500 flex items-center gap-2 shrink-0 text-wrap w-full md:w-70'>
                                       <Icon icon="lets-icons:check-fill" width="30" height="30" />Email sent successfully.
                                   </div>
-                                  :<div className=' flex items-center gap-2 text-red-500 shrink-0 w-96'>
+                                  :<div className=' flex items-center gap-2 text-red-500 shrink-0 text-wrap w-full md:w-96'>
                                       <Icon icon="mdi:cross-circle" width="30" height="30" />Failed to send email please try again!
                               </div>}
                               </div>
@@ -460,9 +459,9 @@ function UserManagement() {
                 </div>
             </div>
             <div className=' flex flex-col w-full'>
-                <div className=' font-bold text-2xl mt-8'>User</div>
-                <div className='w-full flex items-center gap-5 mt-4'>
-                    <div className={`text-lg border rounded-xl h-10 w-96 relative flex items-center gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
+                <div className=' font-bold text-xl md:text-2xl mt-8'>User</div>
+                <div className='w-full flex flex-col md:flex-row items-center gap-3 md:gap-5 mt-4'>
+                    <div className={` md:text-lg border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
                       <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
                       <input 
                       type='text'
@@ -470,8 +469,8 @@ function UserManagement() {
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' placeholder='Search by email, company, user id'/>
                     </div>
-                    <div className='w-48 z-40 relative'>
-                      <Icon icon="mingcute:filter-line" width="24" height="24" className={` absolute left-2 top-2 z-40 ${roleFilter ==='All'?'text-gray-400':'text-primary1'}`}/>
+                    <div className='w-full md:w-48 z-30 relative'>
+                      <Icon icon="mingcute:filter-line" width="24" height="24" className={` absolute left-2 top-2 z-30 ${roleFilter ==='All'?'text-gray-400':'text-primary1'}`}/>
                       <div className='z-20'><Dropdown items={roleItems.map(item => item.roleName)} placeholder='Select Role' setValue={setRoleFilter} value={roleFilter==='All'?'':roleFilter} haveIcon={true}/></div>
                     </div>
                     {(roleFilter !== 'All' || searchTerm !== '') && <Icon icon="maki:cross" width="30" height="30" className='h-10 text-red-500 cursor-pointer' onClick={()=>{setRoleFilter('All'), setSearchTerm('')}} />}
@@ -579,32 +578,6 @@ function UserManagement() {
                 There are<span className="font-semibold text-red-600">{deleteItem?.length ?? 0}</span> item{(deleteItem?.length ?? 0) > 1 ? 's' : ''} that will be deleted.
               </p>
             <div className='flex flex-col px-8 pt-8 pb-6'>
-            {/* <div className=' max-h-80 overflow-y-auto gap-4 flex flex-col'>
-              {deleteItem && deleteItem.map((item, index) => (
-                <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
-                  <div className='flex justify-between items-center'>
-                    <div className='text-sm text-gray-500'>User Id:</div>
-                    <div className=''>{item?.userId}</div>
-                  </div>
-                  <div className='flex justify-between items-center'>
-                    <div className='text-sm text-gray-500'>Email Address:</div>
-                    <div className='py-1 px-3 rounded-lg bg-gray-300'>{item?.email}</div>
-                  </div>
-                  
-                  <div className='flex justify-between items-center'>
-                    <div className='text-sm text-gray-500'>Company</div>
-                    <div className=''>{item?.companyName}</div>
-                  </div>
-                  <div className='flex justify-between items-center'>
-                    <div className='text-sm text-gray-500'>User Role:</div>
-                    <div className={`${item?.roleName ==='Role has been removed'?'text-red-500':''}`}>{item?.roleName}</div>
-                  </div>
-                  <div className='flex justify-between items-center'>
-                    <div className='text-sm text-gray-500'>Created Date:</div>
-                    <div className=''>{item?.createDate}</div>
-                  </div>
-                </div>))}
-              </div> */}
               <div className=' max-h-85 overflow-y-auto gap-4 flex flex-col'>
                 {deleteItem && deleteItem.map((item, index) => (
                 <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>

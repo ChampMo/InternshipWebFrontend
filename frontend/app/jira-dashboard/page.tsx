@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, use } from 'react'
 import Sidebar from '@/src/components/sidebar'
 import { usePermissions } from "@/src/context/permission-context";
 import DataTable from '@/src/components/dataTable'
@@ -11,6 +11,8 @@ import { getAllJiraTickets } from '@/src/modules/jira';
 import Calendar from 'react-calendar'
 import Dropdown from '@/src/components/ui/dropDown'
 import DefultButton from '@/src/components/ui/defultButton'
+import { Search } from 'lucide-react';
+import PopUp from '@/src/components/ui/popUp'
 
 
 interface Header {
@@ -28,6 +30,7 @@ interface Header {
 function JiraDashboard() {
 
   const [loading, setLoading] = useState(true)
+  const [isDataGraphNotFound, setIsDataGraphNotFound] = useState(false)
   const [viewDetail, setViewDetail] = useState(false)
   const [dataDetail, setDataDetail] = useState({
     'Status Ticket': '',
@@ -59,29 +62,80 @@ function JiraDashboard() {
     count: 0
   }])
   const [data, setData] = useState<any[]>()
+  const [allData, setAllData] = useState<any[]>([])
   const [selectBarDate, setSelectBarDate] = useState<string | null>(null)
   const [popupSelectDate, setPopupSelectDate] = useState(false)
   const [startDate, setStartDate] = useState<Date | null>(null);
-  const [period, setPeriod] = useState<string>('Last 7D');
+  const [period, setPeriod] = useState<string>('');
   const [showCalendar, setShowCalendar] = useState(false);
+  const [barChartData, setBarChartData] = useState<any[]>([]);
+  const [infoPopUp, setInfoPopUp] = useState(false);
 
   useEffect(() => {
       if (permissions && !permissions.jira) {
           window.location.href = '/'
       }
   }, [permissions])
+  console.log('infoPopUp--', infoPopUp);
+  useEffect(() => {
+    const fetchData = async () => {
+      const userId = localStorage.getItem('userId') || '';
+      const tickets = await getAllJiraTickets(userId);
+      console.log('Fetched tickets:', tickets.message);
+      if( tickets.message === "Jira token has expired" || tickets.message === "Jira token not found" || tickets.message === "Failed to fetch Jira issues" || tickets.message === "Failed to fetch Jira field metadata" ){ 
+        setInfoPopUp(true);
+        return;
+      }
+      setAllData(
+        tickets.map((ticket: any) => {
+          const incidentCategoryField = ticket.customFields.find(
+            (field: any) => field.fieldName === "Incident Category"
+          );
+
+          const categoryValue =
+            Array.isArray(incidentCategoryField?.value) && incidentCategoryField.value.length > 0
+              ? incidentCategoryField.value.map((v: any) => v.value)
+              : [];
+
+          return {
+            key: ticket.key,
+            priority: ticket.priority,
+            incidentName: ticket.summary,
+            category: categoryValue, // <-- ส่ง array ไป
+            statusTicket: ticket.status,
+            customFields: ticket.customFields,
+            createDate: new Date(ticket.created).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            }),
+          };
+        })
+      );
+    };
+    fetchData();
+    
+  }, []);
+  
+  useEffect(() => {
+    setPeriod('Last 7D');
+    handleSetBarChart('Last 7D')
+  }, [allData]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       const userId = localStorage.getItem('userId') || '';
       const tickets = await getAllJiraTickets(userId);
-
+      if( tickets.message === "Jira token has expired" || tickets.message === "Jira token not found" || tickets.message === "Failed to fetch Jira issues" || tickets.message === "Failed to fetch Jira field metadata"){ 
+        setInfoPopUp(true);
+        return;
+      }
       console.log('Fetched tickets:', tickets);
       if (selectBarDate) {
         setData(
           tickets.filter((ticket: any) => {
-            const ticketDate = new Date(ticket.created).toLocaleDateString("th-TH", {
+            const ticketDate = new Date(ticket.created).toLocaleDateString("en-GB", {
               day: "2-digit",
               month: "2-digit",
               year: "numeric",
@@ -102,7 +156,7 @@ function JiraDashboard() {
               category: categoryValue,
               statusTicket: ticket.status,
               customFields: ticket.customFields,
-              createDate: new Date(ticket.created).toLocaleDateString("th-TH", {
+              createDate: new Date(ticket.created).toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "2-digit",
           year: "numeric",
@@ -130,10 +184,10 @@ function JiraDashboard() {
               category: categoryValue, // <-- ส่ง array ไป
               statusTicket: ticket.status,
               customFields: ticket.customFields,
-              createDate: new Date(ticket.created).toLocaleDateString("th-TH", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
+              createDate: new Date(ticket.created).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
               }),
             };
           })
@@ -145,10 +199,14 @@ function JiraDashboard() {
       }
       console.log(priorityItem);
       console.log(tickets);
+      
       setLoading(false);
     };
     fetchData();
+    
   }, [selectBarDate]);
+
+
 
     useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -312,46 +370,108 @@ console.log('ticket',ticket);
     
   console.log(dataDetail);
 
-const dataS = [
-  { date: "06/08/2568", Critical: 1, High: 4, Medium: 3, Low: 5 },
-  { date: "18/08/2025", Critical: 0, High: 2, Medium: 1, Low: 3 },
-  { date: "19/08/2025", Critical: 2, High: 1, Medium: 4, Low: 1 },
-  { date: "20/08/2025", Critical: 1, High: 4, Medium: 3, Low: 5 },
-  { date: "21/08/2025", Critical: 0, High: 2, Medium: 1, Low: 3 },
-  { date: "22/08/2025", Critical: 2, High: 1, Medium: 4, Low: 1 },
-  { date: "23/08/2025", Critical: 1, High: 4, Medium: 3, Low: 5 },
-];
 
-const handleSetBarChart = () => {
-  if (startDate) {
-    const start = new Date(startDate);
-    const end = new Date(start);
-    if (period === 'Last 7D') {
-      end.setDate(start.getDate() + 6);
-    } else if (period === 'Last 30D') {
-      end.setDate(start.getDate() + 29);
+  console.log('barChartData--------------', barChartData);
+
+
+  const handleSetBarChart = (periodS:string) => {
+    
+    const start = new Date();
+    const end = new Date();
+    if (periodS === 'Last 7D') {
+      start.setDate(end.getDate() - 6);
+      handleSetDataBarChart(start, end);
+    } else if (periodS === 'Last 30D') {
+      start.setDate(end.getDate() - 29);
+      handleSetDataBarChart(start, end);
+    } else {
+      if (startDate) {
+        const startCustom = new Date(startDate);
+        const endCustom = new Date(startCustom);
+        if (periodS === '7 days') {
+          endCustom.setDate(startCustom.getDate() + 6);
+          handleSetDataBarChart(startCustom, endCustom);
+        }else if (periodS === '15 days') {
+          endCustom.setDate(startCustom.getDate() + 14);
+          handleSetDataBarChart(startCustom, endCustom);
+        } else if (periodS === '30 days') {
+          endCustom.setDate(startCustom.getDate() + 29);
+          handleSetDataBarChart(startCustom, endCustom);
+        }
+      }
     }
     
-    const formattedStart = start.toLocaleDateString('th-TH', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-    const formattedEnd = end.toLocaleDateString('th-TH', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
+  };
 
-    setSelectBarDate(`${formattedStart} - ${formattedEnd}`);
-    setPopupSelectDate(false);
-  } else {
-  }
-};
+  const handleSetDataBarChart = (startDate: Date, endDate: Date) => {
+    if (allData.length !== 0) {
+      const filteredData = allData.filter((item: any) => {
+        // กรณี created เป็น ISO string (เช่น 2025-08-06T16:57:04.986+0700)
+        // หรือเป็น "dd/mm/yyyy"
+        let itemDate: Date;
+        if (item.createDate.includes("T")) {
+          // ISO string → แปลงตรง ๆ
+          itemDate = new Date(item.createDate);
+        } else {
+          // dd/mm/yyyy → split
+          const [day, month, year] = item.createDate.split("/").map(Number);
+          itemDate = new Date(year, month - 1, day); // month ต้อง -1
+        }
+  
+        return itemDate >= startDate && itemDate <= endDate;
+      });
+  
+      const groupedData: Record<string, any> = {};
+  
+      filteredData.forEach((item: any) => {
+        let itemDate: Date;
+        if (item.createDate.includes("T")) {
+          itemDate = new Date(item.createDate);
+        } else {
+          const [day, month, year] = item.createDate.split("/").map(Number);
+          itemDate = new Date(year, month - 1, day);
+        }
+  
+        const dateKey = itemDate.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+  
+        if (!groupedData[dateKey]) {
+          groupedData[dateKey] = {
+            date: dateKey,
+            Critical: 0,
+            High: 0,
+            Medium: 0,
+            Low: 0,
+          };
+        }
+  
+        groupedData[dateKey][item.priority] += 1;
+      });
+  
+      const chartData = Object.values(groupedData);
+      if (chartData.length === 0) {
+        setIsDataGraphNotFound(true);
+      }
+
+      setBarChartData(chartData);
+    }
+  };
+  
+  
+
+
+
+
+
+
+
 
 
   return (
-    <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
+    <div className='w-full flex flex-col overflow-auto h-screen px-4 pt-4 md:px-10 md:pt-10'>
       {viewDetail
       ? <> 
         <div className='flex items-center'>
@@ -361,7 +481,7 @@ const handleSetBarChart = () => {
             >
             <Icon icon="famicons:arrow-back" width="30" height="30" />
           </div>
-          <div className=' font-bold text-2xl ml-2'>Detail</div>
+          <div className=' font-bold text-xl md:text-2xl ml-2'>Detail</div>
         </div>
         <div className='mt-5 mb-8'>
             {Object.entries(dataDetail).map(([key, value]: [string, string], index: number) => (
@@ -392,38 +512,53 @@ const handleSetBarChart = () => {
       </>
       : <>
         {!selectBarDate && (<>
-          <div className=' font-bold text-2xl'>Priority</div>
-          <div className='w-full flex gap-4'>
+          <div className=' font-bold text-xl md:text-2xl'>Priority</div>
+          <div className='w-full flex gap-4 md:flex-row flex-col'>
             <div className='flex gap-4 mt-4 shrink-0'>
               <div className='grid grid-cols-2 gap-4'>
                 {priorityItem.map((item, index) => (
-                  <div key={index} className={`h-30 aspect-square bg-gradient-to-br rounded-xl flex flex-col items-center justify-center text-white font-bold ${item.color}`}>
+                  <div key={index} className={`w-26 md:w-30 aspect-square bg-gradient-to-br rounded-xl flex flex-col items-center justify-center text-white font-bold ${item.color}`}>
                     <div className='text-4xl'>{item.count}</div>
                     <div className='text-lg font-bold'>{item.name}</div>
                   </div>
                 ))}
               </div>
-              <div className={`h-full w-30 bg-gradient-to-br from-total to-blue-600 rounded-xl flex flex-col items-center justify-center text-white font-bold `}>
+              <div className={`h-full w-26 md:w-30 bg-gradient-to-br from-total to-blue-600 rounded-xl flex flex-col items-center justify-center text-white font-bold `}>
                 <div className='text-4xl'>{priorityItem.reduce((total, item) => total + item.count, 0)}</div>
                 <div className='text-lg font-bold'>Total</div>
               </div>
             </div>
             <div className='mt-4 w-full relative'>
-              <BarGraph data={dataS} setSelectBarDate={setSelectBarDate}/>
+              {barChartData.length === 0 &&
+                (isDataGraphNotFound ?
+                <div className='absolute top-0 left-0 w-full h-full rounded-xl z-10 flex flex-col items-center justify-center pointer-events-none'>
+                  <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-200">
+                    <Search className="w-6 h-6 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-600 mb-2">No data found</h3>
+                  </div>
+                :<div className='absolute top-0 left-0 w-full h-full rounded-xl z-10 flex flex-col items-center justify-center bg-gray-100/40'>
+                  <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-200 p-1.5">
+                    <Icon icon="ic:round-hourglass-top" width="45" height="45" className="text-gray-300 animate-spin" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-600 mb-2">Loading...</h3>
+                  </div>)}
+
+              <BarGraph data={barChartData} setSelectBarDate={setSelectBarDate}/>
               <Icon icon="mdi:calendar" width="24" height="24" 
               className={`text-gray-400 absolute top-3 right-4 cursor-pointer hover:text-primary1`} 
               onClick={() => setPopupSelectDate(true)}
               />
-              <div ref={popupRef} className={`absolute text-sm top-3 right-10 z-40 w-80 rounded-xl border border-gray-400 bg-white flex flex-col ${popupSelectDate ? 'block' : 'hidden'}`}>
+              <div ref={popupRef} className={`absolute text-sm top-3 right-0 md:right-10 z-40 w-full md:w-80 rounded-xl border border-gray-400 bg-white flex flex-col ${popupSelectDate ? 'block' : 'hidden'}`}>
                 <div className='flex justify-between items-center px-4 pt-1'>
                   <div 
-                  onClick={() => {setPeriod('Last 7D'), setPopupSelectDate(false)}}
+                  onClick={() => {setPeriod('Last 7D'), handleSetBarChart('Last 7D'), setPopupSelectDate(false)}}
                   className='p-2 cursor-pointer text-gray-800 flex flex-col items-center gap-1'>
                     <div>Last 7D</div>
                     <div className={`h-1 w-16 rounded-full duration-500 ${period === 'Last 7D' ? 'bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] ' : 'bg-transparent'}`}/>
                   </div>
                   <div 
-                  onClick={() => {setPeriod('Last 30D'), setPopupSelectDate(false)}}
+                  onClick={() => {setPeriod('Last 30D'), handleSetBarChart('Last 30D'), setPopupSelectDate(false)}}
                   className='p-2 cursor-pointer text-gray-800 flex flex-col items-center gap-1'>
                     <div>Last 30D</div>
                     <div className={`h-1 w-16 rounded-full duration-500 ${period === 'Last 30D' ? 'bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] ' : 'bg-transparent'}`}/>
@@ -435,7 +570,7 @@ const handleSetBarChart = () => {
                     <div className={`h-1 w-16 rounded-full ${(period !== 'Last 7D' && period !== 'Last 30D' ) ? 'bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5]' : 'bg-transparent'}`}/>
                   </div>
                 </div>
-                <div className={`${(period !== 'Last 7D' && period !== 'Last 30D' )? 'block' : 'hidden'} px-6`}>
+                <div className={`${(period !== 'Last 7D' && period !== 'Last 30D' )? 'h-64 opacity-100' : 'h-0 opacity-0 overflow-hidden'} duration-300 px-6`}>
                   <div className=' mt-3 flex flex-col'>
                     <div className='text-sm text-gray-500 flex items-end gap-2'>
                       <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
@@ -494,7 +629,7 @@ const handleSetBarChart = () => {
                     </div>
                     <div className='mt-4 mb-4 flex justify-end'>
                       <DefultButton 
-                        onClick={period !== '' && startDate !== null ?()=>{handleSetBarChart()}:()=>{}} 
+                        onClick={period !== '' && startDate !== null ?()=>{handleSetBarChart(period), setPopupSelectDate(false)}:()=>{}} 
                         active={period !== '' && startDate !== null} loading={loading}>
                           Select
                       </DefultButton>
@@ -506,7 +641,7 @@ const handleSetBarChart = () => {
             </div>
           </div>
         </>)}
-        {!selectBarDate ? <div className={`font-bold text-2xl mt-8`}>Detail</div> :
+        {!selectBarDate ? <div className={`font-bold text-xl md:text-2xl mt-8`}>Detail</div> :
         <div className='flex items-center'>
           <div
             onClick={() => setSelectBarDate(null)}
@@ -514,7 +649,7 @@ const handleSetBarChart = () => {
             >
             <Icon icon="famicons:arrow-back" width="30" height="30" />
           </div>
-          <div className=' font-bold text-2xl ml-2'>Detail</div>
+          <div className=' font-bold text-xl md:text-2xl ml-2'>Detail</div>
         </div>}
         <div className='mt-5 mb-8'>
           <DataTable
@@ -529,6 +664,28 @@ const handleSetBarChart = () => {
             />
         </div>
       </>}
+      <PopUp
+        isVisible={infoPopUp}
+        setIsVisible={setInfoPopUp}
+        onClose={() => {setInfoPopUp(false)}}>
+          <div>
+          <div className='w-[500px] h-16 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-gray-500 to-gray-400 px-8'>
+            <div className='text-xl text-white flex gap-2 items-end'><Icon icon="ep:warn-triangle-filled" width="30" height="30" className='mb-1' /> System Error</div>
+          </div>
+          <div className='flex flex-col px-8 py-6 break-words text-center text-gray-700'>
+            <div className='text-xl font-bold'>Sorry, something went wrong.</div><br/>
+            Please try again in a few minutes.<br/>
+            If the problem persists, please contact support.
+            <div className='w-11/12 bg-gray-200 py-3 mx-auto mt-6 rounded-xl gap-2 flex flex-col'>
+              <div className='text-sm'>Need immediate help?</div>
+              <div className='text-sm flex flex-col items-center gap-2'>
+                <div className='flex items-center justify-center gap-1 text-800'><Icon icon="line-md:phone" width="20" height="20" />02-XXX-XXXX</div>
+                <div className='flex items-center justify-center gap-1 text-800'><Icon icon="line-md:email" width="20" height="20" />support@company.com</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </PopUp>
     </div>
   )
 }

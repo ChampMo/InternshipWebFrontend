@@ -26,7 +26,7 @@ export default function DefultButton({
       type="submit"
       disabled={loading}
       onClick={onClick}
-      className={`group text-white ${highCustom} rounded-xl text-lg w-full  ${
+      className={`group text-white ${highCustom} rounded-lg md:rounded-xl md:text-lg w-full  ${
         active ? 'bg-gradient-to-r from-[rgb(32,144,236)] to-[#007EE5] cursor-pointer' : 'bg-gray-400'
       } transition-all duration-300 ease-in-out relative overflow-hidden`}
     >

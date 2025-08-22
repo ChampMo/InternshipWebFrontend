@@ -40,6 +40,7 @@ const Sidebar: React.FC = () => {
     const [typeNewPassword, setTypeNewPassword] = useState(true)
     const [confirmNewPassword, setConfirmNewPassword] = useState<string>('');
     const [typeConfirmNewPassword, setTypeConfirmNewPassword] = useState(true)
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
     const pathname = usePathname()
 
     const passwordsMatch = newPassword === confirmNewPassword && newPassword !== '' && confirmNewPassword !== ''
@@ -137,9 +138,9 @@ const Sidebar: React.FC = () => {
     return (
         <>
             <div className='w-70 md:flex hidden'/>
-            <aside className='bg-primary3 w-70 h-screen shadow-lg rounded-r-3xl flex-col pb-10 shrink-0 fixed left-0 z-50 md:flex hidden'>
-                <header className='p-4 h-40 items-center flex justify-center'>
-                    <div className='text-4xl orbitron text-center' >Cyber<br/>Command</div>
+            <aside className={`bg-primary3 md:w-70 h-screen shadow-lg rounded-r-xl md:rounded-r-3xl flex-col pb-10 shrink-0 fixed left-0 z-50 flex duration-300 ${isMenuOpen?'':'md:translate-x-0 translate-x-[-100%]'}`}>
+                <header className='p-4 md:h-40 md:items-center flex justify-center'>
+                    <div className='text-xl md:text-4xl orbitron text-center text-wrap' >Cyber Command</div>
                 </header>
                 {permissions && ( permissions.jira ||permissions.cyberNews || permissions.ti ) &&<div className='px-4 py-2'>
                     <div className='text-sm text-gray-400'>Product</div>
@@ -151,7 +152,8 @@ const Sidebar: React.FC = () => {
                             item.havePermission && <React.Fragment key={item.path}>
                                 <Link
                                     href={item.path}
-                                    className={`text-lg px-8 py-3 rounded-r-lg duration-200 ${pathname.startsWith(item.path) ? 'bg-primary1 text-white' : ' hover:bg-primary2'}`}>
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className={`md:text-lg px-8 py-3 rounded-r-lg duration-200 ${pathname.startsWith(item.path) ? 'bg-primary1 text-white' : ' hover:bg-primary2'}`}>
                                     {item.name}
                                 </Link>
                                 {index !== menuItems.length - 1 && (
@@ -173,7 +175,8 @@ const Sidebar: React.FC = () => {
                                 <React.Fragment key={item.path}>
                                     <Link
                                     href={item.path}
-                                    className={`text-lg px-8 py-3 rounded-r-lg duration-200 ${pathname === item.path ? 'bg-primary1 text-white' : ' hover:bg-primary2'}`}>
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className={`md:text-lg px-8 py-3 rounded-r-lg duration-200 ${pathname === item.path ? 'bg-primary1 text-white' : ' hover:bg-primary2'}`}>
                                         {item.name}
                                     </Link>
                                     {index !== menuAdmin.length - 1 && (
@@ -184,27 +187,28 @@ const Sidebar: React.FC = () => {
                         </div>
                     </nav>
                 </>}
-                {permissions && <div className='flex flex-col mt-auto px-4 py-2'>
+                {permissions && 
+                <div className='flex flex-col mt-auto px-4 py-2'>
                     <div 
                     onClick={()=>{setResetPassPopUp(true)}}
-                    className='text-lg w-50 px-4 py-3 text-gray-400 cursor-pointer hover:text-primary1'>Reset Password</div>
+                    className='md:text-lg w-50 px-4 py-3 text-gray-400 cursor-pointer hover:text-primary1'>Reset Password</div>
                     <div 
-                    onClick={()=>{localStorage.removeItem('token'),localStorage.removeItem('userId') , window.location.href = '/'}}
-                    className='text-lg w-40 px-4 py-3 text-red-400 cursor-pointer'>Log out</div>
+                    onClick={()=>{setIsMenuOpen(false), localStorage.removeItem('token'),localStorage.removeItem('userId') , window.location.href = '/'}}
+                    className='md:text-lg w-40 px-4 py-3 text-red-400 cursor-pointer'>Log out</div>
                 </div>}
                 <PopUp
                     isVisible={resetPassPopUp}
                     setIsVisible={setResetPassPopUp}
                     onClose={() => {setResetPassPopUp(false), setOldPassword(''), setNewPassword(''), setConfirmNewPassword('')}}>
-                    <div>
-                        <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-8'>
+                    <div className='md:w-[500px]'>
+                        <div className='w-full h-22 md:h-30 rounded-t-xl md:rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-4 md:px-8'>
                         <div className='text-xl text-white flex gap-2 items-end'><Icon icon="mdi:password-reset" width="30" height="30" className='mb-1' />Reset Password</div>
-                        <div className='text-white'>
+                        <div className='text-white text-sm md:text'>
                             Please change your password for security.
                         </div>
                         </div>
-                        <div className='flex flex-col px-8 pt-2 pb-6'>
-                        <div className=' mt-6 flex flex-col z-40 relative'>
+                        <div className='flex flex-col px-4 md:px-8 md:pt-2 pb-4 md:pb-6'>
+                        <div className=' mt-4 md:mt-6 flex flex-col z-40 relative'>
                             <div className='text-sm text-gray-500 flex items-end gap-2'>
                                 <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Old Password
                             </div>
@@ -220,7 +224,7 @@ const Sidebar: React.FC = () => {
                                 :<Icon icon="iconamoon:eye-off-duotone" width="28" height="28" color='#ABABAB'/>}
                             </div>
                         </div>
-                        <div className=' mt-6 flex flex-col z-40 relative'>
+                        <div className=' mt-4 md:mt-6 flex flex-col z-40 relative'>
                             <div className='text-sm text-gray-500 flex items-end gap-2'>
                                 <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>New Password
                             </div>
@@ -236,7 +240,7 @@ const Sidebar: React.FC = () => {
                                 :<Icon icon="iconamoon:eye-off-duotone" width="28" height="28" color='#ABABAB'/>}
                             </div>
                         </div>
-                        <div className=' mt-6 flex flex-col z-40 relative'>
+                        <div className=' mt-4 md:mt-6 flex flex-col z-40 relative'>
                             <div className='text-sm text-gray-500 flex items-end gap-2'>
                                 <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Confirm New Password
                             </div>
@@ -252,23 +256,23 @@ const Sidebar: React.FC = () => {
                                 :<Icon icon="iconamoon:eye-off-duotone" width="28" height="28" color='#ABABAB'/>}
                             </div>
                         </div>
-                        <div className='mt-3'>
-                            <div className={`text-sm flex flex-row items-center gap-2 ${passwordsMatch ? 'text-green-600' : 'text-gray-400'}`}>
+                        <div className='mt-2 md:mt-3'>
+                            <div className={`text-xs md:text-sm flex flex-row items-center gap-2 ${passwordsMatch ? 'text-green-600' : 'text-gray-400'}`}>
                             <Icon icon="stash:circle-dot-duotone" width="20" height="20" color={`${passwordsMatch ?'#00C90A':'#ABABAB'}`} className=' shrink-0'/>
                             Passwords do match.
                             </div>
-                            <div className={`text-sm flex flex-row items-center gap-2 ${longEnough ? 'text-green-600' : 'text-gray-400'}`} >
+                            <div className={`text-xs md:text-sm flex flex-row items-center gap-2 ${longEnough ? 'text-green-600' : 'text-gray-400'}`} >
                             <Icon icon="stash:circle-dot-duotone" width="20" height="20" color={`${longEnough ?'#00C90A':'#ABABAB'}`} className=' shrink-0'/>
                             Least 6 characters.
                             </div>
-                            <div className={`text-sm flex flex-row items-center gap-2 ${hasSpecialChar ? 'text-green-600' : 'text-gray-400'}`} >
+                            <div className={`text-xs md:text-sm flex flex-row items-center gap-2 ${hasSpecialChar ? 'text-green-600' : 'text-gray-400'}`} >
                             <Icon icon="stash:circle-dot-duotone" width="20" height="20" color={`${hasSpecialChar ?'#00C90A':'#ABABAB'}`} className=' shrink-0'/>
                             {'Least 1 special characters. !@#$%^&*(),.?":{}|<>'}
                             </div>
                         </div>
-                        <div className='border-b border-gray-200 mt-8 mb-5'/>
+                        <div className='border-b border-gray-200 mt-2 md:mt-8 mb-5'/>
                         <div className='flex gap-5'>
-                            <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' 
+                            <div className='text-gray-400 md:text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' 
                             onClick={()=>{setResetPassPopUp(false), setOldPassword(''), setNewPassword(''), setConfirmNewPassword('')}}>
                             Cancel
                             </div>
@@ -282,6 +286,12 @@ const Sidebar: React.FC = () => {
                     </div>
                     </PopUp>
             </aside>
+            {/* responsive */}
+            <div className='h-14 flex md:hidden'/>
+            <div className='bg-primary3 h-14 w-full shadow-lg rounded-b-xl fixed left-0 top-0 z-40 flex md:hidden items-center justify-between px-4'>
+                <div className='text-xl orbitron text-center' >Cyber Command</div>
+                <div className='duration-300' onClick={()=>setIsMenuOpen(!isMenuOpen)}><Icon icon={isMenuOpen?'akar-icons:cross':"material-symbols:menu-rounded"} width="24" height="24" /></div>
+            </div>
         </>
     );
 };
