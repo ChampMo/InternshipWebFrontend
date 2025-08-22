@@ -82,11 +82,11 @@ function CyberNewsManagement() {
     if (!dateString) return '-';
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString;
-    return date.toLocaleDateString('th-TH', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const formattedMonth = month.charAt(0).toUpperCase() + month.slice(1).toLowerCase();
+    const year = date.getFullYear();
+    return `${day} ${formattedMonth} ${year}`;
   };
 
   return (

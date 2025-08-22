@@ -47,17 +47,6 @@ export default function CyberNews() {
   }, [searchTerm, newsDetail]);
 
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return '-';
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return dateString;
-    return date.toLocaleDateString('th-TH', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  };
-
   return (
       <div className='pt-10 px-10 w-full'>
         <div className='flex justify-between items-center mb-6'>
@@ -80,7 +69,7 @@ export default function CyberNews() {
                 NewsID={news.NewsID}
                 imageUrl={news.imgUrl}
                 title={news.title}
-                date={formatDate(news.createdAt)}
+                date={news.createdAt}
                 category={news.tag}
               />
             ))
