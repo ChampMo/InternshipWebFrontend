@@ -41,10 +41,10 @@ interface DataTableProps {
     data: DataItem[];
     searchKeys?: string[];
     itemsPerPage?: number;
-    onView?: (item: AccountItem, index: number) => void;
-    onEdit?: (item: AccountItem, index: number) => void;
+    onView?: (item: any, index: number) => void;
+    onEdit?: (item: any, index: number) => void;
     onDelete?: boolean;
-    onBulkDelete?: (items: AccountItem[]) => void; // เพิ่ม bulk delete callback
+    onBulkDelete?: (items: any[]) => void; // เพิ่ม bulk delete callback
     showActions?: boolean;
     showSearch?: boolean;
     showPagination?: boolean;
@@ -55,6 +55,7 @@ interface DataTableProps {
     roleFilter?: string;
     setRoleFilter?: (role: string) => void;
     showRoleFilter?: boolean;
+    loading?: boolean;
 }
 
 const DataTable: React.FC<DataTableProps> = ({ 
@@ -75,7 +76,8 @@ const DataTable: React.FC<DataTableProps> = ({
   roleKey,
   roleFilter = 'All',
   setRoleFilter,
-  showRoleFilter = false
+  showRoleFilter = false,
+  loading = false,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: null });
@@ -254,6 +256,7 @@ const DataTable: React.FC<DataTableProps> = ({
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       
 
+      
       {/* Search Bar and Role Filter */}
       {(showSearch && searchTerm !== undefined && setSearchTerm) || (showRoleFilter && roleKey && availableRoles.length > 0) ? (
         <div className="p-6 border-b border-gray-200">
@@ -288,7 +291,6 @@ const DataTable: React.FC<DataTableProps> = ({
           </div>
         </div>
       ) : null}
-
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full">
@@ -326,20 +328,23 @@ const DataTable: React.FC<DataTableProps> = ({
                   </div>
                 </th>
               ))}
-              {showActions && (onView || onEdit || onDelete) && (
+              {showActions && ( onEdit || onDelete) && (
                 <th className="text-left py-4 px-6 font-semibold text-gray-900 text-sm">Actions</th>
               )}
             </tr>
           </thead>
+          {!loading && (
           <tbody>
             {currentData.map((item: DataItem, index) => (
               <tr 
                 key={'id' in item ? item.id : index}
+                onClick={() => onView && onView(item, startIndex + index)}
                 className={`border-b border-gray-100 transition-colors duration-150 ${
                   selectedItems.has(item.id) 
                     ? 'bg-red-50 hover:bg-red-100' 
                     : 'hover:bg-blue-50/70'
-                }`}
+                }
+                ${onView && !showBulkActionsIn ? 'cursor-pointer' : ''}`}
               >
                 {/* Individual Select Checkbox */}
                 {showBulkActionsIn && (
@@ -363,22 +368,14 @@ const DataTable: React.FC<DataTableProps> = ({
                     {renderCellValue(item, header)}
                   </td>
                 ))}
-                {showActions && (onView || onEdit || onDelete) && (
+                {showActions && ( onEdit || onDelete) && (
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-2">
-                      {onView && (
-                        <button 
-                          onClick={() => handleAction(onView, item, startIndex + index)}
-                          className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-150"
-                          title="View"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                      )}
+                      
                       {onEdit && (
                         <button 
                           onClick={() => handleAction(onEdit, item, startIndex + index)}
-                          className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150"
+                          className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150 cursor-pointer"
                           title="Edit"
                         >
                           <Edit className="w-4 h-4" />
@@ -391,7 +388,7 @@ const DataTable: React.FC<DataTableProps> = ({
                             (selectedItems.has(item.id) && selectedItems.size === 1)? setShowBulkActionsIn(false) : setShowBulkActionsIn(true);
                             handleSelectItem(item.id, !selectedItems.has(item.id));
                           }}
-                          className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150"
+                          className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150 cursor-pointer"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -403,11 +400,12 @@ const DataTable: React.FC<DataTableProps> = ({
               </tr>
             ))}
           </tbody>
+          )}
         </table>
       </div>
 
       {/* Empty State */}
-      {processedData.length === 0 && (
+      {processedData.length === 0 && !loading && (
         <div className="text-center py-12">
           <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-200">
             <Search className="w-6 h-6 text-gray-400" />
@@ -416,6 +414,14 @@ const DataTable: React.FC<DataTableProps> = ({
           <p className="text-gray-500">
             {searchTerm || roleFilter !== 'All' ? 'Try adjusting your search or filter criteria' : 'No data available'}
           </p>
+        </div>
+      )}
+      {loading && (
+        <div className="text-center py-12">
+          <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-200 p-1.5">
+            <Icon icon="ic:round-hourglass-top" width="45" height="45" className="text-gray-300 animate-spin" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Loading...</h3>
         </div>
       )}
 

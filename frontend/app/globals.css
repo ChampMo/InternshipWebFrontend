@@ -89,3 +89,144 @@ body {
   font-style: normal;
 }
 
+.custom-calendar.react-calendar {
+  border: none;
+  width: 100%;
+  background: transparent;
+  font-family: inherit;
+}
+
+/* แถบนำทาง (เดือน/ปี + ปุ่ม) */
+.custom-calendar .react-calendar__navigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+  gap: .25rem;
+  margin-bottom: .5rem;
+}
+
+.custom-calendar .react-calendar__navigation button {
+  height: 2.25rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  background: #fff;
+  font-weight: 500;
+  transition: transform .05s ease, background-color .15s ease;
+}
+
+.custom-calendar .react-calendar__navigation button:hover {
+  background: #f9fafb; /* gray-50 */
+}
+
+.custom-calendar .react-calendar__navigation button:active {
+  transform: translateY(1px);
+}
+
+.custom-calendar .react-calendar__navigation button[disabled] {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+/* หัวตารางวัน */
+.custom-calendar .react-calendar__month-view__weekdays {
+  text-transform: none;
+  font-size: .75rem; /* text-sm */
+  color: #6b7280;    /* gray-500 */
+  padding: .25rem 0 .5rem;
+}
+
+.custom-calendar .react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+}
+
+/* ช่องวันที่ */
+.custom-calendar .react-calendar__tile {
+  height: 2.25rem;
+  border-radius: 10px;
+  transition: background-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+.custom-calendar .react-calendar__tile:hover {
+  background: #f3f4f6; /* gray-100 */
+}
+
+.custom-calendar .react-calendar__tile:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,126,229,.25);
+}
+
+/* วันนี้ */
+.custom-calendar .react-calendar__tile--now {
+  background: #eff6ff;       /* blue-50 */
+  color: #1d4ed8;            /* blue-700 */
+}
+
+/* เลือกแล้ว (active) */
+.custom-calendar .react-calendar__tile--active {
+  background: linear-gradient(180deg, rgb(0,94,170), #007EE5);
+  color: #fff;
+}
+
+/* Hover บน active */
+.custom-calendar .react-calendar__tile--active:hover {
+  filter: brightness(.95);
+}
+
+/* วันที่นอกเดือน */
+.custom-calendar .react-calendar__month-view__days__day--neighboringMonth {
+  color: #9ca3af; /* gray-400 */
+}
+
+/* ปุ่ม decade/century view */
+.custom-calendar .react-calendar__decade-view__years__year,
+.custom-calendar .react-calendar__year-view__months__month,
+.custom-calendar .react-calendar__century-view__decades__decade {
+  border-radius: 10px;
+  padding: .5rem .25rem;
+}
+
+/* ปิดการใช้งาน */
+.custom-calendar .react-calendar__tile:disabled {
+  background: transparent;
+  color: #d1d5db; /* gray-300 */
+}
+
+/* โหมดมืด (ถ้ามี .dark ครอบหน้า) */
+.dark .custom-calendar.react-calendar {
+  color: #e5e7eb; /* gray-200 */
+}
+
+.dark .custom-calendar .react-calendar__navigation button {
+  background: #0b1220;
+  border-color: #1f2937; /* gray-800 */
+  color: #e5e7eb;
+}
+
+.dark .custom-calendar .react-calendar__navigation button:hover {
+  background: #0f172a; /* slate-900 */
+}
+
+.dark .custom-calendar .react-calendar__tile:hover {
+  background: #0f172a;
+}
+
+.dark .custom-calendar .react-calendar__tile--now {
+  background: rgba(0,126,229,.12);
+  color: #93c5fd; /* blue-300 */
+}
+
+.dark .custom-calendar .react-calendar__tile--active {
+  background: linear-gradient(180deg, rgb(0,94,170), #007EE5);
+  color: #fff;
+}
+
+.chart-wrap :focus,
+.chart-wrap .recharts-wrapper:focus,
+.chart-wrap .recharts-responsive-container:focus,
+.chart-wrap .recharts-surface:focus {
+  outline: none !important;
+}
+
+/* ตัดแถบไฮไลต์บนมือถือ */
+.chart-wrap .recharts-surface {
+  -webkit-tap-highlight-color: transparent;
+}

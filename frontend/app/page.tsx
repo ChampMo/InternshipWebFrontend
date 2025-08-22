@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Sidebar from '@/src/components/sidebar'
 
 
+
 export default function Home() {
 
 
@@ -18,11 +19,13 @@ export default function Home() {
         localStorage.removeItem('login');
       }, 5000);
     }
+
   }, []);
+
 
   return (
     <>
-      <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
+      <div className='w-full flex flex-col overflow-auto h-screen px-2 pt-2 md:px-10 md:pt-10'>
         <Link href={'/signin'} className='w-80 h-20 flex bg-primary1 rounded-3xl text-amber-100 cursor-pointer p-3'>Sign In</Link>
         <Link href={'/cyber-news'} className='w-80 h-20 flex bg-primary1 rounded-3xl text-amber-100 cursor-pointer p-3'>Cyber News</Link>
         <div className='w-80 h-20 flex text-red-400 border-red-400 border rounded-3xl cursor-pointer p-3' onClick={()=>{localStorage.removeItem('token'),localStorage.removeItem('userId') }}>Logout</div>
