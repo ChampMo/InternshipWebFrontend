@@ -288,7 +288,7 @@ console.log('ticket',ticket);
           key: 'key',
           sortable: true,
           render: (value) => (
-            <span className="px-1 text-nowrap py-1 rounded-md font-mono text">
+            <span className="px-1 text-nowrap py-1 rounded-md font-mono text-xs md:text">
               {value}
             </span>
           )
@@ -305,7 +305,7 @@ console.log('ticket',ticket);
               'Low': 'bg-low',
             };
             return (
-              <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-sm border text-white font-bold ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
+              <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs md:text-sm border text-white font-bold ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
                 {value}
               </div>
             );
@@ -332,7 +332,7 @@ console.log('ticket',ticket);
               {value.map((item, index) => (
                 <span
                   key={index}
-                  className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-sm"
+                  className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-xs md:text-sm"
                 >
                   {item}
                 </span>
@@ -362,7 +362,7 @@ console.log('ticket',ticket);
           key: 'createDate',
           sortable: true,
           render: (value) => 
-            <span className="text-sm">
+            <span className="text-xs md:text-sm">
               {value}
             </span>
         }
