@@ -13,6 +13,7 @@ import Dropdown from '@/src/components/ui/dropDown'
 import DefultButton from '@/src/components/ui/defultButton'
 import { Search } from 'lucide-react';
 import PopUp from '@/src/components/ui/popUp'
+import NotFound from '@/app/not-found';
 
 
 interface Header {
@@ -71,11 +72,10 @@ function JiraDashboard() {
   const [barChartData, setBarChartData] = useState<any[]>([]);
   const [infoPopUp, setInfoPopUp] = useState(false);
 
-  useEffect(() => {
-      if (permissions && !permissions.jira) {
-          window.location.href = '/'
-      }
-  }, [permissions])
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
+
   console.log('infoPopUp--', infoPopUp);
   useEffect(() => {
     const fetchData = async () => {

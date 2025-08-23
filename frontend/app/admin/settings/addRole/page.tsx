@@ -5,6 +5,8 @@ import { Icon } from '@iconify/react'
 import { PostRole } from '@/src/modules/role'
 import { useRouter } from 'next/navigation'
 import router from 'next/dist/shared/lib/router/router'
+import NotFound from '@/app/not-found'
+import { usePermissions } from '@/src/context/permission-context'
 
 const PERMISSIONS = [
   {

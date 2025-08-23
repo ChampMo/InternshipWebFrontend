@@ -10,6 +10,7 @@ import Port from '@/port';
 import { useRouter } from 'next/navigation'
 import { GetTag } from '@/src/modules/tag'
 import { getAllCyberNews } from '@/src/modules/cyber-news'
+import NotFound from '@/app/not-found'
 
 
 
@@ -33,11 +34,9 @@ function CyberNewsManagement() {
   };
   
 
-  useEffect(() => {
-    if (permissions && !permissions.admin) {
-      window.location.href = '/'
-    }
-  }, [permissions])
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
 
   const [tags, setTags] = useState<any[]>([]);
 
@@ -92,7 +91,7 @@ function CyberNewsManagement() {
   return (
     <div className="w-full flex flex-col overflow-auto h-screen px-10 pt-10">
       <div className="flex items-center justify-between mb-6">
-        <span className="text-lg md:text-xl font-bold text-gray-900">Cyber News Management</span>
+        <span className="text-xl md:text-2xl font-bold text-gray-900">Cyber News Management</span>
         <div className="flex items-center gap-3">
           <div className={`text-lg border rounded-xl h-10 w-96 relative flex items-center gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
               <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
@@ -102,9 +101,11 @@ function CyberNewsManagement() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' placeholder='Search by date, title, tag'/>
           </div>
-          <DefultButton active={true} loading={false} onClick={handleClick}>
-          Add news
-          </DefultButton>
+          <div 
+          onClick={() => handleClick()}
+          className='text-white bg-primary1 px-8 py-2 rounded-lg md:rounded-xl cursor-pointer duration-200 hover:bg-[#0071cd] shrink-0'>
+            Add news
+          </div>
         </div>
       </div>
 
@@ -114,10 +115,9 @@ function CyberNewsManagement() {
             label: 'No.',
             key: 'id',
             width: '60px',
-            render: (value: number, row: CyberNewsItem) => (
+            render: (value: number) => (
               <span
-                className="font-mono cursor-pointer text-primary1 hover:underline"
-                onClick={() => router.push(`/admin/cyber-news-management/${row.id}`)}
+                className="font-mono"
               >
                 {value}
               </span>
@@ -126,10 +126,9 @@ function CyberNewsManagement() {
           {
             label: 'Name',
             key: 'name',
-            render: (value: string, row: CyberNewsItem) => (
+            render: (value: string) => (
               <span
-                className="font-medium cursor-pointer text-primary1 hover:underline"
-                onClick={() => router.push(`/admin/cyber-news-management/${row.id}`)}
+                className="font-medium"
               >
                 {value}
               </span>
@@ -157,6 +156,7 @@ function CyberNewsManagement() {
         showSearch={false}
         itemsPerPage={5}
         showRoleFilter={false}
+        onView={(item) => { router.push(`/admin/cyber-news-management/${item.id}`) }}
       />
     </div>
   )

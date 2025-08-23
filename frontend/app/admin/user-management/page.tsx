@@ -15,6 +15,7 @@ import DataTable from '@/src/components/dataTable'
 import PopUp from '@/src/components/ui/popUp'
 import GlareHover from '@/src/lib/GlareHover/GlareHover'
 import { usePermissions } from '@/src/context/permission-context'
+import NotFound from '@/app/not-found'
 
 
 interface AccountItem {
@@ -86,11 +87,10 @@ function UserManagement() {
 
     const { permissions, refreshPermissions } = usePermissions()
   
-    useEffect(() => {
-        if (permissions && !permissions.admin) {
-            window.location.href = '/'
-        }
-    }, [permissions])
+    if (permissions && permissions === 'no_permissions') {
+      return <NotFound/>;
+    }
+
 
 
     useEffect(() => {

@@ -16,6 +16,7 @@ import { PutCompany } from '@/src/modules/company'
 import { PostCompany } from '@/src/modules/company';
 import { DeleteCompany } from '@/src/modules/company'
 import PopUp from '../../../src/components/ui/popUp';
+import NotFound from '@/app/not-found';
 
 function Settings() {
   const { permissions } = usePermissions()
@@ -23,11 +24,11 @@ function Settings() {
   const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = React.useState(false)
   const [deleteItem, setDeleteItem] = React.useState<any>(null)
   const [newCompanyKey, setNewCompanyKey] = React.useState('');
-  useEffect(() => {
-    if (permissions && !permissions.admin) {
-      window.location.href = '/'
-    }
-  }, [permissions])
+
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
+
   const [roleItems, setRoleItems] = React.useState<any[]>([])
   const [companyItems, setCompanyItems] = React.useState<any[]>([])
   const [tagItems, setTagItems] = React.useState<any[]>([])
@@ -226,11 +227,11 @@ function Settings() {
                 <div className="text-sm text-gray-500">User roles and permissions</div>
               </div>
               <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+                <span className="bg-blue-50 text-primary1 px-3 py-1 rounded-full text-sm font-medium">
                   {roleItems.length} items
                 </span>
                 <button
-                  className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm"
+                  className="px-4 sm:px-6 py-2 bg-primary1 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm"
                   onClick={() => router.push('/admin/settings/addRole')}
                 >
                   <Icon icon="mdi:plus" width={18} />
@@ -273,12 +274,12 @@ function Settings() {
                 <div className="text-sm text-gray-500">Company information</div>
               </div>
               <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+                <span className="bg-blue-50 text-primary1 px-3 py-1 rounded-full text-sm font-medium">
                   {companyItems.length} items
                 </span>
                 {!isAddingCompany && editingCompanyIdx === null && (
                   <button
-                    className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm"
+                    className="px-4 sm:px-6 py-2 bg-primary1 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm"
                     onClick={() => setIsAddingCompany(true)}
                     disabled={isAddingCompany}
                   >
@@ -300,7 +301,7 @@ function Settings() {
                         autoFocus
                       />
                       <button
-                        className="ml-0 sm:ml-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm mt-2 sm:mt-0"
+                        className="ml-0 sm:ml-2 px-3 py-1 bg-primary1 text-white rounded hover:bg-blue-700 text-sm mt-2 sm:mt-0"
                         onClick={() => handleEditCompany(idx)}
                       >
                         Save
@@ -320,7 +321,7 @@ function Settings() {
                       <span className="py-1 flex-1 text-gray-800 text-sm">
                         {company.name || company.companyName || '-'}
                         {company.companyKey && (
-                          <span className="ml-3 px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs font-mono font-semibold">
+                          <span className="ml-3 px-3 py-1 rounded-full bg-blue-100 text-primary1 text-xs font-mono font-semibold">
                             {company.companyKey}
                           </span>
                         )}
@@ -467,12 +468,12 @@ function Settings() {
                 <div className="text-sm text-gray-500">Tags for categorizing news</div>
               </div>
               <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+                <span className="bg-blue-50 text-primary1 px-3 py-1 rounded-full text-sm font-medium">
                   {tagItems.length} items
                 </span>
                 {!isAddingTag && editingTagIdx === null && (
                   <button
-                    className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm"
+                    className="px-4 sm:px-6 py-2 bg-primary1 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm"
                     onClick={() => setIsAddingTag(true)}
                     disabled={isAddingTag}
                   >

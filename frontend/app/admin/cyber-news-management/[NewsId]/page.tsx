@@ -10,6 +10,7 @@ import PopUp from '@/src/components/ui/popUp'
 import DefultButton from '@/src/components/ui/defultButton'
 import Dropdown from '@/src/components/ui/dropDown'
 import { GetTag } from '@/src/modules/tag'
+import NotFound from '@/app/not-found'
 
 
 export default function CyberNewsManagement() {
@@ -31,11 +32,9 @@ export default function CyberNewsManagement() {
   const [imageUrl, setImageUrl] = useState('');
 
   // Permission check
-  useEffect(() => {
-    if (permissions && !permissions.admin) {
-      window.location.href = '/'
-    }
-  }, [permissions])
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
 
   // Fetch news detail for edit
   useEffect(() => {

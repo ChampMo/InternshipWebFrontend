@@ -15,6 +15,7 @@ import Calendar from 'react-calendar'
 import GlareHover from '@/src/lib/GlareHover/GlareHover'
 import { CreateToken, GetToken, UpdateToken, DeleteToken, UpdateTokenInuse } from '@/src/modules/token';
 import 'react-calendar/dist/Calendar.css';
+import NotFound from '@/app/not-found'
 
 interface Header {
     key: string;
@@ -75,11 +76,9 @@ function TokenManagement() {
   const [dataToken, setDataToken] = useState<TokenItem[]>([])
   const [showCalendar, setShowCalendar] = useState(false)
 
-  useEffect(() => {
-      if (permissions && !permissions.admin) {
-          window.location.href = '/'
-      }
-  }, [permissions])
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
 
   useEffect(() => {
     const fetchTokens = async () => {
