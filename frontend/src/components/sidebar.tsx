@@ -212,7 +212,7 @@ const Sidebar: React.FC = () => {
                         </div>
                     </nav>
                 </>}
-                {permissions && 
+                {permissions && permissions !== 'no_permissions' && 
                 <div className='flex flex-col mt-auto px-4 py-2'>
                     <div 
                     onClick={()=>{setResetPassPopUp(true)}}
