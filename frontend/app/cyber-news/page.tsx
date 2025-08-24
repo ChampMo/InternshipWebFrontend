@@ -8,6 +8,7 @@ import Sidebar from '@/src/components/sidebar'
 import Port from '@/port';
 import { usePermissions } from "@/src/context/permission-context";
 import { getAllCyberNews } from '@/src/modules/cyber-news';
+import NotFound from '@/app/not-found';
 
 export default function CyberNews() {
   const [newsDetail, setNewsDetail] = useState<any[]>([]);
@@ -18,12 +19,9 @@ export default function CyberNews() {
 
   const { permissions } = usePermissions()
 
-  useEffect(() => {
-      const token = localStorage.getItem("token")
-      if (token && permissions && !permissions.cyberNews) {
-          window.location.href = '/'
-      }
-  }, [permissions])
+  if (permissions && permissions !== 'no_permissions' && !permissions.cyberNews) {
+    return <NotFound/>;
+  }
 
   useEffect(() => {
     const fetchNews = async () => {

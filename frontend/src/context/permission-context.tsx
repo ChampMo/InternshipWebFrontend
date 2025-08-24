@@ -16,7 +16,7 @@ type Permissions = {
   cyberNews: boolean
   ti: boolean
   admin: boolean
-} | null
+} | 'no_permissions' | null
 
 type PermissionsContextType = {
   permissions: Permissions
@@ -34,7 +34,7 @@ export const usePermissions = () => {
 }
 
 export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
-  const [permissions, setPermissions] = useState<Permissions>(null)
+  const [permissions, setPermissions] = useState<Permissions>('no_permissions')
 
   const refreshPermissions = async () => {
     const userId = localStorage.getItem("userId")
@@ -46,9 +46,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         setPermissions(result)
         console.log("Permissions refreshed:", result)
       } else {
+        setPermissions('no_permissions')
         console.warn("Permissions not available:", result)
       }
     } catch (err) {
+      setPermissions('no_permissions')
       console.error("Failed to fetch permissions:", err)
     }
   }

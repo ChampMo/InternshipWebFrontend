@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react'
 import { usePermissions } from "@/src/context/permission-context";
 import { checkIPsFromCSVBackend, ResultRow } from '@/src/modules/ti';
 import DataTable from '@/src/components/dataTable'; 
-
+import NotFound from '@/app/not-found';
 
 
 export default function TechIntelligence() {
@@ -16,12 +16,10 @@ export default function TechIntelligence() {
   const [showResult, setShowResult] = useState(false)
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token")
-    if (permissions && !permissions.ti || !token) {
-      window.location.href = '/'
-    }
-  }, [permissions])
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
+
 
   // Mock handle file upload
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

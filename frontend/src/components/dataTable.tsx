@@ -253,7 +253,7 @@ const DataTable: React.FC<DataTableProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-lg md:rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       
 
       
@@ -298,7 +298,7 @@ const DataTable: React.FC<DataTableProps> = ({
             <tr className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
               {/* Bulk Select Checkbox */}
               {showBulkActionsIn && (
-                <th className="py-4 px-6 w-12">
+                <th className="py-2 md:py-4 px-4 md:px-6 w-12">
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -316,7 +316,7 @@ const DataTable: React.FC<DataTableProps> = ({
               {headers.map((header: Header, index) => (
                 <th 
                   key={index}
-                  className={`text-left py-4 px-6 font-semibold text-gray-900 text-sm ${header.className || ''} ${
+                  className={`text-left py-3 md:py-4 px-4 md:px-6 font-semibold text-gray-900 text-sm ${header.className || ''} ${
                     header.sortable !== false ? 'cursor-pointer hover:bg-blue-100 transition-colors duration-150 select-none' : ''
                   }`}
                   style={{ width: header.width }}
@@ -329,7 +329,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 </th>
               ))}
               {showActions && ( onEdit || onDelete) && (
-                <th className="text-left py-4 px-6 font-semibold text-gray-900 text-sm">Actions</th>
+                <th className="text-left py-2 md:py-4 px-4 md:px-6 font-semibold text-gray-900 text-sm">Actions</th>
               )}
             </tr>
           </thead>
@@ -348,7 +348,7 @@ const DataTable: React.FC<DataTableProps> = ({
               >
                 {/* Individual Select Checkbox */}
                 {showBulkActionsIn && (
-                  <td className="py-4 px-6">
+                  <td className="py-2 md:py-4 px-4 md:px-6 ">
                     <div className="flex items-center">
                       <input
                         type="checkbox"
@@ -363,13 +363,13 @@ const DataTable: React.FC<DataTableProps> = ({
                 {headers.map((header: Header, headerIndex: number) => (
                   <td 
                     key={headerIndex}
-                    className={`py-4 px-6 text-sm ${header.cellClassName || 'text-gray-700'}`}
+                    className={`py-2 md:py-4 px-4 md:px-6  text-sm ${header.cellClassName || 'text-gray-700'}`}
                   >
                     {renderCellValue(item, header)}
                   </td>
                 ))}
                 {showActions && ( onEdit || onDelete) && (
-                  <td className="py-4 px-6">
+                  <td className="py-2 md:py-4 px-4 md:px-6 ">
                     <div className="flex items-center gap-2">
                       
                       {onEdit && (
@@ -427,7 +427,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
       {/* Pagination */}
       {showPagination && (
-        <div className="border-t border-[#D2ECFF] bg-[#F2F9FE] px-6 py-4">
+        <div className="border-t border-[#D2ECFF] bg-[#F2F9FE] px-4 md:px-6 py-2 md:py-4">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-700">
               Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
@@ -485,23 +485,23 @@ const DataTable: React.FC<DataTableProps> = ({
       
       {/* Bulk Actions Bar */}
       {showBulkActionsIn && selectedItems.size > 0 && (
-        <div className="bg-[#F2F9FE] border-t border-blue-200 px-6 py-4">
-          <div className="flex items-center justify-between">
+        <div className="bg-[#F2F9FE] border-t border-blue-200 px-4 md:px-6 py-4">
+          <div className="flex md:items-center justify-between flex-col md:flex-row gap-4 md:gap-0">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <span className="text-primary1 font-semibold text-sm">{selectedItems.size}</span>
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <span className="text-primary1 font-semibold text-xs md:text-sm">{selectedItems.size}</span>
                 </div>
-                <span className="text-primary1 font-medium">
+                <span className="text-primary1 font-medium text-xs md:text">
                   {selectedItems.size === 1 ? ' item selected' : ` items selected`}
                 </span>
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 justify-between md:justify-end w-full md:w-auto">
               <button
                 onClick={() => {setSelectedItems(new Set()), setShowBulkActionsIn(false)}}
-                className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 hover:bg-white rounded-lg transition-colors duration-150"
+                className="px-3 py-1.5 text-xs md:text-sm text-gray-600 hover:text-gray-800 hover:bg-white rounded-lg transition-colors duration-150"
               >
                 Clear selection
               </button>
@@ -511,7 +511,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   onBulkDelete(selectedData as AccountItem[]);
                   setSelectedItems(new Set());
                 } : undefined}
-                className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-150 font-medium"
+                className="flex items-center text-sm md:text gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-150 font-medium"
               >
                 <Trash2 className="w-4 h-4" />
                 Delete Selected

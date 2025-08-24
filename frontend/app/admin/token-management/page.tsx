@@ -15,6 +15,7 @@ import Calendar from 'react-calendar'
 import GlareHover from '@/src/lib/GlareHover/GlareHover'
 import { CreateToken, GetToken, UpdateToken, DeleteToken, UpdateTokenInuse } from '@/src/modules/token';
 import 'react-calendar/dist/Calendar.css';
+import NotFound from '@/app/not-found'
 
 interface Header {
     key: string;
@@ -75,11 +76,9 @@ function TokenManagement() {
   const [dataToken, setDataToken] = useState<TokenItem[]>([])
   const [showCalendar, setShowCalendar] = useState(false)
 
-  useEffect(() => {
-      if (permissions && !permissions.admin) {
-          window.location.href = '/'
-      }
-  }, [permissions])
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
 
   useEffect(() => {
     const fetchTokens = async () => {
@@ -210,7 +209,7 @@ function TokenManagement() {
           sortable: true,
           width: '80px',
           render: (value) => (
-            <span className=" px-2.5 py-1 rounded-md font-mono text">
+            <span className=" px-2.5 py-1 rounded-md font-mono  text-sm md:text">
               {value}
             </span>
           )
@@ -221,7 +220,7 @@ function TokenManagement() {
           sortable: true,
           render: (value) => {
             return (
-              <div className={`font-medium text-sm'}`}>
+              <div className={`font-medium text-xs md:text-sm'}`}>
                 {value}
               </div>
             );
@@ -241,8 +240,8 @@ function TokenManagement() {
               'Not used': 'bg-gray-400',
             };
             return (
-              <div className={`inline-flex text-nowrap items-center px-2.5 py-1 rounded-full text-sm gap-2 font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
-                <div className={`${iconColors[value] } w-3 h-3 rounded-full mb-1 shrink-0 `}/>
+              <div className={`inline-flex text-nowrap items-center px-2.5 py-1 rounded-full gap-2 text-xs md:text-sm font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
+                <div className={`${iconColors[value] } w-2 h-2 md:w-3 md:h-3 rounded-full mb-1 shrink-0 `}/>
                 {value}
               </div>
             );
@@ -253,7 +252,7 @@ function TokenManagement() {
           key: 'token',
           sortable: true,
           render: (value) => (
-            <div className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-sm w-fit max-w-96 break-words">
+            <div className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-xs md:text-sm w-fit max-w-96 break-words">
               {value}
             </div>
           )
@@ -268,7 +267,7 @@ function TokenManagement() {
               'TI': 'bg-emerald-100 text-emerald-600 border-emerald-600',
             };
             return (
-              <div className={`inline-flex  items-center px-2.5 py-1 rounded-full text-sm font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
+              <div className={`inline-flex  items-center px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-xs md:text-sm font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
                 {value}
               </div>
             );
@@ -291,7 +290,7 @@ function TokenManagement() {
         
             return (
               <span
-                className={`text-sm px-2 py-1 rounded ${
+                className={`text-xs md:text-sm px-2 py-1 rounded ${
                   isExpired
                     ? 'text-red-500 font-semibold'
                     : isToday
@@ -310,7 +309,7 @@ function TokenManagement() {
           key: 'updatedAt',
           sortable: true,
           render: (value) => 
-            <span className="text-sm">
+            <span className="text-xs md:text-sm">
               {value}
             </span>
         }
@@ -654,12 +653,12 @@ function TokenManagement() {
         setIsVisible={setEditPopUp}
         onClose={() => setEditPopUp(false)}>
           <div>
-            <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-8'>
-              <div className='text-xl text-white flex gap-2 items-end'><Icon icon="tabler:pencil" width="30" height="30" className='mb-1' /> Edit User Account</div>
+            <div className='w-full md:w-[500px] h-22 md:h-30 rounded-t-xl md:rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-4 md:px-8'>
+              <div className='text-xl text-white flex gap-2 items-end'><Icon icon="tabler:pencil" width="30" height="30" className='mb-1' /> Edit Token</div>
               <div className=' text-white'>Update token information</div>
             </div>
-            <div className='flex flex-col px-8 pt-8 pb-6'>
-              <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
+            <div className='flex flex-col px-4 md:px-8 md:pt-2 pb-4 md:pb-6'>
+              <div className='flex mt-4 md:mt-2 flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
                 <div className='flex justify-between items-center'>
                   <div className='text-sm text-gray-500'>Token</div>
                   <div className='text-sm py-1 px-3 rounded-lg bg-gray-300 max-w-70 break-words line-clamp-2'>{editToken?.token}</div>
@@ -669,7 +668,7 @@ function TokenManagement() {
                   <div className=''>{editToken?.updatedAt}</div>
                 </div>
               </div>
-              <div className=' mt-6 flex flex-col z-40'>
+              <div className='mt-4 md:mt-6 flex flex-col z-40'>
                 <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Name</div>
                 <input 
                   type='text'
@@ -678,7 +677,7 @@ function TokenManagement() {
                   className={` border mt-3 bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${editToken?.name?'border-primary1':'border-gray-300'}`}
                   placeholder='Enter name'/>
                 <div className={`ml-auto text-sm text-red-500 h-0 translate-y-1 duration-300 ${editToken && editTokenOld && isAlreadyInUse(dataToken.map(token => token.name !== editTokenOld.name ? token.name:'' ), editToken.name) ? 'opacity-100' : 'opacity-0'}`}>This token name is already in use.</div></div>
-                <div className=' mt-6 flex flex-col gap-3 z-40'>
+                <div className=' mt-4 md:mt-6 flex flex-col gap-3 z-40'>
                 <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Type</div>
                 <Dropdown
                   items={typeToken.map((item: string) => item.toString())}
@@ -691,7 +690,7 @@ function TokenManagement() {
                   haveIcon={false}
                 />
                 </div>
-                <div className=' mt-6 flex flex-col'>
+                <div className=' mt-4 md:mt-6 flex flex-col'>
               <div className='text-sm text-gray-500 flex items-end gap-2'>
                 <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
                 Expire date
@@ -743,9 +742,9 @@ function TokenManagement() {
                   )}
                 </div>
             </div>
-              <div className='border-b border-gray-200 mt-14 mb-5'/>
+              <div className='border-b border-gray-200 mt-4 md:mt-14 mb-2 md:mb-5'/>
               <div className='flex gap-5'>
-                <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setEditPopUp(false)}}>
+                <div className='text-gray-400 md:text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setEditPopUp(false)}}>
                   Cancel
                 </div>
                 <DefultButton 
@@ -762,17 +761,17 @@ function TokenManagement() {
           setIsVisible={setDeletePopUp}
           onClose={() => setDeletePopUp(false)}>
           <div>
-            <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[#a10f16] to-[#ca000a] px-8'>
-              <div className='text-xl text-white flex gap-2 items-end'><Icon icon="streamline-ultimate:bin-1" width="30" height="30" className='mb-1' /> Delete Token</div>
-              <div className=' text-white'>Are you sure you want to delete this token?</div>
+            <div className='md:w-[500px] h-22 md:h-30 rounded-t-xl md:rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l px-4 md:px-8 from-[#a10f16] to-[#ca000a] '>
+              <div className='md:text-xl text-white flex gap-2 items-end'><Icon icon="streamline-ultimate:bin-1" width="30" height="30" className='mb-1' /> Delete Token</div>
+              <div className='text-sm md:text text-white'>Are you sure you want to delete this token?</div>
             </div>
-            <p className="text-gray-700 px-8 pt-5 text-lg flex gap-1">
+            <p className="text-gray-700 px-4 md:px-8 pt-5 text-sm md:text-lg flex gap-1">
                 There are<span className="font-semibold text-red-600">{deleteToken?.length ?? 0}</span> item{(deleteToken?.length ?? 0) > 1 ? 's' : ''} that will be deleted.
               </p>
-            <div className='flex flex-col px-8 pt-8 pb-6'>
-              <div className=' max-h-85 overflow-y-auto gap-4 flex flex-col'>
+            <div className='flex flex-col px-4 md:px-8 pt-4 md:pt-8 pb-4 md:pb-6'>
+              <div className='max-h-66 md:max-h-85 overflow-y-auto gap-4 flex flex-col'>
                 {deleteToken && deleteToken.map((item:TokenItem, index:number) => (
-                <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
+                <div className='flex flex-col gap-3 border border-gray-300 rounded-xl md:rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
                   <div className='flex justify-between items-center'>
                     <div className='text-sm text-gray-500'>Name</div>
                     <div className=''>{item?.name}</div>
@@ -783,15 +782,15 @@ function TokenManagement() {
                   </div>
                 </div>))}
               </div>
-              <div className='border-b border-gray-200 mt-10 mb-5'/>
+              <div className='border-b border-gray-200 mt-4 md:mt-10 mb-2 md:mb-5'/>
               <div className='flex gap-5'>
-                <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setDeletePopUp(false)}}>
+                <div className='text-gray-400 md:text-lg cursor-pointer border border-gray-300 rounded-lg md:rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setDeletePopUp(false)}}>
                   Cancel
                 </div>
                 <button
                   disabled={loading}
                   onClick={() => deleteToken && handleDeleteAccount(deleteToken)}
-                  className={`group text-white h-12 rounded-xl text-lg w-full bg-gradient-to-r from-[#ec1c26] to-[#e7000b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden`}
+                  className={`group text-white h-12 rounded-lg md:rounded-xl md:text-lg w-full bg-gradient-to-r from-[#ec1c26] to-[#e7000b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden`}
                 >
                   <GlareHover
                     glareColor="#ffffff"

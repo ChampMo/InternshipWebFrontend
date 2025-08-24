@@ -15,6 +15,7 @@ import DataTable from '@/src/components/dataTable'
 import PopUp from '@/src/components/ui/popUp'
 import GlareHover from '@/src/lib/GlareHover/GlareHover'
 import { usePermissions } from '@/src/context/permission-context'
+import NotFound from '@/app/not-found'
 
 
 interface AccountItem {
@@ -86,11 +87,10 @@ function UserManagement() {
 
     const { permissions, refreshPermissions } = usePermissions()
   
-    useEffect(() => {
-        if (permissions && !permissions.admin) {
-            window.location.href = '/'
-        }
-    }, [permissions])
+    if (permissions && permissions === 'no_permissions') {
+      return <NotFound/>;
+    }
+
 
 
     useEffect(() => {
@@ -242,7 +242,7 @@ function UserManagement() {
           width: '80px',
           sortable: true,
           render: (value) => (
-            <span className=" px-2.5 py-1 rounded-md font-mono text">
+            <span className=" px-2.5 py-1 rounded-md font-mono text-sm md:text">
               {value}
             </span>
           )
@@ -252,7 +252,7 @@ function UserManagement() {
           key: 'email',
           sortable: true,
           render: (value) => (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 text-sm md:text">
               <span className="font-medium">{value}</span>
             </div>
           )
@@ -266,7 +266,7 @@ function UserManagement() {
               "Company has been removed" : 'bg-red-600 text-white shrink-0 text-center rounded-md px-2.5 py-1',
             };
             return (
-              <div className={`font-medium text-sm ${colors[value] || ''}`}>
+              <div className={`font-medium text-xs md:text-sm ${colors[value] || ''}`}>
                 {value}
               </div>
             );
@@ -277,7 +277,7 @@ function UserManagement() {
           key: 'userId',
           sortable: true,
           render: (value) => (
-            <span className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-sm">
+            <span className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-xs md:text-sm">
               {value}
             </span>
           )
@@ -292,7 +292,7 @@ function UserManagement() {
               'Role has been removed': 'bg-red-600 text-white shrink-0 text-center',
             };
             return (
-              <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
+              <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs md:text-sm font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
                 {value}
               </div>
             );
@@ -303,7 +303,7 @@ function UserManagement() {
           key: 'createDate',
           sortable: true,
           render: (value) => 
-            <span className="text-sm">
+            <span className="text-xs md:text-sm">
               {value}
             </span>
         }
@@ -377,7 +377,7 @@ function UserManagement() {
     <>
         <div className='w-full flex flex-col overflow-auto h-screen px-4 pt-4 md:px-10 md:pt-10'>
             <div className=' font-bold text-xl md:text-2xl'>Create account</div>
-            <div className='w-auto flex flex-col p-5 mt-4 rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] border border-gray-200 max-w-[1300px]'>
+            <div className='w-auto flex flex-col p-5 mt-4 rounded-lg md:rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] border border-gray-200 max-w-[1300px]'>
                 
                 <div 
                 className=' flex gap-5 z-40 md:flex-nowrap flex-wrap'>
@@ -504,26 +504,26 @@ function UserManagement() {
         setIsVisible={setIsVisiblePopUp}
         onClose={() => setIsVisiblePopUp(false)}>
           <div>
-            <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-8'>
+            <div className='w-full md:w-[500px] h-22 md:h-30 rounded-t-xl md:rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] px-4 md:px-8'>
               <div className='text-xl text-white flex gap-2 items-end'><Icon icon="streamline-ultimate:bin-1" width="30" height="30" className='mb-1' /> Edit User Account</div>
               <div className=' text-white'>Update user role and company information</div>
             </div>
-            <div className='flex flex-col px-8 pt-8 pb-6'>
-              <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
-                <div className='flex justify-between items-center'>
-                  <div className='text-sm text-gray-500'>User Id:</div>
-                  <div className=''>{editItem?.userId}</div>
+            <div className='flex flex-col px-4 md:px-8 md:pt-2 pb-4 md:pb-6'>
+              <div className='flex flex-col gap-3 border border-gray-300 mt-2 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
+                <div className='flex justify-between md:items-center md:flex-row flex-col gap-2 md:gap-0'>
+                  <div className='text-xs md:text-sm text-gray-500 '>User Id:</div>
+                  <div className='text-sm md:text w-full flex justify-center items-center md:w-auto text-center'>{editItem?.userId}</div>
                 </div>
-                <div className='flex justify-between items-center'>
-                  <div className='text-sm text-gray-500'>Email Address:</div>
-                  <div className='py-1 px-3 rounded-lg bg-gray-300'>{editItem?.email}</div>
+                <div className='flex justify-between md:items-center md:flex-row flex-col gap-2 md:gap-0'>
+                  <div className='text-xs md:text-sm text-gray-500'>Email Address:</div>
+                  <div className='text-sm md:text py-1 px-3 rounded-lg bg-gray-300 w-full flex justify-center items-center md:w-auto'>{editItem?.email}</div>
                 </div>
-                <div className='flex justify-between items-center'>
-                  <div className='text-sm text-gray-500'>Created Date:</div>
-                  <div className=''>{editItem?.createDate}</div>
+                <div className='flex justify-between md:items-center md:flex-row flex-col gap-2 md:gap-0'>
+                  <div className='text-xs md:text-sm text-gray-500'>Created Date:</div>
+                  <div className='text-sm md:text w-full flex justify-center items-center md:w-auto'>{editItem?.createDate}</div>
                 </div>
               </div>
-              <div className=' mt-6 flex flex-col gap-3 z-40'>
+              <div className='mt-4 md:mt-6 flex flex-col gap-3 z-40'>
                 <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>Company</div>
                 <Dropdown
                   items={companyItems.map(item => item.companyName)}
@@ -537,7 +537,7 @@ function UserManagement() {
                   haveIcon={false}
                 />
               </div>
-              <div className=' mt-6 flex flex-col gap-3 z-30'>
+              <div className=' mt-4 md:mt-6 flex flex-col gap-3 z-30'>
                 <div className='text-sm text-gray-500 flex items-end gap-2'><div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>User Role</div>
                 <Dropdown
                   items={roleItems.map(item => item.roleName)}
@@ -551,9 +551,9 @@ function UserManagement() {
                   haveIcon={false}
                 />
               </div>
-              <div className='border-b border-gray-200 mt-14 mb-5'/>
+              <div className='border-b border-gray-200 mt-4 md:mt-14 mb-2 md:mb-5'/>
               <div className='flex gap-5'>
-                <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setIsVisiblePopUp(false)}}>
+                <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-lg md:rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setIsVisiblePopUp(false)}}>
                   Cancel
                 </div>
                 <DefultButton 
@@ -570,36 +570,36 @@ function UserManagement() {
         setIsVisible={setIsVisiblePopUpDelete}
         onClose={() => setIsVisiblePopUpDelete(false)}>
           <div>
-            <div className='w-[500px] h-30 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[#a10f16] to-[#ca000a] px-8'>
-              <div className='text-xl text-white flex gap-2 items-end'><Icon icon="tabler:pencil" width="30" height="30" className='mb-1' /> Delete User Account</div>
-              <div className=' text-white'>Are you sure you want to delete this user account?</div>
+            <div className='md:w-[500px] h-22 md:h-30 rounded-t-xl md:rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l px-4 md:px-8 from-[#a10f16] to-[#ca000a] '>
+              <div className='md:text-xl text-white flex gap-2 items-end'><Icon icon="tabler:pencil" width="30" height="30" className='mb-1' /> Delete User Account</div>
+              <div className='text-sm md:text text-white'>Are you sure you want to delete this user account?</div>
             </div>
-            <p className="text-gray-700 px-8 pt-5 text-lg flex gap-1">
+            <p className="text-gray-700 px-4 md:px-8 pt-5 text-sm md:text-lg flex gap-1">
                 There are<span className="font-semibold text-red-600">{deleteItem?.length ?? 0}</span> item{(deleteItem?.length ?? 0) > 1 ? 's' : ''} that will be deleted.
               </p>
-            <div className='flex flex-col px-8 pt-8 pb-6'>
-              <div className=' max-h-85 overflow-y-auto gap-4 flex flex-col'>
+            <div className='flex flex-col px-4 md:px-8 pt-4 md:pt-8 pb-6'>
+              <div className=' max-h-66 md:max-h-85 overflow-y-auto gap-4 flex flex-col'>
                 {deleteItem && deleteItem.map((item, index) => (
-                <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
-                  <div className='flex justify-between items-center'>
+                <div className='flex flex-col gap-3 border border-gray-300 rounded-xl md:rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-3 md:p-4'>
+                  <div className='flex md:justify-between md:items-center flex-col md:flex-row gap-2 md:gap-0'>
                     <div className='text-sm text-gray-500'>Email Address:</div>
-                    <div className='py-1 px-3 rounded-lg bg-gray-300'>{item?.email}</div>
+                    <div className='py-1 px-2 md:px-3 rounded-lg bg-gray-300'>{item?.email}</div>
                   </div>
                   <div className='flex justify-between items-center'>
-                    <div className='text-sm text-gray-500'>Company</div>
+                    <div className='text-sm text-gray-500'>Company:</div>
                     <div className=''>{item?.companyName}</div>
                   </div>
                 </div>))}
               </div>
-              <div className='border-b border-gray-200 mt-10 mb-5'/>
+              <div className='border-b border-gray-200 mt-4 md:mt-10 mb-2 md:mb-5'/>
               <div className='flex gap-5'>
-                <div className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setIsVisiblePopUpDelete(false)}}>
+                <div className='text-gray-400 md:text-lg cursor-pointer border border-gray-300 rounded-lg md:rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' onClick={()=>{setIsVisiblePopUpDelete(false)}}>
                   Cancel
                 </div>
                 <button
                   disabled={loading2}
                   onClick={() => deleteItem && handleDeleteAccount(deleteItem)}
-                  className={`group text-white h-12 rounded-xl text-lg w-full bg-gradient-to-r from-[#ec1c26] to-[#e7000b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden`}
+                  className={`group text-white h-12 rounded-lg md:rounded-xl md:text-lg w-full bg-gradient-to-r from-[#ec1c26] to-[#e7000b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden`}
                 >
                   <GlareHover
                     glareColor="#ffffff"

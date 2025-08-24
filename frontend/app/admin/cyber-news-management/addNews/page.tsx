@@ -9,6 +9,7 @@ import DefultButton from '@/src/components/ui/defultButton'
 import Dropdown from '@/src/components/ui/dropDown'
 import { GetTag } from '@/src/modules/tag'
 import { getNextNewsId, uploadNewsImage, createCyberNews } from '@/src/modules/cyber-news'
+import NotFound from '@/app/not-found'
 
 export default function CyberNewsManagement() {
   const { permissions } = usePermissions()
@@ -24,6 +25,7 @@ export default function CyberNewsManagement() {
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+
   const nameRef = React.useRef<HTMLInputElement>(null);
   const tagRef = React.useRef<HTMLSelectElement>(null);
   const summaryRef = React.useRef<HTMLInputElement>(null);
@@ -33,11 +35,9 @@ export default function CyberNewsManagement() {
 
 
   // ตรวจสอบสิทธิ์
-  useEffect(() => {
-    if (permissions && !permissions.admin) {
-      window.location.href = '/'
-    }
-  }, [permissions])
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent, nextRef?: React.RefObject<any>) => {
     if (e.key === 'Enter') {
