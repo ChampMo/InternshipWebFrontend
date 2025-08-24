@@ -210,8 +210,8 @@ function Settings() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 px-2 sm:px-4 md:px-10">
-      <div className="max-w-5xl  pt-10 px-10">
+    <div className="w-full min-h-screen bg-gray-50 px-2 pt-6 sm:px-6 md:px-10 md:pt-10 flex flex-col items-center">
+      <div className="w-full max-w-3xl">
         <div className="mb-2 px-2">
           <h1 className="text-xl sm:text-2xl font-bold mb-1">Settings</h1>
           <p className="text-gray-600 text-sm">Manage your system configurations</p>
@@ -230,7 +230,7 @@ function Settings() {
                   {roleItems.length} items
                 </span>
                 <button
-                  className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm"
+                  className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm shadow hover:bg-blue-700 transition"
                   onClick={() => router.push('/admin/settings/addRole')}
                 >
                   <Icon icon="mdi:plus" width={18} />
@@ -238,10 +238,13 @@ function Settings() {
                 </button>
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="divide-y divide-gray-100 rounded-lg overflow-hidden border border-gray-100 bg-gray-50 text-sm">
               {roleItems.map((role, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2">
-                  <span className="py-1 flex-1 text-gray-800 text-sm">
+                <div
+                  key={idx}
+                  className="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition group"
+                >
+                  <span className="font-medium text-gray-800 text-sm group-hover:text-blue-700 transition">
                     {role.name || role.roleName || '-'}
                   </span>
                   <button
@@ -253,7 +256,7 @@ function Settings() {
                         alert('Role ID not found');
                       }
                     }}
-                    className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150 cursor-pointer"
+                    className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-100 rounded-md transition-colors duration-150 cursor-pointer"
                     title="Edit"
                   >
                     <Edit className="w-4 h-4" />
@@ -288,9 +291,12 @@ function Settings() {
                 )}
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="divide-y divide-gray-100 rounded-lg overflow-hidden border border-gray-100 bg-gray-50 text-sm">
               {companyItems.map((company, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2">
+                <div
+                  key={idx}
+                  className="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition group"
+                >
                   {editingCompanyIdx === idx ? (
                     <>
                       <input
@@ -317,7 +323,7 @@ function Settings() {
                     </>
                   ) : (
                     <>
-                      <span className="py-1 flex-1 text-gray-800 text-sm">
+                      <span className="py-1 flex-1 text-gray-800 text-sm group-hover:text-blue-700 transition">
                         {company.name || company.companyName || '-'}
                         {company.companyKey && (
                           <span className="ml-3 px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs font-mono font-semibold">
@@ -482,9 +488,12 @@ function Settings() {
                 )}
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="divide-y divide-gray-100 rounded-lg overflow-hidden border border-gray-100 bg-gray-50 text-sm">
               {tagItems.map((tag, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2">
+                <div
+                  key={idx}
+                  className="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition group"
+                >
                   {editingTagIdx === idx ? (
                     <>
                       <input
@@ -516,7 +525,7 @@ function Settings() {
                     </>
                   ) : (
                     <>
-                      <span className="py-1 flex-1 text-gray-800 text-sm">
+                      <span className="py-1 flex-1 text-gray-800 text-sm group-hover:text-blue-700 transition">
                         {tag.name || tag.tagName || '-'}
                       </span>
                       <div className="flex gap-2 mt-2 sm:mt-0">

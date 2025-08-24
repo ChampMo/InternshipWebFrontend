@@ -31,8 +31,8 @@ export default function CyberNewsDetailPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 flex flex-col ml-10 mt-10 px-2 sm:px-4">
-      <div className="w-full max-w-6xl pt-6 sm:pt-10 px-0 sm:px-4">
+    <div className="w-full min-h-screen bg-gray-50 flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 max-w-4xl mx-auto">
+      <div className="w-full pt-2 sm:pt-6">
         {/* Back & Title */}
         <div className="flex items-center gap-x-2 mb-2">
           <div
