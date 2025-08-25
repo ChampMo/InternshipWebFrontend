@@ -442,7 +442,7 @@ function TokenManagement() {
 
 
   return (
-      <div className='w-full flex flex-col overflow-auto h-screen px-4 pt-4 md:px-10 md:pt-10'>
+      <div className='w-full flex flex-col overflow-auto h-screen px-4 py-4 md:px-10 md:py-10'>
       <div className=' font-bold text-xl md:text-2xl'>Token in use</div>
       <div className='p-4 md:p-8 mt-4 rounded-xl duration-500 border border-gray-200 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] shadow-sm md:w-fit flex md:flex-row flex-col gap-8 justify-between'>
         <div className='gap-6 flex flex-col'>

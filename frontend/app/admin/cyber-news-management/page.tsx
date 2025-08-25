@@ -91,7 +91,7 @@ function CyberNewsManagement() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 px-4 pt-4 sm:px-6 md:px-10 md:pt-10 flex flex-col">
+    <div className="w-full min-h-screen bg-gray-50 px-4 py-4 sm:px-6 md:px-10 md:py-10 flex flex-col">
       <div className="w-full">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">

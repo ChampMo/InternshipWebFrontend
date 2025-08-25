@@ -172,7 +172,7 @@ export default function AddRolePage() {
   if (!dataLoaded) {
     return (
       <div className='w-full h-screen flex items-center justify-center'>
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary1 border-t-transparent"></div>
       </div>
     );
   }
@@ -278,14 +278,14 @@ export default function AddRolePage() {
                 <div className='border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6'>
                   <div className='flex flex-row gap-3 sm:gap-4'>
                     <button
-                      className='flex-1 px-4 sm:px-6 py-3 text-gray-700 font-medium border border-gray-300 rounded-xl bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all duration-200 text-sm sm:text-base'
+                      className=' text-gray-700 border border-gray-300 bg-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex justify-center items-center shrink-0 text-base grow cursor-pointer'
                       onClick={() => setIsVisiblePopUpDelete(false)}
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleConfirmDelete}
-                      className='flex-1 px-4 sm:px-6 py-3 text-white font-medium rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition-all duration-200 shadow-md hover:shadow-lg text-sm sm:text-base'
+                      className='bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex justify-center items-center shrink-0 text-base grow cursor-pointer'
                     >
                       Delete
                     </button>
@@ -294,9 +294,9 @@ export default function AddRolePage() {
               </div>
             </PopUp>
             <button
-              className={`px-8 py-2 rounded-md transition-colors duration-200 ${
+              className={`px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 ${
                 hasChanges() 
-                  ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer' 
+                  ? 'bg-primary1 text-white hover:bg-[#0071cd] cursor-pointer' 
                   : 'bg-gray-400 text-white cursor-not-allowed'
               }`}
               onClick={hasChanges() ? handleSave : undefined}

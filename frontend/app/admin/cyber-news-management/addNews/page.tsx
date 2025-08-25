@@ -124,17 +124,10 @@ export default function CyberNewsManagement() {
 
   if (permissions === 'no_permissions' || permissions === null) {
     return <NotFound/>;
-  }<div className={` border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
-                      <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
-                      <input 
-                      type='text'
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' placeholder='Search by email, company, user id'/>
-                    </div>
+  }
 
   return (
-    <div className='w-full h-screen flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 overflow-auto max-w-5xl'>
+    <div className='w-full h-screen flex flex-col px-4 py-4 sm:px-6 md:px-10 md:py-10 overflow-auto max-w-5xl'>
       <div className="flex items-center gap-x-2 mb-6 md:mb-7">
         <div
           onClick={() => router.back()}
@@ -158,7 +151,7 @@ export default function CyberNewsManagement() {
               />
               <label
                 htmlFor="fileUpload"
-                className="px-6 py-2.5 sm:px-8 sm:py-3 bg-blue-500 text-white rounded-xl cursor-pointer hover:bg-blue-600 transition text-sm sm:text-base font-medium shadow-sm"
+                className="px-6 py-2.5 sm:px-8 sm:py-3 text-white rounded-xl cursor-pointer bg-primary1 hover:bg-[#0071cd] transition text-sm sm:text-base font-medium shadow-sm"
               >
                 Select file
               </label>
@@ -166,9 +159,9 @@ export default function CyberNewsManagement() {
           ) : (
             <>
               <Icon icon="mdi:cloud-upload-outline" width={48} height={48} className="sm:w-[56px] sm:h-[56px] text-blue-400 mb-4" />
-              <p className="text-sm sm:text-base text-blue-600 mb-2 text-center font-medium">Drag and drop image file to upload</p>
+              <p className="text-sm sm:text-base text-primary1 mb-2 text-center font-medium">Drag and drop image file to upload</p>
               <p className="text-sm sm:text-sm text-blue-400 mb-4 text-center">or</p>
-              <label htmlFor="fileUpload" className="px-6 py-2.5 sm:px-8 sm:py-3 bg-blue-500 text-white rounded-xl cursor-pointer hover:bg-blue-600 transition text-sm sm:text-base font-medium shadow-sm">
+              <label htmlFor="fileUpload" className="px-6 py-2.5 sm:px-8 sm:py-3 text-white rounded-xl cursor-pointer bg-primary1 hover:bg-[#0071cd] transition text-sm sm:text-base font-medium shadow-sm">
                 Select file
               </label>
             </>
@@ -185,19 +178,19 @@ export default function CyberNewsManagement() {
         {/* Name and Tag */}
         <div className="flex flex-col flex-grow gap-4">
           <div>
-            <label className="text-sm sm:text-base font-medium">Name</label>
+            <label className="text-base sm:text-lg font-medium">Name</label>
             <input
               ref={nameRef}
               type="text"
               placeholder="Enter Name"
-              className="w-full border border-blue-300 outline-none rounded-xl px-3 py-2 text-sm sm:text-base"
+              className={`w-full border outline-none rounded-xl px-3 py-2 text-sm sm:text-base ${name ? 'border-primary1' : 'border-gray-300'}`}
               value={name}
               onChange={e => setName(e.target.value)}
               onKeyDown={e => handleKeyDown(e, tagRef)}
             />
           </div>
           <div>
-            <label className="text-sm sm:text-base font-medium">Tag</label>
+            <label className="text-base sm:text-lg font-medium">Tag</label>
             <div className='grow-0 z-30 w-full'>
               <Dropdown 
                 items={tags.map(item => item.tagName)} 
@@ -214,11 +207,11 @@ export default function CyberNewsManagement() {
       {/* Textareas */}
       <div className="mt-6 space-y-4">
         <div>
-          <label className="text-sm sm:text-base font-medium">Summary of information</label>
+          <label className="text-base sm:text-lg font-medium">Summary of information</label>
           <textarea
             ref={summaryRef}
             placeholder="Enter Summary of information"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base"
+            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${summary ? 'border-primary1' : 'border-gray-300'}`}
             value={summary}
             onChange={e => {
               setSummary(e.target.value);
@@ -231,11 +224,11 @@ export default function CyberNewsManagement() {
           />
         </div>
         <div>
-          <label className="text-sm sm:text-base font-medium">More details</label>
+          <label className="text-base sm:text-lg font-medium">More details</label>
           <textarea
             ref={detailsRef}
             placeholder="Enter More details"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base"
+            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${details ? 'border-primary1' : 'border-gray-300'}`}
             value={details}
             onChange={e => {
               setDetails(e.target.value);
@@ -248,11 +241,11 @@ export default function CyberNewsManagement() {
           />
         </div>
         <div>
-          <label className="text-sm sm:text-base font-medium">Impact of the attack</label>
+          <label className="text-base sm:text-lg font-medium">Impact of the attack</label>
           <textarea
             ref={impactRef}
             placeholder="Enter Impact of the attack"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base"
+            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${impact ? 'border-primary1' : 'border-gray-300'}`}
             value={impact}
             onChange={e => {
               setImpact(e.target.value);
@@ -265,11 +258,11 @@ export default function CyberNewsManagement() {
           />
         </div>
         <div>
-          <label className="text-sm sm:text-base font-medium">Advice</label>
+          <label className="text-base sm:text-lg font-medium">Advice</label>
           <textarea
             ref={adviceRef}
             placeholder="Enter Advice"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base"
+            className={`w-full border rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${advice ? 'border-primary1' : 'border-gray-300'}`}
             value={advice}
             onChange={e => {
               setAdvice(e.target.value);
@@ -286,14 +279,13 @@ export default function CyberNewsManagement() {
       {/* Buttons */}
       <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end">
         <button
-          className="px-4 sm:px-6 py-3 border-2 border-red-500 text-red-500 rounded-xl hover:bg-red-500 hover:text-white hover:border-red-600 transition-all duration-200 cursor-pointer text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+          className="border border-red-500 text-red-500 px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base cursor-pointer"
           onClick={() => router.push('/admin/cyber-news-management')}
         >
-          <Icon icon="mdi:close" width="18" height="18" />
           Cancel
         </button>
         <button
-          className="px-4 sm:px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl transition-all duration-200 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl cursor-pointer text-sm sm:text-base font-semibold shadow-lg transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+          className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base cursor-pointer"
           onClick={handleCreate}
           disabled={loading}
         >
@@ -304,7 +296,6 @@ export default function CyberNewsManagement() {
             </>
           ) : (
             <>
-              <Icon icon="mdi:plus" width="18" height="18" />
               Create
             </>
           )}

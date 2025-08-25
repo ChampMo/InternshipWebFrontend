@@ -49,15 +49,13 @@ export default function CyberNews() {
   if (loading) {
     return (
       <div className='w-full h-screen flex items-center justify-center'>
-        <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-200 p-1.5">
-          <Icon icon="ic:round-hourglass-top" width="45" height="45" className="text-gray-300 animate-spin" />
-        </div>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary1 border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <div className="w-full flex flex-col overflow-auto min-h-screen px-4 py-4 sm:px-6 md:px-10 md:py-10  ">
+    <div className="w-full flex flex-col overflow-auto min-h-screen px-4 py-4 sm:px-6 md:px-10 md:py-10">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-3">
         <h1 className="text-xl md:text-2xl font-bold">CyberNews</h1>
 
