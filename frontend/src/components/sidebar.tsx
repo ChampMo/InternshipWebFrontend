@@ -12,6 +12,7 @@ import { Icon } from '@iconify/react';
 import { resetPasswordByOldPass } from '@/src/modules/auth';
 import { useToast } from '@/src/context/toast-context';
 import { GetToken } from '@/src/modules/token';
+import path from 'path';
 
 interface MenuItem {
     name: string;
@@ -22,11 +23,7 @@ interface MenuItem {
 const Sidebar: React.FC = () => {
     const asideRef = useRef<HTMLDivElement | null>(null)
     const { permissions } = usePermissions()
-    const [menuItems, setMenuItems] = useState<MenuItem[]>([
-        { name: 'Jira Dashboard', path: '/jira-dashboard', havePermission: false },
-        { name: 'Cyber News', path: '/cyber-news', havePermission: true },
-        { name: 'TI Tech Intelligence', path: '/ti-tech-intelligence', havePermission: false },
-    ]);
+    const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const { notifySuccess, notifyError } = useToast()
 
     const menuAdmin = [
@@ -61,6 +58,12 @@ const Sidebar: React.FC = () => {
                 { name: 'TI Tech Intelligence', path: '/ti-tech-intelligence', havePermission: permissions.ti },
             ])
             setPermissionsAdmin(permissions.admin);
+        }else{
+            setMenuItems([
+                { name: 'Jira Dashboard', path: '/jira-dashboard', havePermission: false },
+                { name: 'Cyber News', path: '/cyber-news', havePermission: true },
+                { name: 'TI Tech Intelligence', path: '/ti-tech-intelligence', havePermission: false },
+            ])
         }
 
         if (permissions && permissions !== 'no_permissions' && permissions.admin) {
@@ -142,7 +145,9 @@ const Sidebar: React.FC = () => {
         }
     }
 
-    if (pathname.startsWith('/cyber-news') && permissions && permissions === 'no_permissions') {
+    console.log('Current pathname:', pathname, 'Permissions:', permissions);
+
+    if (pathname === '/cyber-news' || pathname.startsWith('/cyber-news/') || pathname === '/admin/settings/addRole') {
     } else if (!['/jira-dashboard', '/cyber-news', '/ti-tech-intelligence', '/admin/user-management', '/admin/token-management', '/admin/cyber-news-management', '/admin/settings'].some(route => pathname === route)) {
         return null;
     } else if (pathname === '/cyber-news' && permissions && permissions !== 'no_permissions' && !permissions.cyberNews) {
@@ -165,7 +170,7 @@ const Sidebar: React.FC = () => {
     }
     else if (pathname === '/admin/settings' && permissions && permissions !== 'no_permissions' && !permissions.admin) {
         return null;
-    }else if (!pathname.startsWith('/cyber-news') && permissions && permissions === 'no_permissions') {
+    }else if (!pathname.startsWith('/cyber-news') && (permissions === 'no_permissions' || permissions === null)) {
         return null;
     }
 

@@ -38,10 +38,14 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshPermissions = async () => {
     const userId = localStorage.getItem("userId")
-    if (!userId) return
+    if (!userId) {
+      setPermissions('no_permissions')
+      return
+    }
 
     try {
       const result = await GetPermissions(userId)
+      console.log("Fetched permissions:", result)
       if ('jira' in result) {
         setPermissions(result)
         console.log("Permissions refreshed:", result)

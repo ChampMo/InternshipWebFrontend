@@ -378,7 +378,7 @@ function UserManagement() {
         }
     }
 
-    if (permissions && permissions === 'no_permissions') {
+    if (permissions === 'no_permissions' || permissions === null) {
       return <NotFound/>;
     }
 
@@ -394,7 +394,7 @@ function UserManagement() {
                     type='email'
                     value={createEmail}
                     onChange={(e) => setCreateEmail(e.target.value)}
-                    className={`md:text-lg border  bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${createEmail?'border-primary1':'border-gray-300'}`}
+                    className={` border  bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${createEmail?'border-primary1':'border-gray-300'}`}
                     placeholder='Enter email'/>
                     <div className=' grow-0 z-40 w-full'>
                         <Dropdown items={roleItems.map(item => item.roleName)} placeholder='Select Role' setValue={setCreateRole} value={createRole} haveIcon={false}/>
@@ -470,7 +470,7 @@ function UserManagement() {
             <div className=' flex flex-col w-full'>
                 <div className=' font-bold text-xl md:text-2xl mt-8'>User</div>
                 <div className='w-full flex flex-col md:flex-row items-center gap-3 md:gap-5 mt-4'>
-                    <div className={` md:text-lg border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
+                    <div className={` border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
                       <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
                       <input 
                       type='text'

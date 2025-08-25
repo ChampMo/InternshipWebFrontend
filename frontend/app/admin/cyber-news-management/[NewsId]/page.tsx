@@ -152,7 +152,7 @@ useEffect(() => {
   fetchTags();
 }, []);
 
-  if (permissions && permissions === 'no_permissions') {
+  if (permissions === 'no_permissions' || permissions === null) {
     return <NotFound/>;
   }
 

@@ -4,10 +4,26 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Icon } from '@iconify/react'
+import { usePermissions } from "@/src/context/permission-context";
+import { PulseLoader } from 'react-spinners';
 
 export default function NotFound() {
   const router = useRouter()
+  const { permissions } = usePermissions()
 
+  if(permissions === null){
+    return (
+      <div className='w-full h-screen flex items-center justify-center'>
+        <PulseLoader
+          loading={true}
+          size={16}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+          color="#007EE5"
+        />
+      </div>
+    );
+  }
   return (
     <main 
     style={{ zIndex : 1000 }}
@@ -42,7 +58,7 @@ export default function NotFound() {
             className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md gap-2"
           >
             <Icon icon="typcn:home-outline" width="20" height="20" />
-            <div className='mt-1'>Back to Home</div>
+            <div className=''>Back to Home</div>
           </Link>
           
           <button
@@ -50,7 +66,7 @@ export default function NotFound() {
             className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-primary1 rounded-xl hover:from-blue-700 hover:to-primary1 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 gap-2"
           >
             <Icon icon="mingcute:arrow-left-fill" width="20" height="20" />
-            <div className='mt-1'>Go Back</div>
+            <div className=''>Go Back</div>
           </button>
         </div>
 

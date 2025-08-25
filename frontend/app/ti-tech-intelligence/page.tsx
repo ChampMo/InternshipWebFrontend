@@ -16,9 +16,7 @@ export default function TechIntelligence() {
   const [showResult, setShowResult] = useState(false)
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
 
-  if (permissions && permissions === 'no_permissions') {
-    return <NotFound/>;
-  }
+
 
 
   // Mock handle file upload
@@ -70,6 +68,10 @@ export default function TechIntelligence() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+
+  if (permissions === 'no_permissions' || permissions === null) {
+    return <NotFound/>;
+  }
 
   return (
     <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>

@@ -124,85 +124,93 @@ function JiraDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
-      const userId = localStorage.getItem('userId') || '';
-      const tickets = await getAllJiraTickets(userId);
-      if( tickets.message === "Jira token has expired" || tickets.message === "Jira token not found" || tickets.message === "Failed to fetch Jira issues" || tickets.message === "Failed to fetch Jira field metadata"){ 
-        setInfoPopUp(true);
-        return;
-      }
-      console.log('Fetched tickets:', tickets);
-      if (selectBarDate) {
-        setData(
-          tickets.filter((ticket: any) => {
-            const ticketDate = new Date(ticket.created).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            });
-            return ticketDate === selectBarDate;
-          }).map((ticket: any) => {
-            const incidentCategoryField = ticket.customFields.find(
-              (field: any) => field.fieldName === "Incident Category"
-            );
-            const categoryValue =
-              Array.isArray(incidentCategoryField?.value) && incidentCategoryField.value.length > 0
-          ? incidentCategoryField.value.map((v: any) => v.value)
-          : [];
-            return {
-              key: ticket.key,
-              priority: ticket.priority,
-              incidentName: ticket.summary,
-              category: categoryValue,
-              statusTicket: ticket.status,
-              customFields: ticket.customFields,
-              createDate: new Date(ticket.created).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-              }),
-            };
-          })
-        );
-        
-      }else{
-        setData(
-          tickets.map((ticket: any) => {
-            const incidentCategoryField = ticket.customFields.find(
-              (field: any) => field.fieldName === "Incident Category"
-            );
+      try{
+        setLoading(true)
+        const userId = localStorage.getItem('userId') || '';
+        const tickets = await getAllJiraTickets(userId);
+        if( tickets.message === "Jira token has expired" || tickets.message === "Jira token not found" || tickets.message === "Failed to fetch Jira issues" || tickets.message === "Failed to fetch Jira field metadata"){ 
+          setInfoPopUp(true);
+          return;
+        }
+        console.log('Fetched tickets:', tickets);
+        if (selectBarDate) {
+          setData(
+            tickets.filter((ticket: any) => {
+              const ticketDate = new Date(ticket.created).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              });
+              return ticketDate === selectBarDate;
+            }).map((ticket: any) => {
+              const incidentCategoryField = ticket.customFields.find(
+                (field: any) => field.fieldName === "Incident Category"
+              );
+              const categoryValue =
+                Array.isArray(incidentCategoryField?.value) && incidentCategoryField.value.length > 0
+            ? incidentCategoryField.value.map((v: any) => v.value)
+            : [];
+              return {
+                key: ticket.key,
+                priority: ticket.priority,
+                incidentName: ticket.summary,
+                category: categoryValue,
+                statusTicket: ticket.status,
+                customFields: ticket.customFields,
+                createDate: new Date(ticket.created).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+                }),
+              };
+            })
+          );
+          
+        }else{
+          setData(
+            tickets.map((ticket: any) => {
+              const incidentCategoryField = ticket.customFields.find(
+                (field: any) => field.fieldName === "Incident Category"
+              );
 
-            const categoryValue =
-              Array.isArray(incidentCategoryField?.value) && incidentCategoryField.value.length > 0
-                ? incidentCategoryField.value.map((v: any) => v.value)
-                : [];
+              const categoryValue =
+                Array.isArray(incidentCategoryField?.value) && incidentCategoryField.value.length > 0
+                  ? incidentCategoryField.value.map((v: any) => v.value)
+                  : [];
 
-            return {
-              key: ticket.key,
-              priority: ticket.priority,
-              incidentName: ticket.summary,
-              category: categoryValue, // <-- ส่ง array ไป
-              statusTicket: ticket.status,
-              customFields: ticket.customFields,
-              createDate: new Date(ticket.created).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-              }),
-            };
-          })
-        );
-        setPriorityItem(prev => prev.map(item => ({
-          ...item,
-          count: tickets.filter((ticket: any) => ticket.priority === item.name).length
-        })));
-      }
-      console.log(priorityItem);
-      console.log(tickets);
+              return {
+                key: ticket.key,
+                priority: ticket.priority,
+                incidentName: ticket.summary,
+                category: categoryValue, // <-- ส่ง array ไป
+                statusTicket: ticket.status,
+                customFields: ticket.customFields,
+                createDate: new Date(ticket.created).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                }),
+              };
+            })
+          );
+          setPriorityItem(prev => prev.map(item => ({
+            ...item,
+            count: tickets.filter((ticket: any) => ticket.priority === item.name).length
+          })));
+        }
+        console.log(priorityItem);
+        console.log(tickets);
       
+      } catch (error) {
+        setData([]);
+        console.error(  error);
+      }
       setLoading(false);
     };
-    fetchData();
+
+    if (permissions !== null && permissions !== 'no_permissions' && permissions.jira) {
+      fetchData();
+    }
     
   }, [selectBarDate]);
 
@@ -454,7 +462,7 @@ console.log('ticket',ticket);
 
 
 
-  if (permissions && permissions === 'no_permissions') {
+  if (permissions === 'no_permissions' || permissions === null) {
     return <NotFound/>;
   }
 
