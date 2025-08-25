@@ -239,15 +239,13 @@ useEffect(() => {
   if (!dataLoaded) {
     return (
       <div className='w-full h-screen flex items-center justify-center'>
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary1 border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <div className='w-full h-screen flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 max-w-5xl'>
-      <style jsx>{scrollbarStyles}</style>
-      
+    <div className='w-full h-screen flex flex-col px-4 py-4 sm:px-6 md:px-10 md:py-10 overflow-auto max-w-5xl'>
       <div className="flex items-center gap-x-2 mb-6 md:mb-7">
         <div
           onClick={() => router.back()}
@@ -271,7 +269,7 @@ useEffect(() => {
               />
                 <label
                 htmlFor="fileUpload"
-                className="px-6 py-2.5 sm:px-8 sm:py-3 bg-blue-500 text-white rounded-xl cursor-pointer hover:bg-blue-600 transition   font-medium shadow-sm"
+                className="px-6 py-2.5 sm:px-8 sm:py-3 text-white rounded-xl cursor-pointer bg-primary1 hover:bg-[#0071cd] transition text-sm sm:text-base font-medium shadow-sm"
                 >
                 Select file
                 </label>
@@ -281,7 +279,7 @@ useEffect(() => {
               <Icon icon="mdi:cloud-upload-outline" width={48} height={48} className="sm:w-[56px] sm:h-[56px] text-blue-400 mb-4" />
               <p className="  text-blue-600 mb-2 text-center font-medium">Drag and drop image file to upload</p>
               <p className="text-sm sm:text-sm text-blue-400 mb-4 text-center">or</p>
-              <label htmlFor="fileUpload" className="px-6 py-2.5 sm:px-8 sm:py-3 bg-blue-500 text-white rounded-xl cursor-pointer hover:bg-blue-600 transition   font-medium shadow-sm">
+              <label htmlFor="fileUpload" className="px-6 py-2.5 sm:px-8 sm:py-3 text-white rounded-xl cursor-pointer bg-primary1 hover:bg-[#0071cd] transition text-sm sm:text-base font-medium shadow-sm">
                 Select file
               </label>
             </>
@@ -298,11 +296,11 @@ useEffect(() => {
         {/* Name and Tag */}
         <div className="flex flex-col flex-grow gap-4">
           <div>
-            <label className=" font-medium">Name</label>
+            <label className="text-base sm:text-lg font-medium">Name</label>
             <input
               type="text"
               placeholder="Enter Name"
-              className="w-full border border-blue-300 outline-none rounded-xl px-3 py-2"
+              className={`w-full border border-blue-300 outline-none rounded-xl px-3 py-2 ${name ? 'border-primary1' : 'border-gray-300'}`}
               value={name}
               onChange={e => setName(e.target.value)}
             />
@@ -328,14 +326,10 @@ useEffect(() => {
       {/* Textareas */}
       <div className="mt-6 space-y-4">
         <div>
-          <label className="  font-medium">Summary of information</label>
+          <label className="text-base sm:text-lg font-medium">Summary of information</label>
           <textarea
             placeholder="Enter Summary of information"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 pr-4 max-h-40 overflow-y-auto resize-none outline-none custom-scrollbar"
-            style={{ 
-              minHeight: 40, 
-              maxHeight: 160
-            }}
+            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${summary ? 'border-primary1' : 'border-gray-300'}`}
             value={summary}
             onChange={e => {
               setSummary(e.target.value);
@@ -347,14 +341,10 @@ useEffect(() => {
           />
         </div>
         <div>
-          <label className="  font-medium">More details</label>
+          <label className="text-base sm:text-lg font-medium">More details</label>
           <textarea
             placeholder="Enter More details"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 pr-4 max-h-40 overflow-y-auto resize-none outline-none custom-scrollbar"
-            style={{ 
-              minHeight: 40, 
-              maxHeight: 160
-            }}
+            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${details ? 'border-primary1' : 'border-gray-300'}`}
             value={details}
             onChange={e => {
               setDetails(e.target.value);
@@ -366,14 +356,10 @@ useEffect(() => {
           />
         </div>
         <div>
-          <label className="  font-medium">Impact of the attack</label>
+          <label className="text-base sm:text-lg font-medium">Impact of the attack</label>
           <textarea
             placeholder="Enter Impact of the attack"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 pr-4 max-h-40 overflow-y-auto resize-none outline-none custom-scrollbar"
-            style={{ 
-              minHeight: 40, 
-              maxHeight: 160
-            }}
+            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${impact ? 'border-primary1' : 'border-gray-300'}`}
             value={impact}
             onChange={e => {
               setImpact(e.target.value);
@@ -385,14 +371,10 @@ useEffect(() => {
           />
         </div>
         <div>
-          <label className="  font-medium">Advice</label>
+          <label className="text-base sm:text-lg font-medium">Advice</label>
           <textarea
             placeholder="Enter Advice"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 pr-4 max-h-40 overflow-y-auto resize-none outline-none custom-scrollbar"
-            style={{ 
-              minHeight: 40, 
-              maxHeight: 160
-            }}
+            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${advice ? 'border-primary1' : 'border-gray-300'}`}
             value={advice}
             onChange={e => {
               setAdvice(e.target.value);
@@ -408,7 +390,7 @@ useEffect(() => {
       {/* Buttons */}
       <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end">
         <button
-          className="px-4 sm:px-6 py-3 border-2 border-red-500 text-red-500 rounded-xl hover:bg-red-500 hover:text-white hover:border-red-600 transition-all duration-200 cursor-pointer   font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+          className="border border-red-500 text-red-500 px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
           onClick={() => setIsVisiblePopUpDelete(true)}
           disabled={loading}
         >
@@ -419,7 +401,6 @@ useEffect(() => {
             </>
           ) : (
             <>
-              <Icon icon="mdi:delete" width="18" height="18" />
               Delete
             </>
           )}
@@ -427,7 +408,7 @@ useEffect(() => {
         <button
           className={`px-4 sm:px-6 py-3 rounded-xl transition-all duration-200   font-semibold shadow-lg flex items-center justify-center gap-2 ${
             hasChanges() && !loading
-              ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 hover:shadow-xl cursor-pointer transform hover:scale-[1.02]'
+              ? 'bg-primary1 hover:bg-[#0071cd] text-white cursor-pointer transform'
               : 'bg-gray-400 text-gray-200 cursor-not-allowed'
           } ${loading ? 'opacity-50 cursor-not-allowed transform-none' : ''}`}
           onClick={hasChanges() && !loading ? handleUpdate : undefined}
@@ -440,7 +421,6 @@ useEffect(() => {
             </>
           ) : (
             <>
-              <Icon icon="mdi:content-save" width="18" height="18" />
               Update
             </>
           )}

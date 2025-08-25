@@ -213,7 +213,7 @@ function Settings() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 px-4 pt-4 sm:px-6 md:px-10 md:pt-10 flex flex-col">
+    <div className="w-full min-h-screen px-4 py-4 sm:px-6 md:px-10 md:py-10 flex flex-col">
       <div className="w-full max-w-3xl">
         <div className="mb-2 px-2">
           <h1 className="text-xl sm:text-2xl font-bold mb-1">Settings</h1>
@@ -508,7 +508,7 @@ function Settings() {
                 </span>
                 {!isAddingTag && editingTagIdx === null && (
                   <button
-                    className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                    className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base cursor-pointer"
                     onClick={() => setIsAddingTag(true)}
                     disabled={isAddingTag}
                   >
@@ -604,7 +604,7 @@ function Settings() {
                     </div>
                     <div className="flex gap-3 justify-end">
                       <button
-                        className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                        className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base "
                         onClick={handleAddTag}
                         disabled={isTagLoading}
                       >

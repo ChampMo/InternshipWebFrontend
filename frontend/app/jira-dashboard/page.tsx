@@ -472,7 +472,7 @@ console.log('ticket',ticket);
 
 
   return (
-    <div className='w-full flex flex-col overflow-auto h-screen px-4 pt-4 md:px-10 md:pt-10'>
+    <div className='w-full flex flex-col overflow-auto h-screen px-4 py-4 md:px-10 md:py-10'>
       {viewDetail
       ? <> 
         <div className='flex items-center'>

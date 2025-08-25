@@ -74,7 +74,7 @@ export default function TechIntelligence() {
   }
 
   return (
-    <div className='w-full flex flex-col overflow-auto h-screen px-4 sm:px-10 pt-6 sm:pt-10'>
+    <div className='w-full flex flex-col overflow-auto h-screen px-4 sm:px-10 py-4 sm:py-10'>
       <div className="font-bold text-lg sm:text-xl mb-4">TI Tech Intelligence</div>
 
       {/* Upload Box */}
@@ -102,7 +102,7 @@ export default function TechIntelligence() {
         }
           }}
         >
-          <Icon icon="mdi:file-excel" width={32} className="text-blue-400 mb-2 sm:w-[40px]" />
+          <Icon icon="mdi:file-excel" width={32} height={32} className="text-blue-400 mb-2 sm:w-[40px] shrink-0" />
           <p className="text-blue-400 mb-2 text-xs sm:text-base text-center px-2">Drag and drop csv file to upload</p>
           <input
         type="file"
@@ -111,7 +111,8 @@ export default function TechIntelligence() {
         className="hidden"
         id="fileUpload"
           />
-          <label htmlFor="fileUpload" className="px-3 sm:px-4 py-2 bg-blue-100 text-blue-600 rounded-xl cursor-pointer hover:bg-blue-200 transition text-xs sm:text-base">
+          <p className="text-sm sm:text-sm text-blue-400 mb-4 text-center">or</p>
+          <label htmlFor="fileUpload" className="px-6 py-2.5 sm:px-8 text-white rounded-xl cursor-pointer bg-primary1 hover:bg-[#0071cd] transition text-sm sm:text-base font-medium shadow-sm">
         Select file
           </label>
           {/* แสดงชื่อไฟล์ที่เลือก */}
@@ -122,10 +123,10 @@ export default function TechIntelligence() {
           )}
         </div>
         <button
-          className={`w-full max-w-60 h-10 rounded-xl transition mb-2 text-xs sm:text-base ${
+          className={`w-60 px-6 py-2.5 sm:px-8 sm:py-3 text-white rounded-xl cursor-pointer transition text-sm sm:text-base font-medium shadow-sm ${
         !file
-          ? 'bg-gray-400 text-white cursor-not-allowed'
-          : 'bg-blue-600 text-white hover:bg-blue-700'
+          ? 'bg-gray-400 cursor-not-allowed'
+          : ' bg-primary1 hover:bg-[#0071cd]'
           }`}
           onClick={handleSubmit}
           disabled={loading || !file}

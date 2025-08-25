@@ -58,7 +58,7 @@ export default function CyberNewsDetailPage() {
   if (loading) {
     return (
       <div className='w-full h-screen flex items-center justify-center'>
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary1 border-t-transparent"></div>
       </div>
     );
   }
@@ -76,7 +76,7 @@ export default function CyberNewsDetailPage() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 max-w-4xl">
+    <div className="w-full min-h-screen flex flex-col px-4 py-4 sm:px-6 md:px-10 md:py-10 max-w-4xl">
       <div className="w-full pt-2 sm:pt-6">
         {/* Back & Title */}
         <div className="flex items-center gap-x-2 mb-2">

@@ -384,7 +384,7 @@ function UserManagement() {
 
   return (
     <>
-        <div className='w-full flex flex-col overflow-auto h-screen px-4 pt-4 md:px-10 md:pt-10'>
+        <div className='w-full flex flex-col overflow-auto h-screen px-4 py-4 md:px-10 md:py-10'>
             <div className=' font-bold text-xl md:text-2xl'>Create account</div>
             <div className='w-auto flex flex-col p-5 mt-4 rounded-lg md:rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] border border-gray-200 max-w-[1300px]'>
                 
