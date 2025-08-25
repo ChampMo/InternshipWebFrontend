@@ -34,7 +34,7 @@ export const usePermissions = () => {
 }
 
 export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
-  const [permissions, setPermissions] = useState<Permissions>('no_permissions')
+  const [permissions, setPermissions] = useState<Permissions>(null)
 
   const refreshPermissions = async () => {
     const userId = localStorage.getItem("userId")
