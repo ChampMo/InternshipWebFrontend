@@ -133,22 +133,22 @@ export default function Signin() {
         {/* sign in */}
         <div 
         ref={containerRef}
-        className={`flex overflow-hidden border-4 border-primary1 rounded-4xl shadow-lg bg-white w-[500] z-10 duration-600 ${statePage === 0 ? 'h-[600]' : statePage === 1 ? 'h-[400]':statePage === 2 ? 'h-[480]':'h-[600]'} ${onStartPage ? 'opacity-100 ' : 'opacity-0'}`}>
-          <div className={`flex flex-col p-10 py-14 items-center justify-center gap-4 w-full shrink-0 mp-10 ${statePage === 0 ? 'opacity-100' : 'opacity-0'} duration-800`}>
+        className={`flex items-center overflow-hidden border-4 border-primary1 rounded-3xl md:rounded-4xl shadow-lg bg-white w-11/12 md:w-[500] z-10 duration-600 ${statePage === 0 ? 'h-[450] md:h-[600] ' : statePage === 1 ? 'h-[320] md:h-[400]':statePage === 2 ? 'h-[360] md:h-[480]':'h-[480] md:h-[600]'} ${onStartPage ? 'opacity-100 ' : 'opacity-0'}`}>
+          <div className={`flex flex-col p-5 md:p-10 py-8 md:py-14 items-center justify-center gap-4 w-full shrink-0 mp-10 ${statePage === 0 ? 'opacity-100' : 'opacity-0'} duration-800`}>
             {statePage === 0 &&
             <>
-              <div className="text-4xl text-primary1 font-bold">Sign In</div>
+              <div className="text-3xl md:text-4xl text-primary1 font-bold">Sign In</div>
               <form 
                 onSubmit={handleSubmit}
-                className="flex flex-col gap-6 mt-10 w-full h-full">
-                <div className='text-gray-500 text-lg'>Email</div>
+                className="flex flex-col gap-4 md:gap-6 mt-5 md:mt-10 w-full h-full">
+                <div className='text-gray-500 md:text-lg'>Email</div>
                 <div className='border-b-2 border-primary1 w-full flex items-center '>
-                  <Icon icon="ic:round-email" width="30" height="30" 
-                  className='mb-1' 
+                  <Icon icon="ic:round-email"
+                  className='mb-1 w-7 h-7 md:w-8 md:h-8' 
                   color={`${!email?'#ABABAB':'#007EE5'}`} />
                   <input 
                   type="email" 
-                  className="pl-4 w-full text-lg outline-0 mb-1 placeholder:text-gray-400" 
+                  className="pl-2 md:pl-4 w-full md:text-lg outline-0 mb-1 placeholder:text-gray-400" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder='Enter your email'
@@ -156,25 +156,25 @@ export default function Signin() {
                 </div>
                   
                   
-                <div className='text-gray-500 text-lg mt-2'>Password</div>
+                <div className='text-gray-500 md:text-lg mt-2'>Password</div>
                 <div className='border-b-2 border-primary1 w-full flex items-center relative'>
-                  <Icon icon="ph:lock-key-fill" width="33" height="33" 
-                  className='mb-1' 
+                  <Icon icon="ph:lock-key-fill"
+                  className='mb-1 w-7 h-7 md:w-8 md:h-8' 
                   color={`${!password?'#ABABAB':'#007EE5'}`} />
                   <input 
                   type={`${typePassword ?"password": "text"}`} 
-                  className="pl-4 w-full text-lg outline-0 mb-1 placeholder:text-gray-400" 
+                  className="pl-2 md:pl-4 w-full md:text-lg outline-0 mb-1 placeholder:text-gray-400" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder='Enter your password'
                   required />
                   <div className='cursor-pointer absolute right-2' onClick={() => setTypePassword(!typePassword)}>
                     {typePassword ?
-                    <Icon icon="iconamoon:eye-duotone" width="28" height="28" color='#ABABAB'/>
-                    :<Icon icon="iconamoon:eye-off-duotone" width="28" height="28" color='#ABABAB'/>}
+                    <Icon icon="iconamoon:eye-duotone" className='w-7 h-7 md:w-8 md:h-8'  color='#ABABAB'/>
+                    :<Icon icon="iconamoon:eye-off-duotone" className='w-7 h-7 md:w-8 md:h-8' color='#ABABAB'/>}
                   </div>
                 </div>
-                <div className="text-blue-500 ml-auto cursor-pointer mb-8" onClick={()=>{setStatePage(1), setPassword('')}}> Forgot Password? </div>
+                <div className="text-blue-500 ml-auto cursor-pointer mb-6 md:mb-8 text-sm md:text" onClick={()=>{setStatePage(1), setPassword('')}}> Forgot Password? </div>
                 <DefultButton active={!!email && !!password} loading={loading} highCustom={'h-12'} >
                   Sign In
                 </DefultButton>

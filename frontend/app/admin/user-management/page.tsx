@@ -87,9 +87,7 @@ function UserManagement() {
 
     const { permissions, refreshPermissions } = usePermissions()
   
-    if (permissions && permissions === 'no_permissions') {
-      return <NotFound/>;
-    }
+
 
 
 
@@ -111,18 +109,6 @@ function UserManagement() {
     useEffect(() => {
       const fetchData = async () => {
           try {
-          const result = await GetRole()
-          const companyResult = await GetCompany()
-          if (result && Array.isArray(result)) {
-              const roles = result.map((role: any) => role);
-              setRoleItems(roles);
-              console.log('Roles fetched successfully:', roles);
-          }
-          if (companyResult && Array.isArray(companyResult)) {
-              const companies = companyResult.map((company: any) => company);
-              setCompanyItems(companies);
-              console.log('Companies fetched successfully:', companies);
-          }
           const userResult = await GetAccount()
 
           if (userResult && Array.isArray(userResult)) {
@@ -152,7 +138,27 @@ function UserManagement() {
           }
       }
 
+      const fetchDataRoleCompany = async () => {
+          try {
+          const result = await GetRole()
+          const companyResult = await GetCompany()
+          if (result && Array.isArray(result)) {
+              const roles = result.map((role: any) => role);
+              setRoleItems(roles);
+              console.log('Roles fetched successfully:', roles);
+          }
+          if (companyResult && Array.isArray(companyResult)) {
+              const companies = companyResult.map((company: any) => company);
+              setCompanyItems(companies);
+              console.log('Companies fetched successfully:', companies);
+          }
+          } catch (err: any) {
+            console.error('Error fetching roles:', err)
+          }
+      }
+
       fetchData();
+      fetchDataRoleCompany();
     }, [loading, loading2]);
 
     useEffect(() => {
@@ -372,6 +378,9 @@ function UserManagement() {
         }
     }
 
+    if (permissions && permissions === 'no_permissions') {
+      return <NotFound/>;
+    }
 
   return (
     <>

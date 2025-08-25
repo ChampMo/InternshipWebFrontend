@@ -19,9 +19,6 @@ export default function CyberNews() {
 
   const { permissions } = usePermissions()
 
-  if (permissions && permissions !== 'no_permissions' && !permissions.cyberNews) {
-    return <NotFound/>;
-  }
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -45,6 +42,9 @@ export default function CyberNews() {
   }, [searchTerm, newsDetail]);
 
 
+  if (permissions && permissions !== 'no_permissions' && !permissions.cyberNews) {
+    return <NotFound/>;
+  }
   return (
     <div className="w-full flex flex-col overflow-auto min-h-screen px-4 pt-4 sm:px-6 md:px-10 md:pt-10  ">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-3">

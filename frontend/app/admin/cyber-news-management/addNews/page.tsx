@@ -34,10 +34,6 @@ export default function CyberNewsManagement() {
   const adviceRef = React.useRef<HTMLInputElement>(null);
 
 
-  // ตรวจสอบสิทธิ์
-  if (permissions && permissions === 'no_permissions') {
-    return <NotFound/>;
-  }
 
   const handleKeyDown = (e: React.KeyboardEvent, nextRef?: React.RefObject<any>) => {
     if (e.key === 'Enter') {
@@ -125,6 +121,11 @@ export default function CyberNewsManagement() {
     }
     setLoading(false);
   };
+
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
+
   return (
  <div className='w-full h-screen flex flex-col px-10 pt-10 overflow-auto'>
       <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Cyber News Management</h1>

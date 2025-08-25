@@ -1,4 +1,5 @@
-'use client'
+"use client"
+
 
 import React, { useEffect, useState, useRef, use } from 'react'
 import Sidebar from '@/src/components/sidebar'
@@ -67,17 +68,16 @@ function JiraDashboard() {
   const [selectBarDate, setSelectBarDate] = useState<string | null>(null)
   const [popupSelectDate, setPopupSelectDate] = useState(false)
   const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [period, setPeriod] = useState<string>('');
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showCalendarEnd, setShowCalendarEnd] = useState(false);
   const [barChartData, setBarChartData] = useState<any[]>([]);
   const [infoPopUp, setInfoPopUp] = useState(false);
 
-  if (permissions && permissions === 'no_permissions') {
-    return <NotFound/>;
-  }
-
   console.log('infoPopUp--', infoPopUp);
   useEffect(() => {
+    
     const fetchData = async () => {
       const userId = localStorage.getItem('userId') || '';
       const tickets = await getAllJiraTickets(userId);
@@ -281,7 +281,6 @@ console.log('ticket',ticket);
 
 
 
-
   const headers: Header[] = [
         { 
           label: 'Key',
@@ -385,19 +384,10 @@ console.log('ticket',ticket);
       start.setDate(end.getDate() - 29);
       handleSetDataBarChart(start, end);
     } else {
-      if (startDate) {
+      if (startDate && endDate) {
         const startCustom = new Date(startDate);
-        const endCustom = new Date(startCustom);
-        if (periodS === '7 days') {
-          endCustom.setDate(startCustom.getDate() + 6);
-          handleSetDataBarChart(startCustom, endCustom);
-        }else if (periodS === '15 days') {
-          endCustom.setDate(startCustom.getDate() + 14);
-          handleSetDataBarChart(startCustom, endCustom);
-        } else if (periodS === '30 days') {
-          endCustom.setDate(startCustom.getDate() + 29);
-          handleSetDataBarChart(startCustom, endCustom);
-        }
+        const endCustom = new Date(endDate);
+        handleSetDataBarChart(startCustom, endCustom);
       }
     }
     
@@ -464,6 +454,9 @@ console.log('ticket',ticket);
 
 
 
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
 
 
 
@@ -564,7 +557,7 @@ console.log('ticket',ticket);
                     <div className={`h-1 w-16 rounded-full duration-500 ${period === 'Last 30D' ? 'bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5] ' : 'bg-transparent'}`}/>
                   </div>
                   <div 
-                  onClick={() => {setPeriod('')}}
+                  onClick={() => {setPeriod('custom')}}
                   className='p-2 cursor-pointer text-gray-800 flex flex-col items-center gap-1'>
                     <div>Custom</div>
                     <div className={`h-1 w-16 rounded-full ${(period !== 'Last 7D' && period !== 'Last 30D' ) ? 'bg-gradient-to-l from-[rgb(0,94,170)] to-[#007EE5]' : 'bg-transparent'}`}/>
@@ -576,61 +569,90 @@ console.log('ticket',ticket);
                       <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
                       Start date
                     </div>
-                      <div className='relative mt-4 rounded-xl cursor-pointer'>
-                        <input 
-                        type='text'
-                        value={startDate ? new Date(startDate).toLocaleDateString('en-GB') : ''}
-                        readOnly
-                        className={` border bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${startDate?'border-primary1':'border-gray-300'}`}
-                        placeholder='Select date'
-                        onClick={() => setShowCalendar(true)}
+                    <div className='relative mt-4 rounded-xl cursor-pointer'>
+                      <input 
+                      type='text'
+                      value={startDate ? new Date(startDate).toLocaleDateString('en-GB') : ''}
+                      readOnly
+                      className={` border bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${startDate?'border-primary1':'border-gray-300'}`}
+                      placeholder='Select date'
+                      onClick={() => setShowCalendar(true)}
+                      />
+                      <Icon icon="mdi:calendar" width="24" height="24" className={`text-gray-400 absolute top-2 right-2 ${startDate?'text-primary1':'text-gray-300'}`} onClick={() => setShowCalendar(true)} />
+                      {showCalendar && (
+                      <div
+                      className="absolute -top-3 -left-1 z-50 w-70"
+                      onClick={(e) => e.stopPropagation()} // Prevent click propagation to parent elements
+                      >
+                      <div className="rounded-2xl border border-gray-200 bg-white shadow-xl p-3 animate-fade-in">
+                        <Calendar
+                        className="custom-calendar"
+                        onChange={(e) => {
+                        if (e && e instanceof Date) {
+                        const adjustedDate = new Date(e.getTime() - e.getTimezoneOffset() * 60000); // Adjust for timezone offset
+                        setStartDate(adjustedDate);
+                        }
+                        setShowCalendar(false);
+                        }}
+                        value={new Date(startDate || Date.now())}
+                        maxDate={endDate ?? undefined} 
                         />
-                        <Icon icon="mdi:calendar" width="24" height="24" className={`text-gray-400 absolute top-2 right-2 ${startDate?'text-primary1':'text-gray-300'}`} onClick={() => setShowCalendar(true)} />
-                        {showCalendar && (
-                        <div
-                        className="absolute -top-3 -left-1 z-50 w-70"
-                        onClick={(e) => e.stopPropagation()} // Prevent click propagation to parent elements
-                        >
-                        <div className="rounded-2xl border border-gray-200 bg-white shadow-xl p-3 animate-fade-in">
-                          <Calendar
-                          className="custom-calendar"
-                          onChange={(e) => {
-                          if (e && e instanceof Date) {
-                          const adjustedDate = new Date(e.getTime() - e.getTimezoneOffset() * 60000); // Adjust for timezone offset
-                          setStartDate(adjustedDate);
-                          }
-                          setShowCalendar(false);
-                          }}
-                          value={new Date(startDate || Date.now())}
-                          />
-                        </div>
-                        </div>
-                        )}
-                        {showCalendar && (
-                        <div
-                        className="fixed inset-0 z-40"
-                        onClick={() => setShowCalendar(false)} // Close calendar when clicking outside
-                        />
-                        )}
                       </div>
+                      </div>
+                      )}
+                      {showCalendar && (
+                      <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setShowCalendar(false)} // Close calendar when clicking outside
+                      />
+                      )}
+                    </div>
                     <div className='text-sm text-gray-500 flex items-end gap-2 mt-4'>
                       <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
-                      Period
+                      End date
                     </div>
-                    <div className='mt-4 z-40'>
-                      <Dropdown
-                        items={['7 days', '15 days', '30 days']}
-                        placeholder="Select period"
-                        setValue={(value) => {
-                          setPeriod(value);
+                    <div className='relative mt-4 rounded-xl cursor-pointer'>
+                      <input 
+                      type='text'
+                      value={endDate ? new Date(endDate).toLocaleDateString('en-GB') : ''}
+                      readOnly
+                      className={` border bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${endDate?'border-primary1':'border-gray-300'}`}
+                      placeholder='Select date'
+                      onClick={() => setShowCalendarEnd(true)}
+                      />
+                      <Icon icon="mdi:calendar" width="24" height="24" className={`text-gray-400 absolute top-2 right-2 ${endDate?'text-primary1':'text-gray-300'}`} onClick={() => setShowCalendarEnd(true)} />
+                      {showCalendarEnd && (
+                      <div
+                      className="absolute -top-3 -left-1 z-50 w-70"
+                      onClick={(e) => e.stopPropagation()} // Prevent click propagation to parent elements
+                      >
+                      <div className="rounded-2xl border border-gray-200 bg-white shadow-xl p-3 animate-fade-in">
+                        <Calendar
+                        className="custom-calendar"
+                        onChange={(e) => {
+                        if (e && e instanceof Date) {
+                        const adjustedDate = new Date(e.getTime() - e.getTimezoneOffset() * 60000); // Adjust for timezone offset
+                        setEndDate(adjustedDate);
+                        }
+                        setShowCalendarEnd(false);
                         }}
-                        value={period === '' ? '' : (period as string) || ''}
-                        haveIcon={false}/>
+                        value={new Date(endDate || Date.now())}
+                        minDate={startDate ?? undefined}
+                        />
+                      </div>
+                      </div>
+                      )}
+                      {showCalendarEnd && (
+                      <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setShowCalendarEnd(false)} // Close calendar when clicking outside
+                      />
+                      )}
                     </div>
                     <div className='mt-4 mb-4 flex justify-end'>
                       <DefultButton 
-                        onClick={period !== '' && startDate !== null ?()=>{handleSetBarChart(period), setPopupSelectDate(false)}:()=>{}} 
-                        active={period !== '' && startDate !== null} loading={loading}>
+                        onClick={endDate !== null && startDate !== null ?()=>{handleSetBarChart('custom'), setPopupSelectDate(false)}:()=>{}} 
+                        active={endDate !== null && startDate !== null} loading={loading}>
                           Select
                       </DefultButton>
                     </div>

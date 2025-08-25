@@ -25,9 +25,7 @@ function Settings() {
   const [deleteItem, setDeleteItem] = React.useState<any>(null)
   const [newCompanyKey, setNewCompanyKey] = React.useState('');
 
-  if (permissions && permissions === 'no_permissions') {
-    return <NotFound/>;
-  }
+
 
   const [roleItems, setRoleItems] = React.useState<any[]>([])
   const [companyItems, setCompanyItems] = React.useState<any[]>([])
@@ -208,6 +206,10 @@ function Settings() {
     } finally {
       setIsCompanyLoading(false)
     }
+  }
+
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
   }
 
   return (

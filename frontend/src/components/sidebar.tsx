@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link'
 import '@/app/globals.css'; // Ensure global styles are applied
 import { usePathname, useRouter } from 'next/navigation'
@@ -20,6 +20,7 @@ interface MenuItem {
 }
 
 const Sidebar: React.FC = () => {
+    const asideRef = useRef<HTMLDivElement | null>(null)
     const { permissions } = usePermissions()
     const [menuItems, setMenuItems] = useState<MenuItem[]>([
         { name: 'Jira Dashboard', path: '/jira-dashboard', havePermission: false },
@@ -102,35 +103,17 @@ const Sidebar: React.FC = () => {
             fetchTokens()
         }
     }, [permissions])
-    console.log('pathname:', pathname, !pathname.startsWith('/cyber-news'));
-    if (pathname.startsWith('/cyber-news') && permissions && permissions === 'no_permissions') {
-    } else if (!['/jira-dashboard', '/cyber-news', '/ti-tech-intelligence', '/admin/user-management', '/admin/token-management', '/admin/cyber-news-management', '/admin/settings'].some(route => pathname === route)) {
-        return null;
-    } else if (pathname === '/cyber-news' && permissions && permissions !== 'no_permissions' && !permissions.cyberNews) {
-        return null;
-    }
-    else if (pathname === '/ti-tech-intelligence' && permissions && permissions !== 'no_permissions' && !permissions.ti) {
-        return null;
-    }
-    else if (pathname === '/jira-dashboard' && permissions && permissions !== 'no_permissions' && !permissions.jira) {
-        return null;
-    }
-    else if (pathname === '/admin/user-management' && permissions && permissions !== 'no_permissions' && !permissions.admin) {
-        return null;
-    }
-    else if (pathname === '/admin/token-management' && permissions && permissions !== 'no_permissions' && !permissions.admin) {
-        return null;
-    }
-    else if (pathname === '/admin/cyber-news-management' && permissions && permissions !== 'no_permissions' && !permissions.admin) {
-        return null;
-    }
-    else if (pathname === '/admin/settings' && permissions && permissions !== 'no_permissions' && !permissions.admin) {
-        return null;
-    }else if (!pathname.startsWith('/cyber-news') && permissions && permissions === 'no_permissions') {
-        return null;
-    }
 
-
+    useEffect(() => {
+        function handleClickOutside(e: MouseEvent) {
+            if (!isMenuOpen) return
+            if (asideRef.current && !asideRef.current.contains(e.target as Node)) {
+            setIsMenuOpen(false) // ← ปิดเมนูเมื่อคลิกนอกกล่อง
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [isMenuOpen])
 
     const handleResetPassword = async () => {
         setLoading(true);
@@ -159,11 +142,38 @@ const Sidebar: React.FC = () => {
         }
     }
 
+    if (pathname.startsWith('/cyber-news') && permissions && permissions === 'no_permissions') {
+    } else if (!['/jira-dashboard', '/cyber-news', '/ti-tech-intelligence', '/admin/user-management', '/admin/token-management', '/admin/cyber-news-management', '/admin/settings'].some(route => pathname === route)) {
+        return null;
+    } else if (pathname === '/cyber-news' && permissions && permissions !== 'no_permissions' && !permissions.cyberNews) {
+        return null;
+    }
+    else if (pathname === '/ti-tech-intelligence' && permissions && permissions !== 'no_permissions' && !permissions.ti) {
+        return null;
+    }
+    else if (pathname === '/jira-dashboard' && permissions && permissions !== 'no_permissions' && !permissions.jira) {
+        return null;
+    }
+    else if (pathname === '/admin/user-management' && permissions && permissions !== 'no_permissions' && !permissions.admin) {
+        return null;
+    }
+    else if (pathname === '/admin/token-management' && permissions && permissions !== 'no_permissions' && !permissions.admin) {
+        return null;
+    }
+    else if (pathname === '/admin/cyber-news-management' && permissions && permissions !== 'no_permissions' && !permissions.admin) {
+        return null;
+    }
+    else if (pathname === '/admin/settings' && permissions && permissions !== 'no_permissions' && !permissions.admin) {
+        return null;
+    }else if (!pathname.startsWith('/cyber-news') && permissions && permissions === 'no_permissions') {
+        return null;
+    }
+
     return (
         <>
             {/* Desktop Sidebar */}
             <div className='w-70 md:flex hidden'/>
-            <aside className={`bg-primary3 md:w-70 h-screen shadow-lg rounded-r-xl md:rounded-r-3xl flex-col pb-10 shrink-0 fixed left-0 z-50 flex duration-300 ${isMenuOpen?'':'md:translate-x-0 translate-x-[-100%]'}`}>
+            <aside ref={asideRef} className={`bg-primary3 md:w-70 h-screen shadow-lg rounded-r-xl md:rounded-r-3xl flex-col pb-10 shrink-0 fixed left-0 z-50 flex duration-300 ${isMenuOpen?'':'md:translate-x-0 translate-x-[-100%]'}`}>
                 <header className='p-4 md:h-40 md:items-center flex justify-center'>
                     <div className='text-xl md:text-4xl orbitron text-center text-wrap' >Cyber Command</div>
                 </header>
@@ -225,9 +235,9 @@ const Sidebar: React.FC = () => {
             </aside>
             {/* responsive */}
             <div className='h-14 flex md:hidden'/>
-            <div className='bg-primary3 h-14 w-full shadow-lg rounded-b-xl fixed left-0 top-0 z-40 flex md:hidden items-center justify-between px-4'>
+            <div style={{ zIndex: 100 }} className='bg-primary3 h-14 w-full shadow-lg rounded-b-xl fixed left-0 top-0 flex md:hidden items-center justify-between px-4'>
                 <div className='text-xl orbitron text-center' >Cyber Command</div>
-                <div className='duration-300' onClick={()=>setIsMenuOpen(!isMenuOpen)}><Icon icon={isMenuOpen?'akar-icons:cross':"material-symbols:menu-rounded"} width="24" height="24" /></div>
+                <div className='duration-300' onClick={()=>!isMenuOpen && setIsMenuOpen(true)}><Icon icon={isMenuOpen?'akar-icons:cross':"material-symbols:menu-rounded"} width="24" height="24" /></div>
             </div>
             <PopUp
             isVisible={resetPassPopUp}

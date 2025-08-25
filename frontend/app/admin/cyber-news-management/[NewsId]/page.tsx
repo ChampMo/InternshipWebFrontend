@@ -31,10 +31,7 @@ export default function CyberNewsManagement() {
   const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
 
-  // Permission check
-  if (permissions && permissions === 'no_permissions') {
-    return <NotFound/>;
-  }
+
 
   // Fetch news detail for edit
   useEffect(() => {
@@ -154,6 +151,10 @@ useEffect(() => {
   };
   fetchTags();
 }, []);
+
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
 
   return (
     <div className='w-full h-screen flex flex-col px-10 pt-10 overflow-auto'>

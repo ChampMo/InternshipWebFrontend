@@ -34,9 +34,7 @@ function CyberNewsManagement() {
   };
   
 
-  if (permissions && permissions === 'no_permissions') {
-    return <NotFound/>;
-  }
+
 
   const [tags, setTags] = useState<any[]>([]);
 
@@ -87,6 +85,10 @@ function CyberNewsManagement() {
     const year = date.getFullYear();
     return `${day} ${formattedMonth} ${year}`;
   };
+
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
 
   return (
     <div className="w-full flex flex-col overflow-auto h-screen px-10 pt-10">

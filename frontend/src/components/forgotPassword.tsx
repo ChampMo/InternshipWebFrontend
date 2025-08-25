@@ -180,23 +180,23 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
   return (
     <>
         {/* forgot password */}
-        <div className={`flex flex-col p-10 py-14 items-center justify-center gap-4 w-full shrink-0 mp-10 ${statePage === 1 ? 'opacity-100' : 'opacity-0'} duration-800`}>
+        <div className={`flex flex-col p-5 md:p-10 py-8 md:py-14 items-center justify-center gap-4 w-full shrink-0 mp-10 ${statePage === 1 ? 'opacity-100' : 'opacity-0'} duration-800`}>
             {statePage === 1 && 
             <>
-              <div className='flex items-center gap-2 cursor-pointer'>
-                <div className="text-4xl text-primary1 font-bold">Forgot Password?</div>
+              <div className='flex items-center'>
+                <div className="text-3xl md:text-4xl text-primary1 font-bold">Forgot Password?</div>
               </div>
               <form 
                 onSubmit={handleSendOTP}
-                className="flex flex-col w-full h-auto mt-5 gap-3">
-                <div className='text-gray-500 text-lg w-full'>Email</div>
-                  <div className='border-b-2 border-primary1 w-full flex items-center mb-10'>
-                    <Icon icon="ic:round-email" width="30" height="30" 
-                    className='mb-1' 
+                className="flex flex-col w-full h-auto mt-2 md:mt-5 gap-3">
+                <div className='text-gray-500 md:text-lg w-full'>Email</div>
+                  <div className='border-b-2 border-primary1 w-full flex items-center mb-6 md:mb-10'>
+                    <Icon icon="ic:round-email"
+                    className='mb-1 w-7 h-7 md:w-10 md:h-10'
                     color={`${!email?'#ABABAB':'#007EE5'}`} />
                     <input 
                     type="email" 
-                    className="pl-4 w-full text-lg outline-0 mb-1" 
+                    className="pl-4 w-full md:text-lg outline-0 mb-1" 
                     value={email}
                     placeholder='Enter your email'
                     onChange={(e) => setEmail(e.target.value)}
@@ -208,20 +208,20 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
               </form>
               
               
-              <div className='text-blue-500 mt-4 cursor-pointer' onClick={()=>handleReset()}> Back to Sign In </div>
+              <div className='text-blue-500 md:mt-4 cursor-pointer text-sm md:text' onClick={()=>handleReset()}> Back to Sign In </div>
             </>}
           </div>
           {/* verify otp */}
-          <div className={`flex flex-col p-10 py-14 gap-4 items-center justify-center w-full shrink-0 mp-10 ${statePage === 2 ? 'opacity-100' : 'opacity-0'} duration-800`}>
+          <div className={`flex flex-col p-5 md:p-10 py-8 md:py-14 gap-4 items-center justify-center w-full shrink-0 ${statePage === 2 ? 'opacity-100' : 'opacity-0'} duration-800`}>
             {statePage === 2 && 
             <>
-              <div className="text-4xl text-primary1 font-bold">Verify OTP</div>
-              <div className='text-gray-500 text-lg text-center'>An OTP has been sent to your email. Please enter it below.</div>
+              <div className="text-3xl md:text-4xl text-primary1 font-bold">Verify OTP</div>
+              <div className='text-gray-500 md:text-lg text-center'>An OTP has been sent to your email. Please enter it below.</div>
               <form 
                 onSubmit={handleVerifyOTP}
-                className="flex flex-col gap-4 mt-3 w-full h-full">
+                className="flex flex-col gap-3 md:gap-4 mt-3 w-full h-full">
                   
-                <div className="flex gap-4 justify-center">
+                <div className="flex gap-2 md:gap-4 justify-center">
                   {otp.map((digit, index) => (
                     <input
                       key={index}
@@ -232,73 +232,73 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                       onChange={(e) => handleChange(e.target.value, index)}
                       onKeyDown={(e) => handleKeyDown(e, index)}
                       ref={el => { inputRefs.current[index] = el }}
-                      className="w-12 h-14 text-center border-b-2 border-primary1 text-2xl outline-none placeholder:text-gray-400"
+                      className="w-8 md:w-12 h-10 md:h-14 text-center border-b-2 border-primary1 text-xl md:text-2xl outline-none placeholder:text-gray-400"
                       placeholder="-"
                     />
                   ))}
                 </div>
-                <div className={`ml-auto mb-8 ${countDown == 0 ?'text-blue-500 cursor-pointer ':'text-gray-500'}`} onClick={countDown == 0 ? () => setStatePage(1):() => {} }>{countDown == 0 ? '':countDown} Resend OTP </div>
+                <div className={`ml-auto mb-4 md:mb-8 text-sm md:text ${countDown == 0 ?'text-blue-500 cursor-pointer ':'text-gray-500'}`} onClick={countDown == 0 ? () => setStatePage(1):() => {} }>{countDown == 0 ? '':countDown} Resend OTP </div>
                 <DefultButton active={otp.join('').length === 6} loading={loading} highCustom={'h-12'}>
                   Verify
                 </DefultButton>
               </form>
               
-              <div className='text-blue-500 mt-4 cursor-pointer' onClick={()=>handleReset()}> Back to Sign In </div>
+              <div className='text-blue-500 md:mt-4 cursor-pointer text-sm md:text' onClick={()=>handleReset()}> Back to Sign In </div>
             </>
             }
           </div>
           {/* reset password */}
-          <div className={`flex flex-col p-10 py-14 items-center justify-center gap-4 w-full shrink-0 mp-10 ${statePage === 3 ? 'opacity-100' : 'opacity-0'} duration-800`}>
+          <div className={`flex flex-col p-5 md:p-10 py-8 md:py-14 items-center justify-center gap-4 w-full shrink-0 mp-10 ${statePage === 3 ? 'opacity-100' : 'opacity-0'} duration-800`}>
             {statePage === 3 && 
             <>
-              <div className="text-4xl text-primary1 font-bold">Reset Password</div>
+              <div className="text-3xl md:text-4xl text-primary1 font-bold">Reset Password</div>
               <form 
                 onSubmit={handleResetPassword}
-                className="flex flex-col gap-6 mt-8 w-full h-full">
+                className="flex flex-col gap-4 md:gap-6 mt-4 md:mt-8 w-full h-full">
                   
                   
-                <div className='text-gray-500 text-lg'>New Password</div>
+                <div className='text-gray-500 md:text-lg'>New Password</div>
                 <div className='border-b-2 border-primary1 w-full flex items-center relative'>
-                  <Icon icon="ph:lock-key-fill" width="33" height="33" 
-                  className='mb-1' 
+                  <Icon icon="ph:lock-key-fill"
+                  className='mb-1 w-6 h-6 md:w-7 md:h-7'
                   color={`${!password?'#ABABAB':'#007EE5'}`} />
                   <input 
                   type={`${typePassword ?"password": "text"}`} 
-                  className="pl-4 w-full text-lg outline-0 mb-1 placeholder:text-gray-400" 
+                  className="pl-2 md:pl-4 w-full md:text-lg outline-0 mb-1 placeholder:text-gray-400" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder='Enter your new password'
                   required />
                   <div className='cursor-pointer absolute right-2' onClick={() => setTypePassword(!typePassword)}>
                     {typePassword ?
-                    <Icon icon="iconamoon:eye-duotone" width="28" height="28" color='#ABABAB'/>
-                    :<Icon icon="iconamoon:eye-off-duotone" width="28" height="28" color='#ABABAB'/>}
+                    <Icon icon="iconamoon:eye-duotone" className='w-6 h-6 md:w-7 md:h-7' color='#ABABAB'/>
+                    :<Icon icon="iconamoon:eye-off-duotone" className='w-6 h-6 md:w-7 md:h-7' color='#ABABAB'/>}
                   </div>
                 </div>
-                <div className='text-gray-500 text-lg'>Confirm New Password</div>
+                <div className='text-gray-500 md:text-lg'>Confirm New Password</div>
                 <div className='border-b-2 border-primary1 w-full flex items-center relative'>
-                  <Icon icon="ph:lock-key-fill" width="33" height="33" 
-                  className='mb-1' 
+                  <Icon icon="ph:lock-key-fill"
+                  className='mb-1 w-6 h-6 md:w-7 md:h-7'
                   color={`${!confirmPassword?'#ABABAB':'#007EE5'}`} />
                   <input 
                   type={`${typePassword2 ?"password": "text"}`} 
-                  className="pl-4 w-full text-lg outline-0 mb-1 placeholder:text-gray-400" 
+                  className="pl-2 md:pl-4 w-full md:text-lg outline-0 mb-1 placeholder:text-gray-400" 
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder='Confirm your new password'
                   required />
                   <div className='cursor-pointer absolute right-2' onClick={() => setTypePassword2(!typePassword2)}>
                     {typePassword2 ?
-                    <Icon icon="iconamoon:eye-duotone" width="28" height="28" color='#ABABAB'/>
-                    :<Icon icon="iconamoon:eye-off-duotone" width="28" height="28" color='#ABABAB'/>}
+                    <Icon icon="iconamoon:eye-duotone" className='w-6 h-6 md:w-7 md:h-7' color='#ABABAB'/>
+                    :<Icon icon="iconamoon:eye-off-duotone" className='w-6 h-6 md:w-7 md:h-7' color='#ABABAB'/>}
                   </div>
                 </div>
-                <div className='mb-5'>
-                  <div className={`text-sm flex flex-row items-center gap-2 ${passwordsMatch ? 'text-green-600' : 'text-gray-400'}`}>
+                <div className=' mb-3 md:mb-5'>
+                  <div className={`text-xs md:text-sm flex flex-row items-center gap-2 ${passwordsMatch ? 'text-green-600' : 'text-gray-400'}`}>
                     <Icon icon="stash:circle-dot-duotone" width="20" height="20" color={`${passwordsMatch ?'#00C90A':'#ABABAB'}`} className=' shrink-0'/>
                     Passwords do match.
                   </div>
-                  <div className={`text-sm flex flex-row items-center gap-2 ${longEnough ? 'text-green-600' : 'text-gray-400'}`} >
+                  <div className={`text-xs md:text-sm flex flex-row items-center gap-2 ${longEnough ? 'text-green-600' : 'text-gray-400'}`} >
                     <Icon icon="stash:circle-dot-duotone" width="20" height="20" color={`${longEnough ?'#00C90A':'#ABABAB'}`} className=' shrink-0'/>
                     Least 6 characters.
                   </div>
@@ -312,7 +312,7 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                 </DefultButton>
               </form>
               
-              <div className='text-blue-500 cursor-pointer mt-2' onClick={()=>handleReset()}> Back to Sign In </div>
+              <div className='text-blue-500 cursor-pointer text-sm md:text md:mt-2' onClick={()=>handleReset()}> Back to Sign In </div>
             </>
             }
           </div>

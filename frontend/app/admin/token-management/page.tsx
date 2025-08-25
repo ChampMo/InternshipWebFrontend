@@ -76,9 +76,6 @@ function TokenManagement() {
   const [dataToken, setDataToken] = useState<TokenItem[]>([])
   const [showCalendar, setShowCalendar] = useState(false)
 
-  if (permissions && permissions === 'no_permissions') {
-    return <NotFound/>;
-  }
 
   useEffect(() => {
     const fetchTokens = async () => {
@@ -438,6 +435,9 @@ function TokenManagement() {
   };
   
 
+  if (permissions && permissions === 'no_permissions') {
+    return <NotFound/>;
+  }
 
 
 
