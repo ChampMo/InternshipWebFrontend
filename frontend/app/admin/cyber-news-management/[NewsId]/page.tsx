@@ -12,6 +12,32 @@ import Dropdown from '@/src/components/ui/dropDown'
 import { GetTag } from '@/src/modules/tag'
 import NotFound from '@/app/not-found'
 
+// Custom scrollbar styles
+const scrollbarStyles = `
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #93C5FD transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #93C5FD;
+    border-radius: 6px;
+    border: 1px solid transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #60A5FA;
+  }
+`;
+
 
 export default function CyberNewsManagement() {
   const { permissions } = usePermissions()
@@ -219,7 +245,9 @@ useEffect(() => {
   }
 
   return (
-    <div className='w-full h-screen flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 overflow-auto max-w-5xl'>
+    <div className='w-full h-screen flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 max-w-5xl'>
+      <style jsx>{scrollbarStyles}</style>
+      
       <div className="flex items-center gap-x-2 mb-6 md:mb-7">
         <div
           onClick={() => router.back()}
@@ -303,7 +331,11 @@ useEffect(() => {
           <label className="  font-medium">Summary of information</label>
           <textarea
             placeholder="Enter Summary of information"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none  "
+            className="w-full border border-blue-300 rounded-xl px-3 py-2 pr-4 max-h-40 overflow-y-auto resize-none outline-none custom-scrollbar"
+            style={{ 
+              minHeight: 40, 
+              maxHeight: 160
+            }}
             value={summary}
             onChange={e => {
               setSummary(e.target.value);
@@ -311,7 +343,6 @@ useEffect(() => {
               el.style.height = 'auto';
               el.style.height = Math.min(el.scrollHeight, 160) + 'px'; // 160px = max-h-40
             }}
-            style={{ minHeight: 40, maxHeight: 160 }}
             rows={3}
           />
         </div>
@@ -319,7 +350,11 @@ useEffect(() => {
           <label className="  font-medium">More details</label>
           <textarea
             placeholder="Enter More details"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none  "
+            className="w-full border border-blue-300 rounded-xl px-3 py-2 pr-4 max-h-40 overflow-y-auto resize-none outline-none custom-scrollbar"
+            style={{ 
+              minHeight: 40, 
+              maxHeight: 160
+            }}
             value={details}
             onChange={e => {
               setDetails(e.target.value);
@@ -327,7 +362,6 @@ useEffect(() => {
               el.style.height = 'auto';
               el.style.height = Math.min(el.scrollHeight, 160) + 'px';
             }}
-            style={{ minHeight: 40, maxHeight: 160 }}
             rows={3}
           />
         </div>
@@ -335,7 +369,11 @@ useEffect(() => {
           <label className="  font-medium">Impact of the attack</label>
           <textarea
             placeholder="Enter Impact of the attack"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none  "
+            className="w-full border border-blue-300 rounded-xl px-3 py-2 pr-4 max-h-40 overflow-y-auto resize-none outline-none custom-scrollbar"
+            style={{ 
+              minHeight: 40, 
+              maxHeight: 160
+            }}
             value={impact}
             onChange={e => {
               setImpact(e.target.value);
@@ -343,7 +381,6 @@ useEffect(() => {
               el.style.height = 'auto';
               el.style.height = Math.min(el.scrollHeight, 160) + 'px';
             }}
-            style={{ minHeight: 40, maxHeight: 160 }}
             rows={3}
           />
         </div>
@@ -351,7 +388,11 @@ useEffect(() => {
           <label className="  font-medium">Advice</label>
           <textarea
             placeholder="Enter Advice"
-            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none  "
+            className="w-full border border-blue-300 rounded-xl px-3 py-2 pr-4 max-h-40 overflow-y-auto resize-none outline-none custom-scrollbar"
+            style={{ 
+              minHeight: 40, 
+              maxHeight: 160
+            }}
             value={advice}
             onChange={e => {
               setAdvice(e.target.value);
@@ -359,7 +400,6 @@ useEffect(() => {
               el.style.height = 'auto';
               el.style.height = Math.min(el.scrollHeight, 160) + 'px';
             }}
-            style={{ minHeight: 40, maxHeight: 160 }}
             rows={3}
           />
         </div>
