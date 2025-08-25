@@ -196,7 +196,7 @@ export default function AddRolePage() {
           {/* Buttons */}
           <div className="flex justify-end gap-4 mt-10">
             <button
-              className="px-8 py-2 border border-red-500 text-red-500 rounded-md hover:bg-red-50 transition-colors duration-200"
+              className="bg-white border border-red-500 text-red-500 px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 cursor-pointer"
               onClick={handleDelete} // เปิด PopUp
             >
               Delete
@@ -222,13 +222,13 @@ export default function AddRolePage() {
                 </div>
                 <div className="flex justify-end gap-4">
                   <button
-                    className="px-8 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-colors duration-200"
+                    className=" bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 cursor-pointer"
                     onClick={() => setIsVisiblePopUpDelete(false)}
                   >
                     Cancel
                   </button>
                   <button
-                    className="px-8 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors duration-200"
+                    className="bg-white border border-red-500 text-red-500 px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 cursor-pointer"
                     onClick={handleConfirmDelete}
                   >
                     Delete
@@ -237,7 +237,7 @@ export default function AddRolePage() {
               </div>
             </PopUp>
             <button
-              className="px-8 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
+              className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 cursor-pointer"
               onClick={handleSave}
             >
               Update

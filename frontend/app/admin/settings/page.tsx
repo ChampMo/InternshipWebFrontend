@@ -233,10 +233,9 @@ function Settings() {
                   {roleItems.length} items
                 </span>
                 <button
-                  className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm shadow hover:bg-blue-700 transition"
+                  className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 cursor-pointer"
                   onClick={() => router.push('/admin/settings/addRole')}
                 >
-                  <Icon icon="mdi:plus" width={18} />
                   Add Role
                 </button>
               </div>
@@ -284,11 +283,10 @@ function Settings() {
                 </span>
                 {!isAddingCompany && editingCompanyIdx === null && (
                   <button
-                    className="px-4 sm:px-6 py-2 bg-primary1 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm"
+                    className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 cursor-pointer"
                     onClick={() => setIsAddingCompany(true)}
                     disabled={isAddingCompany}
                   >
-                    <Icon icon="mdi:plus" width={18} />
                     Add Company
                   </button>
                 )}
@@ -312,24 +310,22 @@ function Settings() {
                           disabled={isCompanyLoading}
                         />
                       </div>
-                      <div className="flex gap-3 w-full">
+                      <div className="flex gap-3 w-full justify-end">
                         <button
-                          className="flex items-center gap-2 justify-center px-4 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-1"
+                          className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                           onClick={() => {
                             setEditingCompanyIdx(null)
                             setEditingCompanyName('')
                           }}
                           disabled={isCompanyLoading}
                         >
-                          <Icon icon="mdi:close" width={16} />
                           Cancel
                         </button>
                         <button
-                          className="flex items-center gap-2 justify-center px-4 py-2.5 bg-primary1 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-1"
+                          className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                           onClick={() => handleEditCompany(idx)}
                           disabled={isCompanyLoading}
                         >
-                          <Icon icon="mdi:check" width={16} />
                           {isCompanyLoading ? 'Saving...' : 'Save'}
                         </button>
                       </div>
@@ -409,15 +405,14 @@ function Settings() {
                     </div>
                     <div className="flex gap-3 justify-end">
                       <button
-                        className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                         onClick={handleAddCompany}
                         disabled={isCompanyLoading}
                       >
-                        <Icon icon="mdi:check" width={16} />
                         {isCompanyLoading ? 'Adding...' : 'Add Company'}
                       </button>
                       <button
-                        className="flex items-center gap-2 px-5 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                         onClick={() => {
                           setIsAddingCompany(false)
                           setNewCompany('')
@@ -425,7 +420,6 @@ function Settings() {
                         }}
                         disabled={isCompanyLoading}
                       >
-                        <Icon icon="mdi:close" width={16} />
                         Cancel
                       </button>
                     </div>
@@ -520,11 +514,10 @@ function Settings() {
                 </span>
                 {!isAddingTag && editingTagIdx === null && (
                   <button
-                    className="px-4 sm:px-6 py-2 bg-primary1 text-white rounded-lg font-medium h-10 flex items-center gap-2 cursor-pointer text-sm"
+                    className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                     onClick={() => setIsAddingTag(true)}
                     disabled={isAddingTag}
                   >
-                    <Icon icon="mdi:plus" width={18} />
                     Add Tag
                   </button>
                 )}
@@ -548,9 +541,9 @@ function Settings() {
                           disabled={isTagLoading}
                         />
                       </div>
-                      <div className="flex gap-3 w-full">
+                      <div className="flex gap-3 w-full justify-end">
                         <button
-                          className="flex items-center gap-2 justify-center px-4 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-1"
+                          className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                           onClick={() => {
                             setEditingTagIdx(null)
                             setEditingTagName('')
@@ -559,15 +552,13 @@ function Settings() {
                           }}
                           disabled={isTagLoading}
                         >
-                          <Icon icon="mdi:close" width={16} />
                           Cancel
                         </button>
                         <button
-                          className="flex items-center gap-2 justify-center px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-1"
+                          className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                           onClick={() => handleEditTag(idx)}
                           disabled={isTagLoading}
                         >
-                          <Icon icon="mdi:check" width={16} />
                           {isTagLoading ? 'Saving...' : 'Save'}
                         </button>
                       </div>
@@ -625,22 +616,20 @@ function Settings() {
                     </div>
                     <div className="flex gap-3 justify-end">
                       <button
-                        className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                         onClick={handleAddTag}
                         disabled={isTagLoading}
                       >
-                        <Icon icon="mdi:check" width={16} />
                         {isTagLoading ? 'Adding...' : 'Add Tag'}
                       </button>
                       <button
-                        className="flex items-center gap-2 px-5 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                         onClick={() => {
                           setIsAddingTag(false)
                           setNewTag('')
                         }}
                         disabled={isTagLoading}
                       >
-                        <Icon icon="mdi:close" width={16} />
                         Cancel
                       </button>
                     </div>

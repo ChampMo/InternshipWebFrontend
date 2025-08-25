@@ -101,51 +101,28 @@ function CyberNewsManagement() {
           </div>
 
           {/* Controls Section - Hidden on mobile, shown on desktop */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="flex items-center gap-4">
             {/* Search Bar */}
-            <div className={`border rounded-lg h-11 w-80 relative flex items-center ${searchTerm ? 'border-primary1 ring-2 ring-primary1/20' : 'border-gray-400'}`}>
-              <Icon icon="ic:round-search" width="20" height="20" className={`absolute left-3 ${searchTerm ? 'text-primary1' : 'text-gray-400'}`}/>
+            <div className={` border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
+              <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
               <input 
-                type='text'
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className='outline-none w-full h-full pr-4 pl-10 rounded-lg text-sm' 
-                placeholder='Search by date, title, tag'/>
+              type='text'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' 
+              placeholder='Search by date, title, tag'/>
             </div>
             
             {/* Add Button */}
             <button 
               onClick={() => handleClick()}
-              className='bg-primary1 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-colors duration-200 flex items-center gap-2 shrink-0'>
-              <Icon icon="mdi:plus" width="18" height="18" />
+              className='bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0'>
               Add news
             </button>
           </div>
         </div>
 
-        {/* Mobile Controls Section - Shown only on mobile */}
-        <div className="flex md:hidden items-center justify-between gap-4 mb-6">
-          {/* Search Bar */}
-          <div className={`border rounded-lg h-11 flex-1 max-w-md relative flex items-center ${searchTerm ? 'border-primary1 ring-2 ring-primary1/20' : 'border-gray-300'}`}>
-            <Icon icon="ic:round-search" width="20" height="20" className={`absolute left-3 ${searchTerm ? 'text-primary1' : 'text-gray-400'}`}/>
-            <input 
-              type='text'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className='outline-none w-full h-full pr-4 pl-10 rounded-lg text-sm' 
-              placeholder='Search by date, title, tag'/>
-          </div>
-          
-          {/* Add Button */}
-          <button 
-            onClick={() => handleClick()}
-            className='bg-primary1 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-colors duration-200 flex items-center gap-2 shrink-0'>
-            <Icon icon="mdi:plus" width="18" height="18" />
-            Add news
-          </button>
-        </div>
-
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="">
         <DataTable
           headers={[
             {
@@ -153,7 +130,7 @@ function CyberNewsManagement() {
               key: 'id',
               width: '60px',
               render: (value: number) => (
-                <span className="font-mono text-xs sm:text-sm">
+                <span className="font-mono text-sm md:text flex items-center justify-center">
                   {value}
                 </span>
               ),

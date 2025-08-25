@@ -42,7 +42,7 @@ export default function CyberNews() {
   }, [searchTerm, newsDetail]);
 
 
-  if (permissions && permissions !== 'no_permissions' && permissions !== null && !permissions.cyberNews) {
+  if ((permissions && permissions !== 'no_permissions' && permissions !== null && !permissions.cyberNews)|| permissions === null) {
     return <NotFound/>;
   }
 
@@ -50,15 +50,15 @@ export default function CyberNews() {
     <div className="w-full flex flex-col overflow-auto min-h-screen px-4 py-4 sm:px-6 md:px-10 md:py-10  ">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-3">
         <h1 className="text-xl md:text-2xl font-bold">CyberNews</h1>
-        <div className={`text-base border rounded-xl h-10 w-full md:w-96 relative flex items-center gap-2 ${searchTerm ? 'border-primary1' : 'border-gray-300'}`}>
-          <Icon icon="ic:round-search" width="24" height="24" className={`absolute left-2 ${searchTerm ? 'text-primary1' : 'text-gray-400'}`} />
-          <input
-            type='text'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl bg-transparent"
-            placeholder="Search by date, title, tag"
-          />
+
+        <div className={` border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
+          <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
+          <input 
+          type='text'
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' 
+          placeholder='Search by date, title, tag'/>
         </div>
       </div>
       <div className="border-t border-gray-300 mb-5 w-full"></div>

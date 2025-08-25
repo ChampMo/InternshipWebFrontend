@@ -147,7 +147,7 @@ const Sidebar: React.FC = () => {
 
     console.log('Current pathname:', pathname, 'Permissions:', permissions);
 
-    if (pathname === '/cyber-news' || pathname.startsWith('/cyber-news/') || pathname === '/admin/settings/addRole') {
+    if (pathname === '/cyber-news' || pathname.startsWith('/cyber-news/') || pathname === '/admin/settings/addRole'|| pathname.startsWith('/admin/settings/') || pathname.startsWith('/admin/cyber-news-management')) {
     } else if (!['/jira-dashboard', '/cyber-news', '/ti-tech-intelligence', '/admin/user-management', '/admin/token-management', '/admin/cyber-news-management', '/admin/settings'].some(route => pathname === route)) {
         return null;
     } else if (pathname === '/cyber-news' && permissions && permissions !== 'no_permissions' && !permissions.cyberNews) {
@@ -182,9 +182,9 @@ const Sidebar: React.FC = () => {
                 <header className='p-4 md:h-40 md:items-center flex justify-center'>
                     <div className='text-xl md:text-4xl orbitron text-center text-wrap' >Cyber Command</div>
                 </header>
-                {permissions && permissions !== 'no_permissions' && ( permissions.jira ||permissions.cyberNews || permissions.ti ) &&<div className='px-4 py-2'>
+                <div className='px-4 py-2'>
                     <div className='text-sm text-gray-400'>Product</div>
-                </div>}
+                </div>
                 {/* Render menu items */}
                 <nav>
                     <div className='flex flex-col'>

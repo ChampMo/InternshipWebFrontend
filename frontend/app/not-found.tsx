@@ -13,7 +13,7 @@ export default function NotFound() {
 
   if(permissions === null){
     return (
-      <div className='w-full h-screen flex items-center justify-center'>
+      <div className='w-full h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
         <PulseLoader
           loading={true}
           size={16}

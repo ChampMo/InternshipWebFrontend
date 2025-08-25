@@ -124,7 +124,14 @@ export default function CyberNewsManagement() {
 
   if (permissions === 'no_permissions' || permissions === null) {
     return <NotFound/>;
-  }
+  }<div className={` border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
+                      <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
+                      <input 
+                      type='text'
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' placeholder='Search by email, company, user id'/>
+                    </div>
 
   return (
     <div className='w-full h-screen flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 overflow-auto max-w-5xl'>
