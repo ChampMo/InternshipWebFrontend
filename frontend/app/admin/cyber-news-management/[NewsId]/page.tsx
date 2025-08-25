@@ -29,7 +29,9 @@ export default function CyberNewsManagement() {
   const [advice, setAdvice] = useState('');
   const [loading, setLoading] = useState(false);
   const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = useState(false);
-const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [notFound, setNotFound] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
 // Store the original data for change detection
 const [originalData, setOriginalData] = useState({
@@ -58,7 +60,11 @@ const hasChanges = () => {
   // Fetch news detail for edit
   useEffect(() => {
     const fetchNewsDetail = async () => {
-      if (!newsIdParam) return;
+      if (!newsIdParam) {
+        setNotFound(true);
+        setDataLoaded(true);
+        return;
+      }
       try {
         const res = await fetch(`${Port.BASE_URL}/detailCybernews/${newsIdParam}`, {
           method: 'GET',
@@ -66,6 +72,11 @@ const hasChanges = () => {
         });
         if (res.ok) {
           const data = await res.json();
+          if (!data || !data.title) {
+            setNotFound(true);
+            setDataLoaded(true);
+            return;
+          }
           const initialData = {
             name: data.title || '',
             tag: data.tag || data.category || '',
@@ -84,9 +95,14 @@ const hasChanges = () => {
           setAdvice(initialData.advice);
           setImageUrl(initialData.imageUrl);
           setOriginalData(initialData);
+          setDataLoaded(true);
+        } else {
+          setNotFound(true);
+          setDataLoaded(true);
         }
       } catch (e) {
-        // handle error
+        setNotFound(true);
+        setDataLoaded(true);
       }
     };
     fetchNewsDetail();
@@ -188,6 +204,20 @@ useEffect(() => {
     return <NotFound/>;
   }
 
+  // Show NotFound if data not found or invalid NewsId
+  if (notFound && dataLoaded) {
+    return <NotFound/>;
+  }
+
+  // Show loading state while fetching data
+  if (!dataLoaded) {
+    return (
+      <div className='w-full h-screen flex items-center justify-center'>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+      </div>
+    );
+  }
+
   return (
     <div className='w-full h-screen flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 overflow-auto max-w-5xl'>
       <div className="flex items-center gap-x-2 mb-6 md:mb-7">
@@ -250,14 +280,17 @@ useEffect(() => {
             />
           </div>
             <div>
-            <label className="  font-medium">Tag</label>
-            <div className='grow-0 z-30 w-full  '>
+            <label className="font-medium">Tag</label>
+            <div className='grow-0 z-30 w-full'>
               <Dropdown 
-                items={tags.map(item => item.tagName)} 
-                placeholder='Select Tag' 
-                setValue={setTag} 
-                value={tag} 
-                haveIcon={false}
+              items={tags.map(item => item.tagName)} 
+              placeholder='Select Tag' 
+              setValue={setTag} 
+              value={
+                // แสดง tagName แทน tagId
+                tags.find(t => t.tagId === tag)?.tagName || tag
+              }
+              haveIcon={false}
               />
             </div>
             </div>
