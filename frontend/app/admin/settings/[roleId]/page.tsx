@@ -52,12 +52,33 @@ export default function AddRolePage() {
 
     const [roleName, setRoleName] = useState('')
     const [permissions, setPermissions] = useState({
-
     cyberNews: false,
     jira: false,
     ti: false,
     admin: false
   })
+
+  // Track original data for change detection
+  const [originalData, setOriginalData] = useState({
+    roleName: '',
+    permissions: {
+      cyberNews: false,
+      jira: false,
+      ti: false,
+      admin: false
+    }
+  })
+
+  // Check if there are any changes
+  const hasChanges = () => {
+    return (
+      roleName !== originalData.roleName ||
+      permissions.cyberNews !== originalData.permissions.cyberNews ||
+      permissions.jira !== originalData.permissions.jira ||
+      permissions.ti !== originalData.permissions.ti ||
+      permissions.admin !== originalData.permissions.admin
+    )
+  }
 
 
   const handleToggle = (key: string) => {
@@ -75,13 +96,19 @@ export default function AddRolePage() {
       try {
         const res = await GetRoleById(roleId);
         if (res && typeof res === 'object' && res.data) {
-          setRoleName(res.data.roleName || '');
-          setPermissions({
-            cyberNews: !!res.data.cyberNews,
-            jira: !!res.data.jira,
-            ti: !!res.data.ti,
-            admin: !!res.data.admin
-          });
+          const roleData = {
+            roleName: res.data.roleName || '',
+            permissions: {
+              cyberNews: !!res.data.cyberNews,
+              jira: !!res.data.jira,
+              ti: !!res.data.ti,
+              admin: !!res.data.admin
+            }
+          };
+          
+          setRoleName(roleData.roleName);
+          setPermissions(roleData.permissions);
+          setOriginalData(roleData); // Store original data for comparison
           setDataLoaded(true);
         } else {
           // ไม่พบข้อมูล role
@@ -221,39 +248,59 @@ export default function AddRolePage() {
               setIsVisible={setIsVisiblePopUpDelete}
               onClose={() => setIsVisiblePopUpDelete(false)}
             >
-              <div className="w-[400px] rounded-t-xl bg-red-700 flex flex-col items-start px-6 pt-6 pb-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <Icon icon="mdi:delete" width="28" height="28" className="text-white" />
-                  <span className="text-2xl font-bold text-white">Delete Role</span>
+              <div className="flex flex-col h-full">
+                {/* Header */}
+                <div className='w-full rounded-t-2xl md:rounded-t-3xl flex flex-col justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 px-4 sm:px-6 lg:px-8 py-5 sm:py-6'>
+                  <div className='text-lg sm:text-xl text-white flex gap-2 sm:gap-3 items-center'>
+                    <Icon icon="tabler:trash" width="24" height="24" className='sm:w-7 sm:h-7' />
+                    <span className='font-semibold'>Delete Role</span>
+                  </div>
+                  <div className='text-red-100 text-sm sm:text-base'>
+                    Are you sure you want to delete this role?
+                  </div>
                 </div>
-                <span className="text-white text-base mb-2">
-                  Are you sure you want to delete this role?
-                </span>
-              </div>
-              <div className="bg-gray-50 px-6 py-4 rounded-b-xl">
-                <div className="mb-4">
-                  <span className="text-gray-600 font-medium">Role Name:</span>
-                  <span className="ml-3 px-3 py-1 bg-gray-200 rounded text-gray-700 font-semibold">{roleName}</span>
+                
+                {/* Content */}
+                <div className='flex-1 overflow-y-auto'>
+                  <div className='px-4 sm:px-6 lg:px-8 py-4 sm:py-6'>
+                    <div className='border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-5'>
+                      <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'>
+                        <div className='text-sm font-medium text-gray-600'>Role Name:</div>
+                        <div className='px-3 py-2 rounded-lg bg-white border border-gray-300 text-gray-900 font-medium break-all'>
+                          {roleName}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-end gap-4">
-                  <button
-                    className="px-8 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-colors duration-200"
-                    onClick={() => setIsVisiblePopUpDelete(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="px-8 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors duration-200"
-                    onClick={handleConfirmDelete}
-                  >
-                    Delete
-                  </button>
+                
+                {/* Footer */}
+                <div className='border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6'>
+                  <div className='flex flex-row gap-3 sm:gap-4'>
+                    <button
+                      className='flex-1 px-4 sm:px-6 py-3 text-gray-700 font-medium border border-gray-300 rounded-xl bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all duration-200 text-sm sm:text-base'
+                      onClick={() => setIsVisiblePopUpDelete(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleConfirmDelete}
+                      className='flex-1 px-4 sm:px-6 py-3 text-white font-medium rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition-all duration-200 shadow-md hover:shadow-lg text-sm sm:text-base'
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             </PopUp>
             <button
-              className="px-8 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
-              onClick={handleSave}
+              className={`px-8 py-2 rounded-md transition-colors duration-200 ${
+                hasChanges() 
+                  ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer' 
+                  : 'bg-gray-400 text-white cursor-not-allowed'
+              }`}
+              onClick={hasChanges() ? handleSave : undefined}
+              disabled={!hasChanges()}
             >
               Update
             </button>
