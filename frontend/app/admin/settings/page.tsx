@@ -250,20 +250,20 @@ function Settings() {
                   <span className="font-medium text-gray-800 text-sm group-hover:text-blue-700 transition">
                     {role.name || role.roleName || '-'}
                   </span>
-                  <button
+                    <button
                     onClick={() => {
                       const roleId = role.roleId || role.id || role._id;
                       if (roleId) {
-                        router.push(`/admin/settings/${roleId}`);
+                      router.push(`/admin/settings/${roleId}`);
                       } else {
-                        alert('Role ID not found');
+                      alert('Role ID not found');
                       }
                     }}
-                    className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-100 rounded-md transition-colors duration-150 cursor-pointer"
-                    title="Edit"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </button>
+                    className="group relative p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-green-200 hover:shadow-md"
+                    title="Edit Role"
+                    >
+                    <Edit className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+                    </button>
                 </div>
               ))}
             </div>
@@ -357,9 +357,6 @@ function Settings() {
                           title="Edit Company"
                         >
                           <Edit className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
-                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                            Edit
-                          </div>
                         </button>
                         <button
                           onClick={() => {
@@ -370,9 +367,6 @@ function Settings() {
                           title="Delete Company"
                         >
                           <Trash2 className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
-                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                            Delete
-                          </div>
                         </button>
                       </div>
                     </>
@@ -587,9 +581,6 @@ function Settings() {
                           title="Edit Tag"
                         >
                           <Edit className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
-                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                            Edit
-                          </div>
                         </button>
                         <button
                           onClick={() => {
@@ -600,9 +591,6 @@ function Settings() {
                           title="Delete Tag"
                         >
                           <Trash2 className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
-                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                            Delete
-                          </div>
                         </button>
                       </div>
                     </>

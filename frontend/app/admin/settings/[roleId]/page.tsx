@@ -7,6 +7,7 @@ import { useRouter, useParams } from 'next/navigation'
 import router from 'next/dist/shared/lib/router/router'
 import { on } from 'events';
 import PopUp from '@/src/components/ui/popUp'
+import NotFound from '@/app/not-found'
 
 // Define RoleData type
 type RoleData = {
@@ -46,6 +47,8 @@ export default function AddRolePage() {
     const params = useParams()
     const roleId = params.roleId as string
     const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = useState(false);
+    const [notFound, setNotFound] = useState(false);
+    const [dataLoaded, setDataLoaded] = useState(false);
 
     const [roleName, setRoleName] = useState('')
     const [permissions, setPermissions] = useState({
@@ -62,7 +65,12 @@ export default function AddRolePage() {
   }
 
   useEffect(() => {
-    if (!roleId) return;
+    if (!roleId) {
+      setNotFound(true);
+      setDataLoaded(true);
+      return;
+    }
+    
     const fetchRoleDetail = async () => {
       try {
         const res = await GetRoleById(roleId);
@@ -74,23 +82,16 @@ export default function AddRolePage() {
             ti: !!res.data.ti,
             admin: !!res.data.admin
           });
+          setDataLoaded(true);
         } else {
-          setRoleName('');
-          setPermissions({
-            cyberNews: false,
-            jira: false,
-            ti: false,
-            admin: false
-          });
+          // ไม่พบข้อมูล role
+          setNotFound(true);
+          setDataLoaded(true);
         }
       } catch (e) {
-        setRoleName('');
-        setPermissions({
-          cyberNews: false,
-          jira: false,
-          ti: false,
-          admin: false
-        });
+        // Error occurred, likely role doesn't exist
+        setNotFound(true);
+        setDataLoaded(true);
       }
     };
     fetchRoleDetail();
@@ -134,6 +135,20 @@ export default function AddRolePage() {
       alert('Failed to delete role.');
     }
   };
+
+  // Show NotFound if data not found or invalid roleId
+  if (notFound && dataLoaded) {
+    return <NotFound/>;
+  }
+
+  // Show loading state while fetching data
+  if (!dataLoaded) {
+    return (
+      <div className='w-full h-screen flex items-center justify-center'>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col overflow-auto h-screen px-4 pt-4">

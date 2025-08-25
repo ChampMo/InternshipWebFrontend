@@ -13,7 +13,7 @@ export default function NotFound() {
 
   if(permissions === null){
     return (
-      <div className='w-full h-screen flex items-center justify-center'>
+      <div className='fixed inset-0 w-screen h-screen flex items-center justify-center bg-white' style={{ zIndex: 9999 }}>
         <PulseLoader
           loading={true}
           size={16}
@@ -25,9 +25,9 @@ export default function NotFound() {
     );
   }
   return (
-    <main 
-    style={{ zIndex : 1000 }}
-    className="min-h-screen w-screen absolute bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center px-4 py-16">
+    <div 
+    style={{ zIndex : 9999 }}
+    className="fixed inset-0 w-screen h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center px-4 py-16 overflow-hidden">
       <div className="max-w-lg w-full text-center">
         {/* Animated 404 */}
         <div className="relative mb-8">
@@ -75,6 +75,6 @@ export default function NotFound() {
           If the problem persists, please contact our support team
         </p>
       </div>
-    </main>
+    </div>
   )
 }

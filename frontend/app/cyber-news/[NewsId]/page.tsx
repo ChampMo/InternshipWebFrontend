@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Port from '@/port';
 import { Icon } from '@iconify/react';
 import { fetchCyberNewsDetail } from '@/src/modules/cyber-news';
+import NotFound from '@/app/not-found';
 
 export default function CyberNewsDetailPage() {
   const params = useParams();
@@ -12,13 +13,57 @@ export default function CyberNewsDetailPage() {
 
   const [newsDetail, setNewsDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (!NewsId) return;
-    fetchCyberNewsDetail(NewsId, setNewsDetail, setLoading);
+    if (!NewsId) {
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
+    
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`${Port.BASE_URL}/detailCybernews/${NewsId}`);
+        if (!res.ok || res.status === 404) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
+        const data = await res.json();
+        if (!data || !data.title) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
+        setNewsDetail(data);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setNotFound(true);
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
   }, [NewsId]);
 
-  if (!newsDetail) return null;
+  // Show NotFound if data not found or invalid NewsId
+  if (notFound) {
+    return <NotFound/>;
+  }
+
+  // Show loading state while fetching data
+  if (loading) {
+    return (
+      <div className='w-full h-screen flex items-center justify-center'>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  if (!newsDetail) return <NotFound/>;
 
   // Format date to dd/mm/yyyy (พ.ศ.)
   const formatDate = (dateString: string) => {
@@ -31,7 +76,7 @@ export default function CyberNewsDetailPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 max-w-4xl mx-auto">
+    <div className="w-full min-h-screen flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 max-w-4xl">
       <div className="w-full pt-2 sm:pt-6">
         {/* Back & Title */}
         <div className="flex items-center gap-x-2 mb-2">
