@@ -136,7 +136,7 @@ export default function AddRolePage() {
   };
 
   return (
-    <div className="w-full flex flex-col overflow-auto h-screen px-10">
+    <div className="w-full flex flex-col overflow-auto h-screen px-4 pt-4">
       <div className="flex-1 flex flex-col pt-10">
         <div className="w-full max-w-2xl px-4">
           {/* Back & Title */}

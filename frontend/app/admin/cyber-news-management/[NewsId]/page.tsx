@@ -29,9 +29,31 @@ export default function CyberNewsManagement() {
   const [advice, setAdvice] = useState('');
   const [loading, setLoading] = useState(false);
   const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
+const [imageUrl, setImageUrl] = useState('');
 
+// Store the original data for change detection
+const [originalData, setOriginalData] = useState({
+  name: '',
+  tag: '',
+  summary: '',
+  details: '',
+  impact: '',
+  advice: '',
+  imageUrl: ''
+});
 
+// Function to check if any field has changed
+const hasChanges = () => {
+  return (
+    name !== originalData.name ||
+    tag !== originalData.tag ||
+    summary !== originalData.summary ||
+    details !== originalData.details ||
+    impact !== originalData.impact ||
+    advice !== originalData.advice ||
+    file !== null
+  );
+};
 
   // Fetch news detail for edit
   useEffect(() => {
@@ -44,14 +66,24 @@ export default function CyberNewsManagement() {
         });
         if (res.ok) {
           const data = await res.json();
-          setName(data.title || '');
-          setTag(data.tag || data.category || '');
-          setSummary(data.Summary || '');
-          setDetails(data.Detail || '');
-          setImpact(data.Impact || '');
-          setAdvice(data.Advice || '');
-          setImageUrl(data.imgUrl || '');
-          // setFile หรือ set รูปภาพถ้ามี
+          const initialData = {
+            name: data.title || '',
+            tag: data.tag || data.category || '',
+            summary: data.Summary || '',
+            details: data.Detail || '',
+            impact: data.Impact || '',
+            advice: data.Advice || '',
+            imageUrl: data.imgUrl || ''
+          };
+          
+          setName(initialData.name);
+          setTag(initialData.tag);
+          setSummary(initialData.summary);
+          setDetails(initialData.details);
+          setImpact(initialData.impact);
+          setAdvice(initialData.advice);
+          setImageUrl(initialData.imageUrl);
+          setOriginalData(initialData);
         }
       } catch (e) {
         // handle error
@@ -157,70 +189,77 @@ useEffect(() => {
   }
 
   return (
-    <div className='w-full h-screen flex flex-col px-10 pt-10 overflow-auto'>
-      <div className="flex items-center gap-x-2 mb-7">
+    <div className='w-full h-screen flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10 overflow-auto max-w-5xl'>
+      <div className="flex items-center gap-x-2 mb-6 md:mb-7">
         <div
           onClick={() => router.back()}
           className="cursor-pointer hover:opacity-70 w-fit">
-          <Icon icon="famicons:arrow-back" width="30" height="30" />
+          <Icon icon="famicons:arrow-back" width="24" height="24" className="sm:w-[30px] sm:h-[30px]" />
         </div>
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 ">
+        <h1 className="text-xl sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800">
           Cyber News Management
         </h1>
       </div>
 
-      <div className="flex flex-wrap gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Upload box */}
-        <div className="border-2 border-dashed border-blue-300 rounded-md p-6 flex flex-col items-center justify-center w-80 h-60">
+        <div className="border-2 border-dashed border-blue-300 rounded-xl p-4 sm:p-6 flex flex-col items-center justify-center w-full lg:w-80 h-56 sm:h-64 lg:h-60 bg-blue-50/30">
           {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt="news"
-              className="w-full h-35 object-cover rounded my-1"
-            />
+            <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+              <img
+                src={imageUrl}
+                alt="news"
+                className="w-full h-36 sm:h-40 object-cover rounded-xl"
+              />
+                <label
+                htmlFor="fileUpload"
+                className="px-6 py-2.5 sm:px-8 sm:py-3 bg-blue-500 text-white rounded-xl cursor-pointer hover:bg-blue-600 transition   font-medium shadow-sm"
+                >
+                Select file
+                </label>
+            </div>
           ) : (
-            <Icon icon="mdi:image-outline" width={40} className="text-blue-400 mb-2" />
+            <>
+              <Icon icon="mdi:cloud-upload-outline" width={48} height={48} className="sm:w-[56px] sm:h-[56px] text-blue-400 mb-4" />
+              <p className="  text-blue-600 mb-2 text-center font-medium">Drag and drop image file to upload</p>
+              <p className="text-sm sm:text-sm text-blue-400 mb-4 text-center">or</p>
+              <label htmlFor="fileUpload" className="px-6 py-2.5 sm:px-8 sm:py-3 bg-blue-500 text-white rounded-xl cursor-pointer hover:bg-blue-600 transition   font-medium shadow-sm">
+                Select file
+              </label>
+            </>
           )}
-          <p className="text-blue-400 mb-2">Drag and drop image file to upload</p>
           <input
             type="file"
             onChange={handleFileChange}
             className="hidden"
             id="fileUpload"
+            accept="image/*"
           />
-          <label htmlFor="fileUpload" className="px-4 py-2 bg-blue-100 text-blue-600 rounded-md cursor-pointer hover:bg-blue-200 transition">
-            Select file
-          </label>
         </div>
 
         {/* Name and Tag */}
         <div className="flex flex-col flex-grow gap-4">
           <div>
-            <label className="font-medium">Name</label>
+            <label className=" font-medium">Name</label>
             <input
               type="text"
               placeholder="Enter Name"
-              className="w-full border border-blue-300 outline-none rounded-md px-3 py-2"
+              className="w-full border border-blue-300 outline-none rounded-xl px-3 py-2"
               value={name}
               onChange={e => setName(e.target.value)}
             />
           </div>
             <div>
-            <label className="font-medium">Tag</label>
-            <select
-              className="w-full border border-blue-300 outline-none rounded-md px-3 py-2"
-              value={tag}
-              onChange={e => setTag(e.target.value)}
-            >
-              <option value="" disabled hidden>
-                Select Tag
-              </option>
-              {tags.map((t) => (
-                 <option key={t.tagId} value={t.tagName}>
-                  {t.tagName}
-                </option>
-              ))}
-            </select>
+            <label className="  font-medium">Tag</label>
+            <div className='grow-0 z-30 w-full  '>
+              <Dropdown 
+                items={tags.map(item => item.tagName)} 
+                placeholder='Select Tag' 
+                setValue={setTag} 
+                value={tag} 
+                haveIcon={false}
+              />
+            </div>
             </div>
         </div>
       </div>
@@ -228,10 +267,10 @@ useEffect(() => {
       {/* Textareas */}
       <div className="mt-6 space-y-4">
         <div>
-          <label className="font-medium">Summary of information</label>
+          <label className="  font-medium">Summary of information</label>
           <textarea
             placeholder="Enter Summary of information"
-            className="w-full border border-blue-300 rounded-md px-3 py-2  max-h-40 overflow-y-auto resize-none outline-none"
+            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none  "
             value={summary}
             onChange={e => {
               setSummary(e.target.value);
@@ -244,10 +283,10 @@ useEffect(() => {
           />
         </div>
         <div>
-          <label className="font-medium">More details</label>
+          <label className="  font-medium">More details</label>
           <textarea
             placeholder="Enter More details"
-            className="w-full border border-blue-300 rounded-md px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none"
+            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none  "
             value={details}
             onChange={e => {
               setDetails(e.target.value);
@@ -260,10 +299,10 @@ useEffect(() => {
           />
         </div>
         <div>
-          <label className="font-medium">Impact of the attack</label>
+          <label className="  font-medium">Impact of the attack</label>
           <textarea
             placeholder="Enter Impact of the attack"
-            className="w-full border border-blue-300 rounded-md px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none"
+            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none  "
             value={impact}
             onChange={e => {
               setImpact(e.target.value);
@@ -276,10 +315,10 @@ useEffect(() => {
           />
         </div>
         <div>
-          <label className="font-medium">Advice</label>
+          <label className="  font-medium">Advice</label>
           <textarea
             placeholder="Enter Advice"
-            className="w-full border border-blue-300 rounded-md px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none"
+            className="w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none  "
             value={advice}
             onChange={e => {
               setAdvice(e.target.value);
@@ -294,21 +333,44 @@ useEffect(() => {
       </div>
 
       {/* Buttons */}
-      <div className="mt-6 flex gap-4">
-        <div></div>
+      <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end">
         <button
-          className="px-6 py-2 border border-red-500 text-red-500 rounded-md hover:bg-red-500 hover:text-white transition-colors duration-200 cursor-pointer"
+          className="px-4 sm:px-6 py-3 border-2 border-red-500 text-red-500 rounded-xl hover:bg-red-500 hover:text-white hover:border-red-600 transition-all duration-200 cursor-pointer   font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
           onClick={() => setIsVisiblePopUpDelete(true)}
           disabled={loading}
         >
-          {loading ? 'Deleting...' : 'Delete'}
+          {loading ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent"></div>
+              Processing...
+            </>
+          ) : (
+            <>
+              <Icon icon="mdi:delete" width="18" height="18" />
+              Delete
+            </>
+          )}
         </button>
         <button
-          className="px-6 py-2 bg-blue-600 text-white rounded-md transition-colors duration-200 hover:bg-blue-700 hover:shadow-lg cursor-pointer"
-          onClick={handleUpdate}
-          disabled={loading}
+          className={`px-4 sm:px-6 py-3 rounded-xl transition-all duration-200   font-semibold shadow-lg flex items-center justify-center gap-2 ${
+            hasChanges() && !loading
+              ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 hover:shadow-xl cursor-pointer transform hover:scale-[1.02]'
+              : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+          } ${loading ? 'opacity-50 cursor-not-allowed transform-none' : ''}`}
+          onClick={hasChanges() && !loading ? handleUpdate : undefined}
+          disabled={loading || !hasChanges()}
         >
-          {loading ? 'Saving...' : 'Update'}
+          {loading ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+              Saving...
+            </>
+          ) : (
+            <>
+              <Icon icon="mdi:content-save" width="18" height="18" />
+              Update
+            </>
+          )}
         </button>
       </div>
       <PopUp
@@ -316,39 +378,53 @@ useEffect(() => {
         setIsVisible={setIsVisiblePopUpDelete}
         onClose={() => setIsVisiblePopUpDelete(false)}
       >
-        <div className="w-[400px] rounded-t-xl bg-red-700 flex flex-col items-start px-6 pt-6 pb-4">
-          <div className="flex items-center gap-3 mb-2">
-            <Icon icon="mdi:delete" width="28" height="28" className="text-white" />
-            <span className="text-2xl font-bold text-white">Delete News</span>
+        <div>
+          <div className='md:w-[500px] h-22 md:h-30 rounded-t-xl md:rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l px-4 md:px-8 from-[#a10f16] to-[#ca000a]'>
+            <div className='md:text-xl text-white flex gap-2 items-end'>
+              <Icon icon="mdi:delete" width="30" height="30" className='mb-1' /> 
+              Delete News
+            </div>
+            <div className='text-sm md:text text-white'>Are you sure you want to delete this news?</div>
           </div>
-          <span className="text-white text-base mb-2">
-            Are you sure you want to delete this news?
-          </span>
-        </div>
-        <div className="bg-gray-50 px-6 py-4 rounded-b-xl">
-          <div className="mb-4 flex items-center">
-            <span className="text-gray-600 font-medium flex-shrink-0">News Title:</span>
-            <span
-              className="ml-3 px-3 py-1 bg-gray-200 rounded text-gray-700 font-semibold max-w-[260px] overflow-x-auto whitespace-nowrap scrollbar-hide"
-              style={{ display: 'inline-block' }}
-              title={name}
-            >
-              {name}
-            </span>
-          </div>
-          <div className="flex justify-end gap-4">
-            <button
-              className="px-8 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-colors duration-200"
-              onClick={() => setIsVisiblePopUpDelete(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="px-8 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors duration-200"
-              onClick={handleDelete}
-            >
-              Delete
-            </button>
+          <div className='flex flex-col px-4 md:px-8 pt-4 md:pt-8 pb-6'>
+            <div className='flex flex-col gap-3 border border-gray-300 rounded-xl md:rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-3 md:p-4'>
+              <div className='flex md:justify-between md:items-center flex-col md:flex-row gap-2 md:gap-0'>
+                <div className='text-sm text-gray-500'>News Title:</div>
+                <div className='py-1 px-2 md:px-3 rounded-lg bg-gray-300 text-sm md:text-base max-w-[280px] overflow-x-auto whitespace-nowrap'>{name}</div>
+              </div>
+              <div className='flex justify-between items-center'>
+                <div className='text-sm text-gray-500'>Tag:</div>
+                <div className='text-sm md:text-base'>{tag}</div>
+              </div>
+            </div>
+            <div className='border-b border-gray-200 mt-4 md:mt-10 mb-2 md:mb-5'/>
+            <div className='flex gap-3 md:gap-5'>
+              <button 
+                className='text-gray-600 md:text-lg cursor-pointer border border-gray-300 rounded-lg md:rounded-xl w-2/5 h-12 flex items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-gray-400 transition-all duration-200 font-medium shadow-sm hover:shadow-md' 
+                onClick={() => setIsVisiblePopUpDelete(false)}
+              >
+                Cancel
+              </button>
+              <button
+                disabled={loading}
+                onClick={handleDelete}
+                className={`group text-white h-12 rounded-lg md:rounded-xl md:text-lg w-3/5 bg-gradient-to-r from-[#dc2626] to-[#b91c1c] hover:from-[#b91c1c] hover:to-[#991b1b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+              >
+                <div className="m-auto flex items-center justify-center gap-2">
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Icon icon="mdi:delete" width="20" height="20" />
+                      Delete News
+                    </>
+                  )}
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </PopUp>

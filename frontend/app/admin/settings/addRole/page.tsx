@@ -67,8 +67,8 @@ export default function AddRolePage() {
 
 
   return (
-    <div className="w-full flex flex-col overflow-auto h-screen px-10">
-      <div className="flex-1 flex flex-col pt-10">
+    <div className="w-full flex flex-col overflow-auto h-screen px-4 pt-10">
+      <div className="flex-1 flex flex-col">
         <div className="w-full max-w-2xl px-4">
           {/* Back & Title */}
           <div className="flex items-center gap-x-2 mb-6">
@@ -129,6 +129,7 @@ export default function AddRolePage() {
           <div className="flex justify-end gap-4 mt-10">
             <button
               className="px-8 py-2 border border-red-500 text-red-500 rounded-md hover:bg-red-50 transition-colors duration-200"
+              onClick={() => window.history.back()}
             >
               Cancel
             </button>

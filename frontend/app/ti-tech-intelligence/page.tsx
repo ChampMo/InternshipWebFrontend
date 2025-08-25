@@ -74,15 +74,15 @@ export default function TechIntelligence() {
   }
 
   return (
-    <div className='w-full flex flex-col overflow-auto h-screen px-10 pt-10'>
-      <div className="font-bold text-xl mb-4">TI Tech Intelligence</div>
+    <div className='w-full flex flex-col overflow-auto h-screen px-4 sm:px-10 pt-6 sm:pt-10'>
+      <div className="font-bold text-lg sm:text-xl mb-4">TI Tech Intelligence</div>
 
       {/* Upload Box */}
       <div
         className="flex flex-col items-center mb-6"
       >
         <div
-          className={`border-2 border-dashed border-blue-400 rounded-md p-6 flex flex-col items-center justify-center w-[400px] h-48 mb-4 transition
+          className={`border-2 border-dashed border-blue-400 rounded-xl p-4 sm:p-6 flex flex-col items-center justify-center w-full max-w-[400px] h-40 sm:h-48 mb-4 transition
         ${file ? 'bg-blue-50' : ''}
           `}
           onDragOver={e => {
@@ -102,8 +102,8 @@ export default function TechIntelligence() {
         }
           }}
         >
-          <Icon icon="mdi:file-excel" width={40} className="text-blue-400 mb-2" />
-          <p className="text-blue-400 mb-2">Drag and drop csv file to upload</p>
+          <Icon icon="mdi:file-excel" width={32} className="text-blue-400 mb-2 sm:w-[40px]" />
+          <p className="text-blue-400 mb-2 text-xs sm:text-base text-center px-2">Drag and drop csv file to upload</p>
           <input
         type="file"
         accept=".xlsx,.xls,.csv"
@@ -111,18 +111,18 @@ export default function TechIntelligence() {
         className="hidden"
         id="fileUpload"
           />
-          <label htmlFor="fileUpload" className="px-4 py-2 bg-blue-100 text-blue-600 rounded-md cursor-pointer hover:bg-blue-200 transition">
+          <label htmlFor="fileUpload" className="px-3 sm:px-4 py-2 bg-blue-100 text-blue-600 rounded-xl cursor-pointer hover:bg-blue-200 transition text-xs sm:text-base">
         Select file
           </label>
           {/* แสดงชื่อไฟล์ที่เลือก */}
           {uploadedFileName && (
-        <span className="mt-2 text-gray-700 text-sm break-all max-w-[320px] text-center">
+        <span className="mt-2 text-gray-700 text-xs sm:text-sm break-all max-w-[280px] sm:max-w-[320px] text-center">
           {uploadedFileName}
         </span>
           )}
         </div>
         <button
-          className={`w-60 h-10 rounded-md transition mb-2 ${
+          className={`w-full max-w-60 h-10 rounded-xl transition mb-2 text-xs sm:text-base ${
         !file
           ? 'bg-gray-400 text-white cursor-not-allowed'
           : 'bg-blue-600 text-white hover:bg-blue-700'
@@ -136,8 +136,8 @@ export default function TechIntelligence() {
 
       {/* Result Table */}
       {showResult && (
-        <div className="mt-8">
-          <div className="font-bold text-lg mb-2">Result</div>
+        <div className="mt-6 sm:mt-8">
+          <div className="font-bold text-base sm:text-lg mb-2">Result</div>
           <DataTable
             headers={[
               {
@@ -184,10 +184,10 @@ export default function TechIntelligence() {
             itemsPerPage={10}
             showSearch={false}
           />
-          <div className="flex justify-between items-center mt-2">
+          <div className="flex flex-col sm:flex-row justify-between items-center mt-2 gap-2">
             <div className="flex-1" />
             <button
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 text-xs sm:text-base w-full max-w-60 sm:w-auto mt-2 sm:mt-0"
               onClick={handleExport}
             >
               Export CSV file

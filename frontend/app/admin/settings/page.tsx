@@ -213,7 +213,7 @@ function Settings() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 px-2 pt-6 sm:px-6 md:px-10 md:pt-10 flex flex-col items-center">
+    <div className="w-full min-h-screen bg-gray-50 px-4 pt-4 sm:px-6 md:px-10 md:pt-10 flex flex-col">
       <div className="w-full max-w-3xl">
         <div className="mb-2 px-2">
           <h1 className="text-xl sm:text-2xl font-bold mb-1">Settings</h1>
@@ -301,29 +301,39 @@ function Settings() {
                   className="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition group"
                 >
                   {editingCompanyIdx === idx ? (
-                    <>
-                      <input
-                        className="py-1 flex-1 border border-blue-300 rounded-md px-2 outline-none text-sm"
-                        value={editingCompanyName}
-                        onChange={e => setEditingCompanyName(e.target.value)}
-                        autoFocus
-                      />
-                      <button
-                        className="ml-0 sm:ml-2 px-3 py-1 bg-primary1 text-white rounded hover:bg-blue-700 text-sm mt-2 sm:mt-0"
-                        onClick={() => handleEditCompany(idx)}
-                      >
-                        Save
-                      </button>
-                      <button
-                        className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-800 text-sm mt-2 sm:mt-0"
-                        onClick={() => {
-                          setEditingCompanyIdx(null)
-                          setEditingCompanyName('')
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    </>
+                    <div className="flex flex-col items-start w-full gap-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg px-4">
+                      <div className={`border rounded-lg md:rounded-xl h-10 w-full relative flex items-center ${editingCompanyName?'border-primary1':'border-gray-300'}`}>
+                        <input
+                          className="outline-none w-full h-full px-3 rounded-lg md:rounded-xl text-sm placeholder-gray-400"
+                          value={editingCompanyName}
+                          onChange={e => setEditingCompanyName(e.target.value)}
+                          placeholder="Company name"
+                          autoFocus
+                          disabled={isCompanyLoading}
+                        />
+                      </div>
+                      <div className="flex gap-3 w-full">
+                        <button
+                          className="flex items-center gap-2 justify-center px-4 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-1"
+                          onClick={() => {
+                            setEditingCompanyIdx(null)
+                            setEditingCompanyName('')
+                          }}
+                          disabled={isCompanyLoading}
+                        >
+                          <Icon icon="mdi:close" width={16} />
+                          Cancel
+                        </button>
+                        <button
+                          className="flex items-center gap-2 justify-center px-4 py-2.5 bg-primary1 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-1"
+                          onClick={() => handleEditCompany(idx)}
+                          disabled={isCompanyLoading}
+                        >
+                          <Icon icon="mdi:check" width={16} />
+                          {isCompanyLoading ? 'Saving...' : 'Save'}
+                        </button>
+                      </div>
+                    </div>
                   ) : (
                     <>
                       <span className="py-1 flex-1 text-gray-800 text-sm group-hover:text-blue-700 transition">
@@ -343,20 +353,26 @@ function Settings() {
                             setNewCompany('')
                             setNewCompanyKey('')
                           }}
-                          className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150 cursor-pointer"
-                          title="Edit"
+                          className="group relative p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-green-200 hover:shadow-md"
+                          title="Edit Company"
                         >
-                          <Edit className="w-4 h-4" />
+                          <Edit className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                            Edit
+                          </div>
                         </button>
                         <button
                           onClick={() => {
                             setDeleteItem(company)
                             setIsVisiblePopUpDelete(true)
                           }}
-                          className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150 cursor-pointer"
-                          title="Delete"
+                          className="group relative p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-red-200 hover:shadow-md"
+                          title="Delete Company"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                            Delete
+                          </div>
                         </button>
                       </div>
                     </>
@@ -364,42 +380,56 @@ function Settings() {
                 </div>
               ))}
               {isAddingCompany && editingCompanyIdx === null && (
-                <div className="flex flex-col sm:flex-row items-start sm:items-center mt-2 gap-2">
-                  <input
-                    type="text"
-                    className="py-2 flex-1 border border-blue-300 rounded-md px-3 outline-none text-sm"
-                    placeholder="New company name"
-                    value={newCompany}
-                    onChange={e => setNewCompany(e.target.value)}
-                    autoFocus
-                    disabled={isCompanyLoading}
-                  />
-                  <input
-                    type="text"
-                    className="py-2 w-full sm:w-48 border border-blue-300 rounded-md px-3 outline-none text-sm"
-                    placeholder="Key"
-                    value={newCompanyKey}
-                    onChange={e => setNewCompanyKey(e.target.value)}
-                    disabled={isCompanyLoading}
-                  />
-                  <button
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer text-sm w-full sm:w-auto"
-                    onClick={handleAddCompany}
-                    disabled={isCompanyLoading}
-                  >
-                    {isCompanyLoading ? 'Saving...' : 'Save'}
-                  </button>
-                  <button
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-800 cursor-pointer text-sm w-full sm:w-auto"
-                    onClick={() => {
-                      setIsAddingCompany(false)
-                      setNewCompany('')
-                      setNewCompanyKey('')
-                    }}
-                    disabled={isCompanyLoading}
-                  >
-                    Cancel
-                  </button>
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border-2 border-blue-200 mb-2">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <div className={`md:text-lg border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${newCompany ? 'border-primary1' : 'border-gray-300'}`}>
+                        <input
+                          type="text"
+                          className="flex-1 h-full px-4 bg-transparent outline-none text-sm"
+                          placeholder="Company name"
+                          value={newCompany}
+                          onChange={e => setNewCompany(e.target.value)}
+                          autoFocus
+                          disabled={isCompanyLoading}
+                        />
+                        <Icon icon="mdi:office-building" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" width={18} />
+                      </div>
+                      <div className={`md:text-lg border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${newCompanyKey ? 'border-primary1' : 'border-gray-300'}`}>
+                        <input
+                          type="text"
+                          className="flex-1 h-full px-4 bg-transparent outline-none text-sm"
+                          placeholder="Company Key"
+                          value={newCompanyKey}
+                          onChange={e => setNewCompanyKey(e.target.value)}
+                          disabled={isCompanyLoading}
+                        />
+                        <Icon icon="mdi:key" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" width={18} />
+                      </div>
+                    </div>
+                    <div className="flex gap-3 justify-end">
+                      <button
+                        className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        onClick={handleAddCompany}
+                        disabled={isCompanyLoading}
+                      >
+                        <Icon icon="mdi:check" width={16} />
+                        {isCompanyLoading ? 'Adding...' : 'Add Company'}
+                      </button>
+                      <button
+                        className="flex items-center gap-2 px-5 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        onClick={() => {
+                          setIsAddingCompany(false)
+                          setNewCompany('')
+                          setNewCompanyKey('')
+                        }}
+                        disabled={isCompanyLoading}
+                      >
+                        <Icon icon="mdi:close" width={16} />
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -411,58 +441,67 @@ function Settings() {
           setIsVisible={setIsVisiblePopUpDelete}
           onClose={() => setIsVisiblePopUpDelete(false)}
         >
-          <div>
+          <div className="flex flex-col h-full ">
             {/* Header */}
-            <div className='w-full sm:w-[400px] rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-[#a10f16] to-[#ca000a] px-4 sm:px-8 py-4'>
-              <div className='text-xl text-white flex gap-2 items-end'>
-                <Icon icon="tabler:trash" width="30" height="30" className='mb-1' />
-                Delete {deleteItem?.email ? 'User Account' : deleteItem?.companyName ? 'Company' : deleteItem?.tagName ? 'Tag' : ''}
+            <div className='w-full rounded-t-2xl md:rounded-t-3xl flex flex-col justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 px-4 sm:px-6 lg:px-8 py-5 sm:py-6'>
+              <div className='text-lg sm:text-xl text-white flex gap-2 sm:gap-3 items-center'>
+                <Icon icon="tabler:trash" width="24" height="24" className='sm:w-7 sm:h-7' />
+                <span className='font-semibold'>Delete {deleteItem?.email ? 'User Account' : deleteItem?.companyName ? 'Company' : deleteItem?.tagName ? 'Tag' : ''}</span>
               </div>
-              <div className='text-white'>
+              <div className='text-red-100 text-sm sm:text-base'>
                 Are you sure you want to delete this {deleteItem?.email ? 'user account' : deleteItem?.companyName ? 'company' : deleteItem?.tagName ? 'tag' : ''}?
               </div>
             </div>
-            {/* Detail */}
-            <div className='max-h-85 overflow-y-auto gap-4 flex flex-col px-4 sm:px-8 pt-4'>
-              {deleteItem?.companyName && !deleteItem?.email && (
-                <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
-                  <div className='flex justify-between items-center'>
-                    <div className='text-sm text-gray-500'>Company Name:</div>
-                    <div className='py-1 px-3 rounded-lg bg-gray-300'>{deleteItem.companyName}</div>
+            
+            {/* Content */}
+            <div className='flex-1 overflow-y-auto'>
+              <div className='px-4 sm:px-6 lg:px-8 py-4 sm:py-6'>
+                {deleteItem?.companyName && !deleteItem?.email && (
+                  <div className='border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-5'>
+                    <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'>
+                      <div className='text-sm font-medium text-gray-600'>Company Name:</div>
+                      <div className='px-3 py-2 rounded-lg bg-white border border-gray-300 text-gray-900 font-medium break-all'>
+                        {deleteItem.companyName}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              )}
-              {deleteItem?.tagName && !deleteItem?.email && (
-                <div className='flex flex-col gap-3 border border-gray-300 rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
-                  <div className='flex justify-between items-center'>
-                    <div className='text-sm text-gray-500'>Tag Name:</div>
-                    <div className='py-1 px-3 rounded-lg bg-gray-300'>{deleteItem.tagName}</div>
+                )}
+                {deleteItem?.tagName && !deleteItem?.email && (
+                  <div className='border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-5'>
+                    <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'>
+                      <div className='text-sm font-medium text-gray-600'>Tag Name:</div>
+                      <div className='px-3 py-2 rounded-lg bg-white border border-gray-300 text-gray-900 font-medium break-all'>
+                        {deleteItem.tagName}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-            {/* Footer */}
-            <div className='border-b border-gray-200 mt-5 mb-5'/>
-            <div className='flex flex-col sm:flex-row gap-3 sm:gap-5 px-4 sm:px-8 pb-6'>
-              <div
-                className='text-gray-400 text-lg cursor-pointer border border-gray-300 rounded-xl flex-1 flex items-center justify-center bg-gray-50 hover:bg-gray-100'
-                onClick={() => setIsVisiblePopUpDelete(false)}
-              >
-                Cancel
+                )}
               </div>
-              <button
-                onClick={async () => {
-                  if (deleteItem?.companyId) {
-                    await handleDeleteCompany(companyItems.findIndex(c => c.companyId === deleteItem.companyId))
-                  } else if (deleteItem?.tagId) {
-                    await handleDeleteTag(tagItems.findIndex(t => t.tagId === deleteItem.tagId))
-                  }
-                  setIsVisiblePopUpDelete(false)
-                }}
-                className='text-white h-12 rounded-xl text-lg flex-1 bg-gradient-to-r from-[#ec1c26] to-[#e7000b] cursor-pointer'
-              >
-                Delete
-              </button>
+            </div>
+            
+            {/* Footer */}
+            <div className='border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6'>
+              <div className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
+                <button
+                  className='flex-1 px-6 py-3 text-gray-700 font-medium border border-gray-300 rounded-xl bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all duration-200'
+                  onClick={() => setIsVisiblePopUpDelete(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    if (deleteItem?.companyId) {
+                      await handleDeleteCompany(companyItems.findIndex(c => c.companyId === deleteItem.companyId))
+                    } else if (deleteItem?.tagId) {
+                      await handleDeleteTag(tagItems.findIndex(t => t.tagId === deleteItem.tagId))
+                    }
+                    setIsVisiblePopUpDelete(false)
+                  }}
+                  className='flex-1 px-6 py-3 text-white font-medium rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition-all duration-200 shadow-md hover:shadow-lg'
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </PopUp>
@@ -498,34 +537,41 @@ function Settings() {
                   className="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition group"
                 >
                   {editingTagIdx === idx ? (
-                    <>
-                      <input
-                        className="py-1 flex-1 border border-blue-300 rounded-md px-2 outline-none text-sm"
-                        value={editingTagName}
-                        onChange={e => setEditingTagName(e.target.value)}
-                        autoFocus
-                        disabled={isTagLoading}
-                      />
-                      <button
-                        className="ml-0 sm:ml-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm mt-2 sm:mt-0"
-                        onClick={() => handleEditTag(idx)}
-                        disabled={isTagLoading}
-                      >
-                        {isTagLoading ? 'Saving...' : 'Save'}
-                      </button>
-                      <button
-                        className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-800 text-sm mt-2 sm:mt-0"
-                        onClick={() => {
-                          setEditingTagIdx(null)
-                          setEditingTagName('')
-                          setIsAddingTag(false)
-                          setNewTag('')
-                        }}
-                        disabled={isTagLoading}
-                      >
-                        Cancel
-                      </button>
-                    </>
+                    <div className="flex flex-col items-start w-full gap-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg px-4">
+                      <div className={`border rounded-lg md:rounded-xl h-10 w-full relative flex items-center ${editingTagName?'border-primary1':'border-gray-300'}`}>
+                        <input
+                          className="outline-none w-full h-full px-3 rounded-lg md:rounded-xl text-sm placeholder-gray-400"
+                          value={editingTagName}
+                          onChange={e => setEditingTagName(e.target.value)}
+                          placeholder="Tag name"
+                          autoFocus
+                          disabled={isTagLoading}
+                        />
+                      </div>
+                      <div className="flex gap-3 w-full">
+                        <button
+                          className="flex items-center gap-2 justify-center px-4 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-1"
+                          onClick={() => {
+                            setEditingTagIdx(null)
+                            setEditingTagName('')
+                            setIsAddingTag(false)
+                            setNewTag('')
+                          }}
+                          disabled={isTagLoading}
+                        >
+                          <Icon icon="mdi:close" width={16} />
+                          Cancel
+                        </button>
+                        <button
+                          className="flex items-center gap-2 justify-center px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-1"
+                          onClick={() => handleEditTag(idx)}
+                          disabled={isTagLoading}
+                        >
+                          <Icon icon="mdi:check" width={16} />
+                          {isTagLoading ? 'Saving...' : 'Save'}
+                        </button>
+                      </div>
+                    </div>
                   ) : (
                     <>
                       <span className="py-1 flex-1 text-gray-800 text-sm group-hover:text-blue-700 transition">
@@ -537,20 +583,26 @@ function Settings() {
                             setEditingTagIdx(idx)
                             setEditingTagName(tag.name || tag.tagName || '')
                           }}
-                          className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-150 cursor-pointer"
-                          title="Edit"
+                          className="group relative p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-green-200 hover:shadow-md"
+                          title="Edit Tag"
                         >
-                          <Edit className="w-4 h-4" />
+                          <Edit className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                            Edit
+                          </div>
                         </button>
                         <button
                           onClick={() => {
                             setDeleteItem(tag)
                             setIsVisiblePopUpDelete(true)
                           }}
-                          className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150 cursor-pointer"
-                          title="Delete"
+                          className="group relative p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-red-200 hover:shadow-md"
+                          title="Delete Tag"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                            Delete
+                          </div>
                         </button>
                       </div>
                     </>
@@ -558,33 +610,41 @@ function Settings() {
                 </div>
               ))}
               {isAddingTag && editingTagIdx === null && (
-                <div className="flex flex-col sm:flex-row items-start sm:items-center mt-2 gap-2">
-                  <input
-                    type="text"
-                    className="py-2 flex-1 border border-blue-300 rounded-md px-3 outline-none text-sm"
-                    placeholder="New tag name"
-                    value={newTag}
-                    onChange={e => setNewTag(e.target.value)}
-                    autoFocus
-                    disabled={isTagLoading}
-                  />
-                  <button
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer text-sm w-full sm:w-auto"
-                    onClick={handleAddTag}
-                    disabled={isTagLoading}
-                  >
-                    {isTagLoading ? 'Saving...' : 'Save'}
-                  </button>
-                  <button
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-800 cursor-pointer text-sm w-full sm:w-auto"
-                    onClick={() => {
-                      setIsAddingTag(false)
-                      setNewTag('')
-                    }}
-                    disabled={isTagLoading}
-                  >
-                    Cancel
-                  </button>
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border-2 border-blue-200 mb-2">
+                  <div className="flex flex-col gap-4">
+                    <div className={`border rounded-lg md:rounded-xl h-10 w-full relative flex items-center ${newTag?'border-primary1':'border-gray-300'}`}>
+                      <input
+                        type="text"
+                        className="outline-none w-full h-full px-3 rounded-lg md:rounded-xl text-sm placeholder-gray-400"
+                        placeholder="Enter new tag name"
+                        value={newTag}
+                        onChange={e => setNewTag(e.target.value)}
+                        autoFocus
+                        disabled={isTagLoading}
+                      />
+                    </div>
+                    <div className="flex gap-3 justify-end">
+                      <button
+                        className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        onClick={handleAddTag}
+                        disabled={isTagLoading}
+                      >
+                        <Icon icon="mdi:check" width={16} />
+                        {isTagLoading ? 'Adding...' : 'Add Tag'}
+                      </button>
+                      <button
+                        className="flex items-center gap-2 px-5 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        onClick={() => {
+                          setIsAddingTag(false)
+                          setNewTag('')
+                        }}
+                        disabled={isTagLoading}
+                      >
+                        <Icon icon="mdi:close" width={16} />
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

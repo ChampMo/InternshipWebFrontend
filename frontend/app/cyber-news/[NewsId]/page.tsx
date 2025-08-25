@@ -47,7 +47,7 @@ export default function CyberNewsDetailPage() {
         </div>
 
         {/* Date & Tag */}
-        <div className="flex flex-wrap items-center text-xs sm:text-sm text-gray-500 gap-2 mb-2 ml-0">
+        <div className="flex flex-wrap items-center text-xs sm:text-sm text-gray-500 gap-2 mb-2 ml-10">
           <span>
             {formatDate(newsDetail.createdAt)}
           </span>
