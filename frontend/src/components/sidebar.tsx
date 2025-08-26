@@ -178,7 +178,7 @@ const Sidebar: React.FC = () => {
         <>
             {/* Desktop Sidebar */}
             <div className='w-70 md:flex hidden shrink-0'/>
-            <aside ref={asideRef} style={{zIndex: 101}} className={`bg-primary3 md:w-70 h-screen shadow-lg rounded-r-xl md:rounded-r-3xl flex-col pb-10 shrink-0 fixed left-0 z-50 flex duration-300 ${isMenuOpen?'':'md:translate-x-0 translate-x-[-100%]'}`}>
+            <aside ref={asideRef} style={{zIndex: 101}} className={`bg-primary3 md:w-70 h-screen shadow-lg rounded-r-xl md:rounded-r-3xl flex-col pb-5 md:pb-10 shrink-0 fixed left-0 z-50 flex duration-300 ${isMenuOpen?'':'md:translate-x-0 translate-x-[-100%]'}`}>
                 <header className='p-4 md:h-40 md:items-center flex justify-center'>
                     <div className='text-xl md:text-4xl orbitron text-center text-wrap' >Cyber Command</div>
                 </header>
@@ -228,7 +228,7 @@ const Sidebar: React.FC = () => {
                     </nav>
                 </>}
                 {permissions && permissions !== 'no_permissions' ?
-                <div className='flex flex-col mt-auto px-4 py-2'>
+                <div className='flex flex-col mt-auto px-4 py-2 sticky bottom-0'>
                     <div 
                     onClick={()=>{setResetPassPopUp(true)}}
                     className='md:text-lg w-50 px-4 py-3 text-gray-400 cursor-pointer hover:text-primary1'>Reset Password</div>
@@ -236,7 +236,7 @@ const Sidebar: React.FC = () => {
                     onClick={()=>{setIsMenuOpen(false), localStorage.removeItem('token'),localStorage.removeItem('userId') , window.location.href = '/'}}
                     className='md:text-lg w-40 px-4 py-3 text-red-400 cursor-pointer'>Log out</div>
                 </div>
-                :<div className='flex flex-col mt-auto px-4 py-2'>
+                :<div className='flex flex-col mt-auto px-4 py-2 sticky bottom-0'>
                     <div 
                     onClick={()=>{ window.location.href = '/signin'}}
                     className='md:text-lg w-40 px-4 py-3 text-primary1 cursor-pointer'>Sign In</div>
