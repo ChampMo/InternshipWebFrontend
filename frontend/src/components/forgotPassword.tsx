@@ -302,7 +302,7 @@ const forgotPassword: React.FC<ForgotPasswordProps> = ({
                     <Icon icon="stash:circle-dot-duotone" width="20" height="20" color={`${longEnough ?'#00C90A':'#ABABAB'}`} className=' shrink-0'/>
                     Least 6 characters.
                   </div>
-                  <div className={`text-sm flex flex-row items-center gap-2 ${hasSpecialChar ? 'text-green-600' : 'text-gray-400'}`} >
+                  <div className={`text-xs md:text-sm flex flex-row items-center gap-2 ${hasSpecialChar ? 'text-green-600' : 'text-gray-400'}`} >
                     <Icon icon="stash:circle-dot-duotone" width="20" height="20" color={`${hasSpecialChar ?'#00C90A':'#ABABAB'}`} className=' shrink-0'/>
                     {'Least 1 special characters. !@#$%^&*(),.?":{}|<>'}
                   </div>
