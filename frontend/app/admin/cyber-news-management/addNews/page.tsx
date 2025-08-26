@@ -127,7 +127,7 @@ export default function CyberNewsManagement() {
   }
 
   return (
-    <div className='w-full h-screen flex flex-col px-4 py-4 sm:px-6 md:px-10 md:py-10 overflow-auto max-w-5xl'>
+    <div className='w-full h-screen flex flex-col px-4 pt-4 sm:px-6 md:px-10 md:pt-10  max-w-5xl'>
       <div className="flex items-center gap-x-2 mb-6 md:mb-7">
         <div
           onClick={() => router.back()}

@@ -12,6 +12,32 @@ import Dropdown from '@/src/components/ui/dropDown'
 import { GetTag } from '@/src/modules/tag'
 import NotFound from '@/app/not-found'
 
+// Custom scrollbar styles
+const scrollbarStyles = `
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #93C5FD transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #93C5FD;
+    border-radius: 6px;
+    border: 1px solid transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #60A5FA;
+  }
+`;
+
 
 export default function CyberNewsManagement() {
   const { permissions } = usePermissions()
@@ -311,7 +337,6 @@ useEffect(() => {
               el.style.height = 'auto';
               el.style.height = Math.min(el.scrollHeight, 160) + 'px'; // 160px = max-h-40
             }}
-            style={{ minHeight: 40, maxHeight: 160 }}
             rows={3}
           />
         </div>
@@ -327,7 +352,6 @@ useEffect(() => {
               el.style.height = 'auto';
               el.style.height = Math.min(el.scrollHeight, 160) + 'px';
             }}
-            style={{ minHeight: 40, maxHeight: 160 }}
             rows={3}
           />
         </div>
@@ -343,7 +367,6 @@ useEffect(() => {
               el.style.height = 'auto';
               el.style.height = Math.min(el.scrollHeight, 160) + 'px';
             }}
-            style={{ minHeight: 40, maxHeight: 160 }}
             rows={3}
           />
         </div>
@@ -359,7 +382,6 @@ useEffect(() => {
               el.style.height = 'auto';
               el.style.height = Math.min(el.scrollHeight, 160) + 'px';
             }}
-            style={{ minHeight: 40, maxHeight: 160 }}
             rows={3}
           />
         </div>
