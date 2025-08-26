@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation'
 import router from 'next/dist/shared/lib/router/router'
 import NotFound from '@/app/not-found'
 import { usePermissions } from '@/src/context/permission-context'
+import { useToast } from '@/src/context/toast-context'
+import ClipLoader from "react-spinners/ClipLoader";
 
 const PERMISSIONS = [
   {
@@ -33,6 +35,7 @@ const PERMISSIONS = [
 
 export default function AddRolePage() {
     const router = useRouter()
+    const [loading, setLoading] = useState(false)
     const [roleName, setRoleName] = useState('')
     const [permissions, setPermissions] = useState({
 
@@ -41,6 +44,7 @@ export default function AddRolePage() {
     ti: false,
     admin: false
   })
+  const { notifySuccess, notifyError, notifyInfo } = useToast()
 
 
   const handleToggle = (key: string) => {
@@ -49,19 +53,23 @@ export default function AddRolePage() {
 
   const handleSave = async () => {
   try {
+    setLoading(true);
     const res = await PostRole({
       roleName,
       ...permissions
     });
     if (res.message === 'Role created successfully') {
-      alert('Role created successfully');
+      notifySuccess(`Role ${roleName} created successfully`);
        router.push('/admin/settings');
       // คุณอาจจะ redirect หรือ reset form ตรงนี้
     } else {
-      alert(res.message || 'Error occurred');
+      notifyError(res.message || 'Failed to create role');
     }
   } catch (e) {
-    alert('Network error');
+    notifyError('An error occurred while creating the role');
+    console.error(e);
+  }finally {
+    setLoading(false);
   }
 };
 
@@ -134,10 +142,17 @@ export default function AddRolePage() {
               Cancel
             </button>
             <button
-              className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 cursor-pointer"
+              className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 gap-1 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 cursor-pointer"
               onClick={handleSave}
             >
               Save
+              {loading && <ClipLoader
+                        loading={true}
+                        size={20}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                        color="#ffffff"
+                      />}
             </button>
           </div>
         </div>

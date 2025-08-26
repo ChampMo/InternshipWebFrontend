@@ -8,6 +8,9 @@ import router from 'next/dist/shared/lib/router/router'
 import { on } from 'events';
 import PopUp from '@/src/components/ui/popUp'
 import NotFound from '@/app/not-found'
+import { useToast } from '@/src/context/toast-context'
+import ClipLoader from "react-spinners/ClipLoader";
+import GlareHover from '@/src/lib/GlareHover/GlareHover'
 
 // Define RoleData type
 type RoleData = {
@@ -49,6 +52,10 @@ export default function AddRolePage() {
     const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = useState(false);
     const [notFound, setNotFound] = useState(false);
     const [dataLoaded, setDataLoaded] = useState(false);
+    const [loading, setLoading] = useState(false)
+    const [loading2, setLoading2] = useState(false)
+    const { notifySuccess, notifyError, notifyInfo } = useToast()
+    
 
     const [roleName, setRoleName] = useState('')
     const [permissions, setPermissions] = useState({
@@ -125,6 +132,7 @@ export default function AddRolePage() {
   }, [roleId]);
 
   const handleSave = async () => {
+    setLoading(true);
     // Validate role name
     if (!roleName.trim()) {
       alert('Please enter a role name.');
@@ -136,9 +144,13 @@ export default function AddRolePage() {
         roleName: roleName,
         ...permissions
       });
+      notifySuccess(`Role ${roleName} updated successfully`);
       router.push('/admin/settings');
     } catch (error) {
-      alert('Failed to update role.');
+      notifyError('An error occurred while updating the role');
+      console.error(error);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -153,13 +165,18 @@ export default function AddRolePage() {
   };
 
   const handleConfirmDelete = async () => {
+    setLoading2(true);
     if (!roleId) return;
 
     try {
       await DeleteRole(roleId);
+      notifySuccess('Role deleted successfully');
       router.push('/admin/settings');
     } catch (error) {
-      alert('Failed to delete role.');
+      notifyError('An error occurred while deleting the role');
+      console.error(error);
+    }finally {
+      setLoading2(false);
     }
   };
 
@@ -250,7 +267,7 @@ export default function AddRolePage() {
             >
               <div className="flex flex-col h-full">
                 {/* Header */}
-                <div className='w-full rounded-t-2xl md:rounded-t-3xl flex flex-col justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 px-4 sm:px-6 lg:px-8 py-5 sm:py-6'>
+                <div className='w-full rounded-t-xl md:rounded-t-3xl flex flex-col justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 px-4 sm:px-6 lg:px-8 py-5 sm:py-6'>
                   <div className='text-lg sm:text-xl text-white flex gap-2 sm:gap-3 items-center'>
                     <Icon icon="tabler:trash" width="24" height="24" className='sm:w-7 sm:h-7' />
                     <span className='font-semibold'>Delete Role</span>
@@ -285,16 +302,33 @@ export default function AddRolePage() {
                     </button>
                     <button
                       onClick={handleConfirmDelete}
-                      className='bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex justify-center items-center shrink-0 text-base grow cursor-pointer'
+                      className={`group text-white h-12 rounded-lg md:rounded-xl md:text-lg w-full bg-gradient-to-r from-[#ec1c26] to-[#e7000b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden`}
                     >
-                      Delete
+                      <GlareHover
+                        glareColor="#ffffff"
+                        glareOpacity={0.3}
+                        glareAngle={-30}
+                        glareSize={300}
+                        transitionDuration={800}
+                        playOnce={false}
+                      ><div className="m-auto flex items-center gap-2">
+                        Delete
+                        {loading2 && <ClipLoader
+                            loading={true}
+                            size={20}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                            color="#ffffff"
+                          />}
+                        </div>
+                      </GlareHover>
                     </button>
                   </div>
                 </div>
               </div>
             </PopUp>
             <button
-              className={`px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 ${
+              className={`px-8 py-2 rounded-lg gap-1 md:rounded-xl transition-colors duration-200 flex items-center ${
                 hasChanges() 
                   ? 'bg-primary1 text-white hover:bg-[#0071cd] cursor-pointer' 
                   : 'bg-gray-400 text-white cursor-not-allowed'
@@ -303,6 +337,13 @@ export default function AddRolePage() {
               disabled={!hasChanges()}
             >
               Update
+              {loading && <ClipLoader
+                  loading={true}
+                  size={20}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                  color="#ffffff"
+                />}
             </button>
           </div>
         </div>

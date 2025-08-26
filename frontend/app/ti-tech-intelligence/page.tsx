@@ -6,6 +6,7 @@ import { usePermissions } from "@/src/context/permission-context";
 import { checkIPsFromCSVBackend, ResultRow } from '@/src/modules/ti';
 import DataTable from '@/src/components/dataTable'; 
 import NotFound from '@/app/not-found';
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 export default function TechIntelligence() {
@@ -123,15 +124,21 @@ export default function TechIntelligence() {
           )}
         </div>
         <button
-          className={`w-60 px-6 py-2.5 sm:px-8 sm:py-3 text-white rounded-lg md:rounded-xl cursor-pointer transition text-sm sm:text-base font-medium shadow-sm ${
+          className={`w-60 px-6 py-2.5 sm:px-8 sm:py-3 gap-1 flex items-center justify-center text-white rounded-lg md:rounded-xl cursor-pointer transition text-sm sm:text-base ${
         !file
           ? 'bg-gray-400 cursor-not-allowed'
           : ' bg-primary1 hover:bg-[#0071cd]'
           }`}
           onClick={handleSubmit}
           disabled={loading || !file}
-        >
-          {loading ? 'Submitting...' : 'Submit'}
+        >Submit
+          {loading && <ClipLoader
+            loading={true}
+            size={20}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+            color="#ffffff"
+          />}
         </button>
       </div>
 
@@ -169,17 +176,21 @@ export default function TechIntelligence() {
                     {value}
                     </span>
                 ),
-              },
-              {
+              },{
                 label: 'Status',
                 key: 'status',
-                render: (value: string) => (
-                  <span className={`font-semibold ${value === 'Good' ? 'text-green-600' : 'text-red-600'}`}>
-                    {value}
-                  </span>
-                ),
-              },
-            ]}
+                render: (value) => {
+                  const colors: Record<string, string> = {
+                    'Good': 'bg-green-100 text-green-600 border-green-600',
+                    'Bad': 'bg-red-100 text-red-600 border-red-600',
+                  };
+                  return (
+                    <div className={`inline-flex  items-center px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-xs md:text-sm font-medium border ${colors[value] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
+                      {value}
+                    </div>
+                  );
+                },
+            }]}
             data={results.map((row, idx) => ({ ...row, id: idx + 1 }))}
             searchKeys={['ip', 'country', 'owner', 'reputation', 'status']}
             itemsPerPage={10}
@@ -188,7 +199,7 @@ export default function TechIntelligence() {
           <div className="flex flex-col sm:flex-row justify-between items-center mt-2 gap-2">
             <div className="flex-1" />
             <button
-              className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg md:rounded-xl hover:bg-blue-700 text-xs sm:text-base w-full max-w-60 sm:w-auto mt-2 sm:mt-0"
+              className="w-60 px-6 py-2.5 sm:px-8 sm:py-3 gap-1 flex items-center justify-center text-white rounded-lg md:rounded-xl cursor-pointer transition text-sm sm:text-base bg-primary1 hover:bg-[#0071cd]"
               onClick={handleExport}
             >
               Export CSV file

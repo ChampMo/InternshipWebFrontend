@@ -17,6 +17,9 @@ import { PostCompany } from '@/src/modules/company';
 import { DeleteCompany } from '@/src/modules/company'
 import PopUp from '../../../src/components/ui/popUp';
 import NotFound from '@/app/not-found';
+import { ClipLoader } from 'react-spinners'
+import { useToast } from '@/src/context/toast-context'
+import GlareHover from '@/src/lib/GlareHover/GlareHover'
 
 function Settings() {
   const { permissions } = usePermissions()
@@ -24,12 +27,15 @@ function Settings() {
   const [isVisiblePopUpDelete, setIsVisiblePopUpDelete] = React.useState(false)
   const [deleteItem, setDeleteItem] = React.useState<any>(null)
   const [newCompanyKey, setNewCompanyKey] = React.useState('');
+  const [loadingDel, setLoadingDel] = React.useState(false)
 
 
 
   const [roleItems, setRoleItems] = React.useState<any[]>([])
   const [companyItems, setCompanyItems] = React.useState<any[]>([])
   const [tagItems, setTagItems] = React.useState<any[]>([])
+  const { notifySuccess, notifyError, notifyInfo } = useToast()
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,10 +73,12 @@ function Settings() {
         if (tagResult && Array.isArray(tagResult)) {
           setTagItems(tagResult)
         }
+        notifySuccess(`Tag "${newTag}" added successfully`)
         setNewTag('')
         setIsAddingTag(false)
       }
     } catch (error) {
+      notifyError('Failed to add tag. Please check your network connection and try again.')
       console.error('Error adding tag:', error)
     } finally {
       setIsTagLoading(false)
@@ -89,11 +97,13 @@ function Settings() {
         if (companyResult && Array.isArray(companyResult)) {
           setCompanyItems(companyResult)
         }
+        notifySuccess(`Company "${newCompany}" added successfully`)
         setNewCompany('')
         setNewCompanyKey('')
         setIsAddingCompany(false)
       }
     } catch (e) {
+      notifyError('Failed to add company. Please check your network connection and try again.')
       console.error('Error adding company:', e)
     } finally {
       setIsCompanyLoading(false)
@@ -124,8 +134,9 @@ function Settings() {
       }
       setEditingTagIdx(null)
       setEditingTagName('')
+      notifySuccess('Tag updated successfully')
     } catch (error) {
-      alert('Failed to update tag. Please check your network connection and try again.')
+      notifyError('Failed to update tag. Please check your network connection and try again.')
       console.error('Error updating tag:', error)
     } finally {
       setIsTagLoading(false)
@@ -138,7 +149,7 @@ function Settings() {
       const company = companyItems[idx]
       const companyId = company.companyId || company.id || company._id
       if (!companyId) {
-        alert('Company ID not found. Cannot update company.')
+        notifyError('Company ID not found. Cannot update company.')
         setIsCompanyLoading(false)
         return
       }
@@ -151,21 +162,22 @@ function Settings() {
       }
       setEditingCompanyIdx(null)
       setEditingCompanyName('')
+      notifySuccess('Company updated successfully')
     } catch (error) {
-      alert('Failed to update company. Please check your network connection and try again.')
+      notifyError('Failed to update company. Please check your network connection and try again.')
       console.error('Error updating company:', error)
     } finally {
       setIsCompanyLoading(false)
     }
   }
   const handleDeleteTag = async (idx: number) => {
-    setIsTagLoading(true)
+    setLoadingDel(true)
     try {
       const tag = tagItems[idx]
       const tagId = tag.tagId || tag.id || tag._id
       if (!tagId) {
-        alert('Tag ID not found. Cannot delete tag.')
-        setIsTagLoading(false)
+        notifyError('Tag ID not found. Cannot delete tag.')
+        setLoadingDel(false)
         return
       }
       const result = await DeleteTag(tagId)
@@ -175,21 +187,23 @@ function Settings() {
           setTagItems(tagResult)
         }
       }
+      notifySuccess('Tag deleted successfully')
     } catch (error) {
-      alert('Failed to delete tag. Please try again.')
+      notifyError('Failed to delete tag. Please check your network connection and try again.')
       console.error('Error deleting tag:', error)
     } finally {
-      setIsTagLoading(false)
+      setLoadingDel(false)
     }
   }
 
   const handleDeleteCompany = async (idx: number) => {
     try {
+      setLoadingDel(true)
       const company = companyItems[idx]
       const companyId = company.companyId || company.id || company._id
       if (!companyId) {
         alert('Company ID not found. Cannot delete company.')
-        setIsCompanyLoading(false)
+        setLoadingDel(false)
         return
       }
       // เรียกใช้ DeleteCompany API
@@ -200,11 +214,12 @@ function Settings() {
           setCompanyItems(companyResult)
         }
       }
+      notifySuccess('Company deleted successfully')
     } catch (error) {
-      alert('Failed to delete company. Please try again.')
+      notifyError('Failed to delete company. Please check your network connection and try again.')
       console.error('Error deleting company:', error)
     } finally {
-      setIsCompanyLoading(false)
+      setLoadingDel(false)
     }
   }
 
@@ -322,11 +337,17 @@ function Settings() {
                           Cancel
                         </button>
                         <button
-                          className="bg-primary1 hover:bg-[#0071cd] text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                          className="bg-primary1 hover:bg-[#0071cd] text-white grow gap-1 justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                           onClick={() => handleEditCompany(idx)}
                           disabled={isCompanyLoading}
-                        >
-                          {isCompanyLoading ? 'Saving...' : 'Save'}
+                        >Save
+                          {isCompanyLoading && <ClipLoader
+                          loading={true}
+                          size={20}
+                          aria-label="Loading Spinner"
+                          data-testid="loader"
+                          color="#ffffff"
+                        />}
                         </button>
                       </div>
                     </div>
@@ -399,11 +420,17 @@ function Settings() {
                     </div>
                     <div className="flex gap-3">
                       <button
-                        className="bg-primary1 hover:bg-[#0071cd] text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                        className="bg-primary1 hover:bg-[#0071cd] text-white grow gap-1 justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                         onClick={handleAddCompany}
                         disabled={isCompanyLoading}
-                      >
-                        {isCompanyLoading ? 'Adding...' : 'Add Company'}
+                      >Add Company
+                        {isCompanyLoading && <ClipLoader
+                          loading={true}
+                          size={20}
+                          aria-label="Loading Spinner"
+                          data-testid="loader"
+                          color="#ffffff"
+                        />}
                       </button>
                       <button
                         className="bg-red-500 hover:bg-red-600 text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
@@ -469,7 +496,7 @@ function Settings() {
             
             {/* Footer */}
             <div className='border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6'>
-              <div className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
+              <div className='flex flex-row gap-3 sm:gap-4'>
                 <button
                   className='flex-1 px-6 py-3 text-gray-700 font-medium border border-gray-300 rounded-lg md:rounded-xl bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all duration-200'
                   onClick={() => setIsVisiblePopUpDelete(false)}
@@ -485,10 +512,27 @@ function Settings() {
                     }
                     setIsVisiblePopUpDelete(false)
                   }}
-                  className='flex-1 px-6 py-3 text-white font-medium rounded-lg md:rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition-all duration-200 shadow-md hover:shadow-lg'
-                >
-                  Delete
-                </button>
+                  className={`group text-white h-12 rounded-lg md:rounded-xl md:text-lg w-full bg-gradient-to-r from-[#ec1c26] to-[#e7000b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden`}
+                  >
+                    <GlareHover
+                      glareColor="#ffffff"
+                      glareOpacity={0.3}
+                      glareAngle={-30}
+                      glareSize={300}
+                      transitionDuration={800}
+                      playOnce={false}
+                    ><div className="m-auto flex items-center gap-2">
+                      Delete
+                      {loadingDel && <ClipLoader
+                          loading={true}
+                          size={20}
+                          aria-label="Loading Spinner"
+                          data-testid="loader"
+                          color="#ffffff"
+                        />}
+                      </div>
+                    </GlareHover>
+                  </button>
               </div>
             </div>
           </div>
@@ -549,11 +593,17 @@ function Settings() {
                           Cancel
                         </button>
                         <button
-                          className="bg-primary1 hover:bg-[#0071cd] text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                          className="bg-primary1 hover:bg-[#0071cd] text-white grow gap-1 justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                           onClick={() => handleEditTag(idx)}
                           disabled={isTagLoading}
-                        >
-                          {isTagLoading ? 'Saving...' : 'Save'}
+                        >Save
+                          {isTagLoading && <ClipLoader
+                          loading={true}
+                          size={20}
+                          aria-label="Loading Spinner"
+                          data-testid="loader"
+                          color="#ffffff"
+                        />}
                         </button>
                       </div>
                     </div>
@@ -604,11 +654,17 @@ function Settings() {
                     </div>
                     <div className="flex gap-3">
                       <button
-                        className="bg-primary1 hover:bg-[#0071cd] text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base "
+                        className="bg-primary1 hover:bg-[#0071cd] text-white grow gap-1 justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base "
                         onClick={handleAddTag}
                         disabled={isTagLoading}
-                      >
-                        {isTagLoading ? 'Adding...' : 'Add Tag'}
+                      >Add Tag
+                        {isTagLoading && <ClipLoader
+                          loading={true}
+                          size={20}
+                          aria-label="Loading Spinner"
+                          data-testid="loader"
+                          color="#ffffff"
+                        />}
                       </button>
                       <button
                         className="bg-red-500 hover:bg-red-600 text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"

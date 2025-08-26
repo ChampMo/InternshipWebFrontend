@@ -16,6 +16,7 @@ import PopUp from '@/src/components/ui/popUp'
 import GlareHover from '@/src/lib/GlareHover/GlareHover'
 import { usePermissions } from '@/src/context/permission-context'
 import NotFound from '@/app/not-found'
+import { ClipLoader } from 'react-spinners'
 
 
 interface AccountItem {
@@ -63,6 +64,7 @@ function UserManagement() {
     })
     const [loading, setLoading] = useState(false)
     const [loading2, setLoading2] = useState(false)
+    const [loadingDel, setLoadingDel] = useState(false)
     const [statusCreateAccount, setStatusCreateAccount] = useState('')
 
     const [allUser, setAllUser] = useState<AccountItem[]>([]);
@@ -621,6 +623,13 @@ function UserManagement() {
                     playOnce={false}
                   ><div className="m-auto flex items-center gap-2">
                     Delete Account
+                    {loading2 && <ClipLoader
+                        loading={true}
+                        size={20}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                        color="#ffffff"
+                      />}
                     </div>
                   </GlareHover>
                 </button>

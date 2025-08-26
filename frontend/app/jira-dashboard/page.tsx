@@ -82,7 +82,7 @@ function JiraDashboard() {
       const userId = localStorage.getItem('userId') || '';
       const tickets = await getAllJiraTickets(userId);
       console.log('Fetched tickets:', tickets.message);
-      if( tickets.message === "Jira token has expired" || tickets.message === "Jira token not found" || tickets.message === "Failed to fetch Jira issues" || tickets.message === "Failed to fetch Jira field metadata" ){ 
+      if( tickets.message === "Company not found" || tickets.message === "Jira token has expired" || tickets.message === "Jira token not found" || tickets.message === "Failed to fetch Jira issues" || tickets.message === "Failed to fetch Jira field metadata" ){ 
         setInfoPopUp(true);
         return;
       }
@@ -515,7 +515,7 @@ console.log('ticket',ticket);
         {!selectBarDate && (<>
           <div className=' font-bold text-xl md:text-2xl'>Priority</div>
           <div className='w-full flex gap-4 md:flex-row flex-col'>
-            <div className='flex gap-4 mt-4 shrink-0'>
+            <div className='flex h-full gap-4 mt-4 shrink-0'>
               <div className='grid grid-cols-2 gap-4'>
                 {priorityItem.map((item, index) => (
                   <div key={index} className={`w-26 md:w-30 aspect-square bg-gradient-to-br rounded-lg md:rounded-xl flex flex-col items-center justify-center text-white font-bold ${item.color}`}>
@@ -667,7 +667,7 @@ console.log('ticket',ticket);
                     <div className='mt-4 mb-4 flex justify-end'>
                       <DefultButton 
                         onClick={endDate !== null && startDate !== null ?()=>{handleSetBarChart('custom'), setPopupSelectDate(false)}:()=>{}} 
-                        active={endDate !== null && startDate !== null} loading={loading}>
+                        active={endDate !== null && startDate !== null} loading={false}>
                           Select
                       </DefultButton>
                     </div>
@@ -706,14 +706,14 @@ console.log('ticket',ticket);
         setIsVisible={setInfoPopUp}
         onClose={() => {setInfoPopUp(false)}}>
           <div>
-          <div className='w-[500px] h-16 rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-gray-500 to-gray-400 px-8'>
+          <div className='md:w-[500px] h-16 rounded-t-xl md:rounded-t-3xl flex flex-col justify-center gap-1 bg-gradient-to-l from-gray-500 to-gray-400 px-8'>
             <div className='text-xl text-white flex gap-2 items-end'><Icon icon="ep:warn-triangle-filled" width="30" height="30" className='mb-1' /> System Error</div>
           </div>
           <div className='flex flex-col px-8 py-6 break-words text-center text-gray-700'>
             <div className='text-xl font-bold'>Sorry, something went wrong.</div><br/>
             Please try again in a few minutes.<br/>
             If the problem persists, please contact support.
-            <div className='w-11/12 bg-gray-200 py-3 mx-auto mt-6 rounded-xl gap-2 flex flex-col'>
+            <div className='w-11/12 bg-gray-200 py-3 mx-auto mt-6 rounded-lg md:rounded-xl gap-2 flex flex-col'>
               <div className='text-sm'>Need immediate help?</div>
               <div className='text-sm flex flex-col items-center gap-2'>
                 <div className='flex items-center justify-center gap-1 text-800'><Icon icon="line-md:phone" width="20" height="20" />02-XXX-XXXX</div>
