@@ -524,7 +524,7 @@ console.log('ticket',ticket);
                   </div>
                 ))}
               </div>
-              <div className={`h-full w-26 md:w-30 bg-gradient-to-br from-total to-blue-600 rounded-lg md:rounded-xl flex flex-col items-center justify-center text-white font-bold `}>
+              <div className={`self-stretch w-26 md:w-30 bg-gradient-to-br from-total to-blue-600 rounded-lg md:rounded-xl flex flex-col items-center justify-center text-white font-bold `}>
                 <div className='text-4xl'>{priorityItem.reduce((total, item) => total + item.count, 0)}</div>
                 <div className='text-lg font-bold'>Total</div>
               </div>

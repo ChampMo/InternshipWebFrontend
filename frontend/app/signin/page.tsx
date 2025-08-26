@@ -129,7 +129,7 @@ export default function Signin() {
   return (
       <>
         
-      <div className='flex items-center justify-center h-screen bg-background font-sans w-full'>
+      <div className='flex items-center justify-center my-auto bg-background font-sans w-full h-full absolute top-0 left-0'>
         {/* sign in */}
         <div 
         ref={containerRef}

@@ -325,7 +325,7 @@ const Sidebar: React.FC = () => {
                 </div>
                 <div className='border-b border-gray-200 mt-2 md:mt-8 mb-5'/>
                 <div className='flex gap-5'>
-                    <div className='text-gray-400 md:text-lg cursor-pointer border border-gray-300 rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' 
+                    <div className='text-gray-400 md:text-lg cursor-pointer border border-gray-300 rounded-lg md:rounded-xl w-3/5 flex items-center justify-center bg-gray-50 hover:bg-gray-100' 
                     onClick={()=>{setResetPassPopUp(false), setOldPassword(''), setNewPassword(''), setConfirmNewPassword('')}}>
                     Cancel
                     </div>

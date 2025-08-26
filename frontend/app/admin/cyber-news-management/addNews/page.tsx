@@ -139,7 +139,7 @@ export default function CyberNewsManagement() {
           className="cursor-pointer hover:opacity-70 w-fit">
           <Icon icon="famicons:arrow-back" width="24" height="24" className="sm:w-[30px] sm:h-[30px]" />
         </div>
-        <h1 className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800">
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800">
           Cyber News Management
         </h1>
       </div>

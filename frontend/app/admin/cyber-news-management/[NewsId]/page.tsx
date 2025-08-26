@@ -269,13 +269,13 @@ useEffect(() => {
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Upload box */}
-        <div className="border-2 border-dashed border-blue-300 rounded-xl p-4 sm:p-6 flex flex-col items-center justify-center w-full lg:w-80 h-56 sm:h-64 lg:h-60 bg-blue-50/30">
+        <div className="border-2 border-dashed border-blue-300 rounded-lg md:rounded-xl p-4 sm:p-6 flex flex-col items-center justify-center w-full lg:w-80 h-56 sm:h-64 lg:h-60 bg-blue-50/30">
           {imageUrl ? (
             <div className="w-full h-full flex flex-col items-center justify-center gap-3">
               <img
                 src={imageUrl}
                 alt="news"
-                className="w-full h-36 sm:h-40 object-cover rounded-xl"
+                className="w-full h-36 sm:h-40 object-cover rounded-lg md:rounded-xl"
               />
                 <label
                 htmlFor="fileUpload"
