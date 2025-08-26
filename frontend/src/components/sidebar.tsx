@@ -178,7 +178,7 @@ const Sidebar: React.FC = () => {
         <>
             {/* Desktop Sidebar */}
             <div className='w-70 md:flex hidden'/>
-            <aside ref={asideRef} className={`bg-primary3 md:w-70 h-screen shadow-lg rounded-r-xl md:rounded-r-3xl flex-col pb-10 shrink-0 fixed left-0 z-50 flex duration-300 ${isMenuOpen?'':'md:translate-x-0 translate-x-[-100%]'}`}>
+            <aside ref={asideRef} style={{zIndex: 101}} className={`bg-primary3 md:w-70 h-screen shadow-lg rounded-r-xl md:rounded-r-3xl flex-col pb-10 shrink-0 fixed left-0 z-50 flex duration-300 ${isMenuOpen?'':'md:translate-x-0 translate-x-[-100%]'}`}>
                 <header className='p-4 md:h-40 md:items-center flex justify-center'>
                     <div className='text-xl md:text-4xl orbitron text-center text-wrap' >Cyber Command</div>
                 </header>
