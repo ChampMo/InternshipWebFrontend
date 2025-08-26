@@ -227,7 +227,7 @@ const Sidebar: React.FC = () => {
                         </div>
                     </nav>
                 </>}
-                {permissions && permissions !== 'no_permissions' && 
+                {permissions && permissions !== 'no_permissions' ?
                 <div className='flex flex-col mt-auto px-4 py-2'>
                     <div 
                     onClick={()=>{setResetPassPopUp(true)}}
@@ -235,6 +235,11 @@ const Sidebar: React.FC = () => {
                     <div 
                     onClick={()=>{setIsMenuOpen(false), localStorage.removeItem('token'),localStorage.removeItem('userId') , window.location.href = '/'}}
                     className='md:text-lg w-40 px-4 py-3 text-red-400 cursor-pointer'>Log out</div>
+                </div>
+                :<div className='flex flex-col mt-auto px-4 py-2'>
+                    <div 
+                    onClick={()=>{ window.location.href = '/signin'}}
+                    className='md:text-lg w-40 px-4 py-3 text-primary1 cursor-pointer'>Sign In</div>
                 </div>}
                 
             </aside>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Sidebar from '@/src/components/sidebar'
 import { usePermissions } from '@/src/context/permission-context'
 import { Icon } from '@iconify/react'
@@ -11,6 +11,7 @@ import DefultButton from '@/src/components/ui/defultButton'
 import Dropdown from '@/src/components/ui/dropDown'
 import { GetTag } from '@/src/modules/tag'
 import NotFound from '@/app/not-found'
+import { useAutosizeTextArea } from "@/src/hook/useAutosizeTextArea";
 
 // Custom scrollbar styles
 const scrollbarStyles = `
@@ -58,6 +59,15 @@ export default function CyberNewsManagement() {
   const [imageUrl, setImageUrl] = useState('');
   const [notFound, setNotFound] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const summaryRef = useRef<HTMLTextAreaElement>(null);
+  const detailsRef = useRef<HTMLTextAreaElement>(null);
+  const impactRef  = useRef<HTMLTextAreaElement>(null);
+  const adviceRef  = useRef<HTMLTextAreaElement>(null);
+  useAutosizeTextArea(summaryRef.current, summary);
+  useAutosizeTextArea(detailsRef.current,  details);
+  useAutosizeTextArea(impactRef.current,   impact);
+  useAutosizeTextArea(adviceRef.current,   advice);
+  
 
 // Store the original data for change detection
 const [originalData, setOriginalData] = useState({
@@ -245,14 +255,14 @@ useEffect(() => {
   }
 
   return (
-    <div className='w-full h-screen flex flex-col px-4 py-4 sm:px-6 md:px-10 md:py-10 overflow-auto max-w-5xl'>
+    <div className='w-full h-full flex flex-col px-4 py-4 sm:px-6 md:px-10 md:py-10 overflow-auto max-w-5xl'>
       <div className="flex items-center gap-x-2 mb-6 md:mb-7">
         <div
           onClick={() => router.back()}
           className="cursor-pointer hover:opacity-70 w-fit">
           <Icon icon="famicons:arrow-back" width="24" height="24" className="sm:w-[30px] sm:h-[30px]" />
         </div>
-        <h1 className="text-xl sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800">
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800">
           Cyber News Management
         </h1>
       </div>
@@ -269,7 +279,7 @@ useEffect(() => {
               />
                 <label
                 htmlFor="fileUpload"
-                className="px-6 py-2.5 sm:px-8 sm:py-3 text-white rounded-xl cursor-pointer bg-primary1 hover:bg-[#0071cd] transition text-sm sm:text-base font-medium shadow-sm"
+                className="px-6 py-2.5 sm:px-8 sm:py-3 text-white rounded-lg md:rounded-xl cursor-pointer bg-primary1 hover:bg-[#0071cd] transition text-sm sm:text-base font-medium shadow-sm"
                 >
                 Select file
                 </label>
@@ -300,14 +310,14 @@ useEffect(() => {
             <input
               type="text"
               placeholder="Enter Name"
-              className={`w-full border border-blue-300 outline-none rounded-xl px-3 py-2 ${name ? 'border-primary1' : 'border-gray-300'}`}
+              className={`w-full border border-blue-300 outline-none rounded-lg md:rounded-xl px-3 py-2 mt-2 ${name ? 'border-primary1' : 'border-gray-300'}`}
               value={name}
               onChange={e => setName(e.target.value)}
             />
           </div>
             <div>
             <label className="font-medium">Tag</label>
-            <div className='grow-0 z-30 w-full'>
+            <div className='grow-0 z-30 w-full mt-2'>
               <Dropdown 
               items={tags.map(item => item.tagName)} 
               placeholder='Select Tag' 
@@ -328,61 +338,57 @@ useEffect(() => {
         <div>
           <label className="text-base sm:text-lg font-medium">Summary of information</label>
           <textarea
+            ref={summaryRef}
             placeholder="Enter Summary of information"
-            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${summary ? 'border-primary1' : 'border-gray-300'}`}
+            className={`w-full border rounded-lg md:rounded-xl mt-2 px-3 py-2 overflow-hidden resize-none outline-none text-sm sm:text-base ${
+              summary ? "border-primary1" : "border-gray-300"
+            }`}
             value={summary}
-            onChange={e => {
-              setSummary(e.target.value);
-              const el = e.target as HTMLTextAreaElement;
-              el.style.height = 'auto';
-              el.style.height = Math.min(el.scrollHeight, 160) + 'px'; // 160px = max-h-40
-            }}
-            rows={3}
+            onChange={(e) => setSummary(e.target.value)}
           />
+
         </div>
         <div>
           <label className="text-base sm:text-lg font-medium">More details</label>
           <textarea
+            ref={detailsRef}
             placeholder="Enter More details"
-            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${details ? 'border-primary1' : 'border-gray-300'}`}
+            className={`w-full border rounded-lg md:rounded-xl mt-2 px-3 py-2 overflow-hidden resize-none outline-none text-sm sm:text-base ${
+              details ? "border-primary1" : "border-gray-300"
+            }`}            
             value={details}
             onChange={e => {
               setDetails(e.target.value);
-              const el = e.target as HTMLTextAreaElement;
-              el.style.height = 'auto';
-              el.style.height = Math.min(el.scrollHeight, 160) + 'px';
             }}
-            rows={3}
+            
           />
         </div>
         <div>
           <label className="text-base sm:text-lg font-medium">Impact of the attack</label>
           <textarea
+            ref={impactRef}
             placeholder="Enter Impact of the attack"
-            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${impact ? 'border-primary1' : 'border-gray-300'}`}
+            className={`w-full border rounded-lg md:rounded-xl mt-2 px-3 py-2 overflow-hidden resize-none outline-none text-sm sm:text-base ${
+              impact ? "border-primary1" : "border-gray-300"
+            }`} 
             value={impact}
             onChange={e => {
               setImpact(e.target.value);
-              const el = e.target as HTMLTextAreaElement;
-              el.style.height = 'auto';
-              el.style.height = Math.min(el.scrollHeight, 160) + 'px';
             }}
-            rows={3}
           />
         </div>
         <div>
           <label className="text-base sm:text-lg font-medium">Advice</label>
           <textarea
+          ref={adviceRef}
             placeholder="Enter Advice"
-            className={`w-full border border-blue-300 rounded-xl px-3 py-2 max-h-40 overflow-y-auto resize-none outline-none text-sm sm:text-base ${advice ? 'border-primary1' : 'border-gray-300'}`}
+            className={`w-full border rounded-lg md:rounded-xl mt-2 px-3 py-2 overflow-hidden resize-none outline-none text-sm sm:text-base ${
+              advice ? "border-primary1" : "border-gray-300"
+            }`} 
             value={advice}
             onChange={e => {
               setAdvice(e.target.value);
-              const el = e.target as HTMLTextAreaElement;
-              el.style.height = 'auto';
-              el.style.height = Math.min(el.scrollHeight, 160) + 'px';
             }}
-            rows={3}
           />
         </div>
       </div>
@@ -390,7 +396,7 @@ useEffect(() => {
       {/* Buttons */}
       <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end">
         <button
-          className="border border-red-500 text-red-500 px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+          className="border border-red-500 text-red-500 justify-center px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base cursor-pointer"
           onClick={() => setIsVisiblePopUpDelete(true)}
           disabled={loading}
         >
@@ -406,7 +412,7 @@ useEffect(() => {
           )}
         </button>
         <button
-          className={`px-4 sm:px-6 py-3 rounded-xl transition-all duration-200   font-semibold shadow-lg flex items-center justify-center gap-2 ${
+          className={`px-4 sm:px-6 py-3 rounded-lg md:rounded-xl transition-all duration-200 shadow-lg flex items-center justify-center gap-2 ${
             hasChanges() && !loading
               ? 'bg-primary1 hover:bg-[#0071cd] text-white cursor-pointer transform'
               : 'bg-gray-400 text-gray-200 cursor-not-allowed'
@@ -441,19 +447,19 @@ useEffect(() => {
           </div>
           <div className='flex flex-col px-4 md:px-8 pt-4 md:pt-8 pb-6'>
             <div className='flex flex-col gap-3 border border-gray-300 rounded-xl md:rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-3 md:p-4'>
-              <div className='flex md:justify-between md:items-center flex-col md:flex-row gap-2 md:gap-0'>
-                <div className='text-sm text-gray-500'>News Title:</div>
-                <div className='py-1 px-2 md:px-3 rounded-lg bg-gray-300 text-sm md:text-base max-w-[280px] overflow-x-auto whitespace-nowrap'>{name}</div>
+              <div className='flex md:justify-between flex-col md:flex-row gap-2 md:gap-0'>
+                <div className='text-sm text-gray-500 shrink-0'>News Title:</div>
+                <div className='pl-2 text-sm md:text-base text-wrap'>{name}</div>
               </div>
               <div className='flex justify-between items-center'>
                 <div className='text-sm text-gray-500'>Tag:</div>
-                <div className='text-sm md:text-base'>{tag}</div>
+                <div className='py-1 px-2 md:px-3 rounded-lg bg-gray-300 text-sm md:text-base max-w-[280px] overflow-x-auto whitespace-nowrap'>{tag}</div>
               </div>
             </div>
             <div className='border-b border-gray-200 mt-4 md:mt-10 mb-2 md:mb-5'/>
             <div className='flex gap-3 md:gap-5'>
               <button 
-                className='text-gray-600 md:text-lg cursor-pointer border border-gray-300 rounded-lg md:rounded-xl w-2/5 h-12 flex items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-gray-400 transition-all duration-200 font-medium shadow-sm hover:shadow-md' 
+                className='text-gray-600 md:text-lg cursor-pointer border border-gray-300 rounded-lg md:rounded-xl w-2/5 h-12 flex items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-gray-400 transition-all duration-200' 
                 onClick={() => setIsVisiblePopUpDelete(false)}
               >
                 Cancel
@@ -461,7 +467,7 @@ useEffect(() => {
               <button
                 disabled={loading}
                 onClick={handleDelete}
-                className={`group text-white h-12 rounded-lg md:rounded-xl md:text-lg w-3/5 bg-gradient-to-r from-[#dc2626] to-[#b91c1c] hover:from-[#b91c1c] hover:to-[#991b1b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+                className={`group text-white h-12 rounded-lg md:rounded-xl md:text-lg w-3/5 bg-gradient-to-r from-[#dc2626] to-[#b91c1c] hover:from-[#b91c1c] hover:to-[#991b1b] cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden `}
               >
                 <div className="m-auto flex items-center justify-center gap-2">
                   {loading ? (

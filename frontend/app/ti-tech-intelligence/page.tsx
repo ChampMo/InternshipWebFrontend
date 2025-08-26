@@ -74,7 +74,7 @@ export default function TechIntelligence() {
   }
 
   return (
-    <div className='w-full flex flex-col overflow-auto h-screen px-4 sm:px-10 py-4 sm:py-10'>
+    <div className='w-full flex flex-col overflow-auto h-full px-4 py-4 md:px-10 md:py-10'>
       <div className="font-bold text-lg sm:text-xl mb-4">TI Tech Intelligence</div>
 
       {/* Upload Box */}
@@ -82,7 +82,7 @@ export default function TechIntelligence() {
         className="flex flex-col items-center mb-6"
       >
         <div
-          className={`border-2 border-dashed border-blue-400 rounded-xl p-4 sm:p-6 flex flex-col items-center justify-center w-full max-w-[400px] h-40 sm:h-48 mb-4 transition
+          className={`border-2 border-dashed border-blue-400 rounded-lg md:rounded-xl p-4 sm:p-6 flex flex-col items-center justify-center w-full max-w-[400px] h-40 sm:h-48 mb-4 transition
         ${file ? 'bg-blue-50' : ''}
           `}
           onDragOver={e => {
@@ -111,8 +111,8 @@ export default function TechIntelligence() {
         className="hidden"
         id="fileUpload"
           />
-          <p className="text-sm sm:text-sm text-blue-400 mb-4 text-center">or</p>
-          <label htmlFor="fileUpload" className="px-6 py-2.5 sm:px-8 text-white rounded-xl cursor-pointer bg-primary1 hover:bg-[#0071cd] transition text-sm sm:text-base font-medium shadow-sm">
+          <p className="text-sm sm:text-sm text-blue-400 mb-2 md:mb-4 text-center">or</p>
+          <label htmlFor="fileUpload" className="px-6 py-2.5 sm:px-8 text-white rounded-lg md:rounded-xl cursor-pointer bg-primary1 hover:bg-[#0071cd] transition text-sm sm:text-base font-medium shadow-sm">
         Select file
           </label>
           {/* แสดงชื่อไฟล์ที่เลือก */}
@@ -123,7 +123,7 @@ export default function TechIntelligence() {
           )}
         </div>
         <button
-          className={`w-60 px-6 py-2.5 sm:px-8 sm:py-3 text-white rounded-xl cursor-pointer transition text-sm sm:text-base font-medium shadow-sm ${
+          className={`w-60 px-6 py-2.5 sm:px-8 sm:py-3 text-white rounded-lg md:rounded-xl cursor-pointer transition text-sm sm:text-base font-medium shadow-sm ${
         !file
           ? 'bg-gray-400 cursor-not-allowed'
           : ' bg-primary1 hover:bg-[#0071cd]'
@@ -188,7 +188,7 @@ export default function TechIntelligence() {
           <div className="flex flex-col sm:flex-row justify-between items-center mt-2 gap-2">
             <div className="flex-1" />
             <button
-              className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 text-xs sm:text-base w-full max-w-60 sm:w-auto mt-2 sm:mt-0"
+              className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg md:rounded-xl hover:bg-blue-700 text-xs sm:text-base w-full max-w-60 sm:w-auto mt-2 sm:mt-0"
               onClick={handleExport}
             >
               Export CSV file

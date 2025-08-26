@@ -35,7 +35,7 @@ const CyberNewsCard: React.FC<CyberNewsCardProps> = ({
 
   return (
     <div
-      className="flex flex-col md:flex-row rounded-xl overflow-hidden hover:shadow-sm transition-all duration-200 bg-white cursor-pointer border border-gray-100 hover:border-blue-200"
+      className="flex flex-col md:flex-row rounded-lg md:rounded-xl overflow-hidden hover:shadow-sm transition-all duration-200 bg-white cursor-pointer border border-gray-100 hover:border-blue-200"
       data-news-id={NewsID}
       onClick={handleClick}
     >

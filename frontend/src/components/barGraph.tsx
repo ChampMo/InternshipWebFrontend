@@ -22,7 +22,7 @@ interface BarGraphProps {
   data: SevItem[];
   height?: number;
   colors?: Partial<Record<keyof Omit<SevItem, "date">, string>>;
-setSelectBarDate?: (date: string | null) => void;
+  setSelectBarDate?: (date: string | null) => void;
 }
 
 const defaultColors = {
@@ -84,7 +84,7 @@ function BarGraph({
   );
 
   return (
-    <div className="h-64 w-full border border-primary2 rounded-xl bg-gray-50 p-4 outline-none chart-wrap">
+    <div className="h-64 w-full border border-primary2 rounded-lg md:rounded-xl bg-gray-50 p-4 outline-none chart-wrap">
       <div className="mb-2 text-sm text-gray-600">Ticket</div>
       <div style={{ width: "100%", height: "94%" }} className="chart-wrap">
         <ResponsiveContainer width="100%" height="100%" className="focus:outline-none outline-none select-none ">

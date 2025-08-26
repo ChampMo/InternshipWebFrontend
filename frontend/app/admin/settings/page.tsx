@@ -213,7 +213,7 @@ function Settings() {
   }
 
   return (
-    <div className="w-full min-h-screen px-4 py-4 sm:px-6 md:px-10 md:py-10 flex flex-col">
+    <div className="w-full h-full px-4 py-4 md:px-10 md:py-10 flex flex-col">
       <div className="w-full max-w-3xl">
         <div className="mb-2 px-2">
           <h1 className="text-xl sm:text-2xl font-bold mb-1">Settings</h1>
@@ -221,14 +221,14 @@ function Settings() {
         </div>
 
         {/* Role Section */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4 sm:p-6 mb-6 shadow-sm">
+        <div className="bg-white rounded-lg md:rounded-xl border border-gray-100 p-4 sm:p-6 mb-6 shadow-sm">
           <div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
               <div>
                 <div className="font-bold text-base sm:text-lg">Role</div>
                 <div className="text-sm text-gray-500">User roles and permissions</div>
               </div>
-              <div className="flex items-center gap-2 mt-2 sm:mt-0">
+              <div className="flex items-center gap-2 mt-2 sm:mt-0 w-full sm:w-auto justify-between sm:justify-start">
                 <span className="bg-blue-50 text-primary1 px-3 py-1 rounded-full text-sm font-medium">
                   {roleItems.length} items
                 </span>
@@ -270,14 +270,14 @@ function Settings() {
         </div>
 
         {/* Company Section */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4 sm:p-6 mb-6 shadow-sm">
+        <div className="bg-white rounded-lg md:rounded-xl border border-gray-100 p-4 sm:p-6 mb-6 shadow-sm">
           <div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
               <div>
                 <div className="font-bold text-base sm:text-lg">Company</div>
                 <div className="text-sm text-gray-500">Company information</div>
               </div>
-              <div className="flex items-center gap-2 mt-2 sm:mt-0">
+              <div className="flex items-center gap-2 mt-2 sm:mt-0 w-full sm:w-auto justify-between sm:justify-start">
                 <span className="bg-blue-50 text-primary1 px-3 py-1 rounded-full text-sm font-medium">
                   {companyItems.length} items
                 </span>
@@ -299,7 +299,7 @@ function Settings() {
                   className="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition group"
                 >
                   {editingCompanyIdx === idx ? (
-                    <div className="flex flex-col items-start w-full gap-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg px-4">
+                    <div className="flex flex-col items-start w-full gap-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg px-2 md:px-4">
                       <div className={`border rounded-lg md:rounded-xl h-10 w-full relative flex items-center ${editingCompanyName?'border-primary1':'border-gray-300'}`}>
                         <input
                           className="outline-none w-full h-full px-3 rounded-lg md:rounded-xl text-sm placeholder-gray-400"
@@ -310,9 +310,9 @@ function Settings() {
                           disabled={isCompanyLoading}
                         />
                       </div>
-                      <div className="flex gap-3 w-full justify-end">
+                      <div className="flex gap-3 w-full ">
                         <button
-                          className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                          className="bg-red-500 hover:bg-red-600 text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                           onClick={() => {
                             setEditingCompanyIdx(null)
                             setEditingCompanyName('')
@@ -322,7 +322,7 @@ function Settings() {
                           Cancel
                         </button>
                         <button
-                          className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                          className="bg-primary1 hover:bg-[#0071cd] text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                           onClick={() => handleEditCompany(idx)}
                           disabled={isCompanyLoading}
                         >
@@ -370,7 +370,7 @@ function Settings() {
                 </div>
               ))}
               {isAddingCompany && editingCompanyIdx === null && (
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border-2 border-blue-200 mb-2">
+                <div className="p-2 md:p-4 rounded-xl border border-blue-200 mb-2">
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-col sm:flex-row gap-3">
                       <div className={`md:text-lg border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${newCompany ? 'border-primary1' : 'border-gray-300'}`}>
@@ -397,16 +397,16 @@ function Settings() {
                         <Icon icon="mdi:key" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" width={18} />
                       </div>
                     </div>
-                    <div className="flex gap-3 justify-end">
+                    <div className="flex gap-3">
                       <button
-                        className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                        className="bg-primary1 hover:bg-[#0071cd] text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                         onClick={handleAddCompany}
                         disabled={isCompanyLoading}
                       >
                         {isCompanyLoading ? 'Adding...' : 'Add Company'}
                       </button>
                       <button
-                        className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                        className="bg-red-500 hover:bg-red-600 text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                         onClick={() => {
                           setIsAddingCompany(false)
                           setNewCompany('')
@@ -431,7 +431,7 @@ function Settings() {
         >
           <div className="flex flex-col h-full ">
             {/* Header */}
-            <div className='w-full rounded-t-2xl md:rounded-t-3xl flex flex-col justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 px-4 sm:px-6 lg:px-8 py-5 sm:py-6'>
+            <div className='w-full rounded-t-xl md:rounded-t-3xl flex flex-col justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 px-4 sm:px-6 lg:px-8 py-5 sm:py-6'>
               <div className='text-lg sm:text-xl text-white flex gap-2 sm:gap-3 items-center'>
                 <Icon icon="tabler:trash" width="24" height="24" className='sm:w-7 sm:h-7' />
                 <span className='font-semibold'>Delete {deleteItem?.email ? 'User Account' : deleteItem?.companyName ? 'Company' : deleteItem?.tagName ? 'Tag' : ''}</span>
@@ -445,7 +445,7 @@ function Settings() {
             <div className='flex-1 overflow-y-auto'>
               <div className='px-4 sm:px-6 lg:px-8 py-4 sm:py-6'>
                 {deleteItem?.companyName && !deleteItem?.email && (
-                  <div className='border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-5'>
+                  <div className='border border-gray-200 rounded-lg md:rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-5'>
                     <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'>
                       <div className='text-sm font-medium text-gray-600'>Company Name:</div>
                       <div className='px-3 py-2 rounded-lg bg-white border border-gray-300 text-gray-900 font-medium break-all'>
@@ -455,7 +455,7 @@ function Settings() {
                   </div>
                 )}
                 {deleteItem?.tagName && !deleteItem?.email && (
-                  <div className='border border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-5'>
+                  <div className='border border-gray-200 rounded-lg md:rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-5'>
                     <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'>
                       <div className='text-sm font-medium text-gray-600'>Tag Name:</div>
                       <div className='px-3 py-2 rounded-lg bg-white border border-gray-300 text-gray-900 font-medium break-all'>
@@ -471,7 +471,7 @@ function Settings() {
             <div className='border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6'>
               <div className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
                 <button
-                  className='flex-1 px-6 py-3 text-gray-700 font-medium border border-gray-300 rounded-xl bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all duration-200'
+                  className='flex-1 px-6 py-3 text-gray-700 font-medium border border-gray-300 rounded-lg md:rounded-xl bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all duration-200'
                   onClick={() => setIsVisiblePopUpDelete(false)}
                 >
                   Cancel
@@ -485,7 +485,7 @@ function Settings() {
                     }
                     setIsVisiblePopUpDelete(false)
                   }}
-                  className='flex-1 px-6 py-3 text-white font-medium rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition-all duration-200 shadow-md hover:shadow-lg'
+                  className='flex-1 px-6 py-3 text-white font-medium rounded-lg md:rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition-all duration-200 shadow-md hover:shadow-lg'
                 >
                   Delete
                 </button>
@@ -502,7 +502,7 @@ function Settings() {
                 <div className="font-bold text-base sm:text-lg">News Tag</div>
                 <div className="text-sm text-gray-500">Tags for categorizing news</div>
               </div>
-              <div className="flex items-center gap-2 mt-2 sm:mt-0">
+              <div className="flex items-center gap-2 mt-2 sm:mt-0 w-full sm:w-auto justify-between sm:justify-start">
                 <span className="bg-blue-50 text-primary1 px-3 py-1 rounded-full text-sm font-medium">
                   {tagItems.length} items
                 </span>
@@ -524,7 +524,7 @@ function Settings() {
                   className="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition group"
                 >
                   {editingTagIdx === idx ? (
-                    <div className="flex flex-col items-start w-full gap-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg px-4">
+                    <div className="flex flex-col items-start w-full gap-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg px-2 md:px-4">
                       <div className={`border rounded-lg md:rounded-xl h-10 w-full relative flex items-center ${editingTagName?'border-primary1':'border-gray-300'}`}>
                         <input
                           className="outline-none w-full h-full px-3 rounded-lg md:rounded-xl text-sm placeholder-gray-400"
@@ -535,9 +535,9 @@ function Settings() {
                           disabled={isTagLoading}
                         />
                       </div>
-                      <div className="flex gap-3 w-full justify-end">
+                      <div className="flex gap-3 w-full ">
                         <button
-                          className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                          className="bg-red-500 hover:bg-red-600 text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                           onClick={() => {
                             setEditingTagIdx(null)
                             setEditingTagName('')
@@ -549,7 +549,7 @@ function Settings() {
                           Cancel
                         </button>
                         <button
-                          className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                          className="bg-primary1 hover:bg-[#0071cd] text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                           onClick={() => handleEditTag(idx)}
                           disabled={isTagLoading}
                         >
@@ -589,7 +589,7 @@ function Settings() {
                 </div>
               ))}
               {isAddingTag && editingTagIdx === null && (
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border-2 border-blue-200 mb-2">
+                <div className=" p-2 md:p-4 rounded-xl border border-blue-200 mb-2">
                   <div className="flex flex-col gap-4">
                     <div className={`border rounded-lg md:rounded-xl h-10 w-full relative flex items-center ${newTag?'border-primary1':'border-gray-300'}`}>
                       <input
@@ -602,16 +602,16 @@ function Settings() {
                         disabled={isTagLoading}
                       />
                     </div>
-                    <div className="flex gap-3 justify-end">
+                    <div className="flex gap-3">
                       <button
-                        className="bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base "
+                        className="bg-primary1 hover:bg-[#0071cd] text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base "
                         onClick={handleAddTag}
                         disabled={isTagLoading}
                       >
                         {isTagLoading ? 'Adding...' : 'Add Tag'}
                       </button>
                       <button
-                        className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
+                        className="bg-red-500 hover:bg-red-600 text-white grow justify-center py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 text-base"
                         onClick={() => {
                           setIsAddingTag(false)
                           setNewTag('')

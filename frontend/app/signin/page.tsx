@@ -133,7 +133,7 @@ export default function Signin() {
         {/* sign in */}
         <div 
         ref={containerRef}
-        className={`flex items-center overflow-hidden border-4 border-primary1 rounded-3xl md:rounded-4xl shadow-lg bg-white w-11/12 md:w-[500] z-10 duration-600 ${statePage === 0 ? 'h-[450] md:h-[600] ' : statePage === 1 ? 'h-[320] md:h-[400]':statePage === 2 ? 'h-[360] md:h-[480]':'h-[480] md:h-[600]'} ${onStartPage ? 'opacity-100 ' : 'opacity-0'}`}>
+        className={`flex items-center overflow-hidden border-2 md:border-4 border-primary1 rounded-2xl md:rounded-4xl shadow-lg bg-white w-11/12 md:w-[500] z-10 duration-600 ${statePage === 0 ? 'h-[450] md:h-[600] ' : statePage === 1 ? 'h-[320] md:h-[400]':statePage === 2 ? 'h-[360] md:h-[480]':'h-[480] md:h-[600]'} ${onStartPage ? 'opacity-100 ' : 'opacity-0'}`}>
           <div className={`flex flex-col p-5 md:p-10 py-8 md:py-14 items-center justify-center gap-4 w-full shrink-0 mp-10 ${statePage === 0 ? 'opacity-100' : 'opacity-0'} duration-800`}>
             {statePage === 0 &&
             <>

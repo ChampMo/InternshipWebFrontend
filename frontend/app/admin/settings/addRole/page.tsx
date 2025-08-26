@@ -67,9 +67,9 @@ export default function AddRolePage() {
 
 
   return (
-    <div className="w-full flex flex-col overflow-auto h-screen px-4 pt-10">
+    <div className="w-full flex flex-col overflow-auto h-full px-4 py-4 md:px-10 md:py-10">
       <div className="flex-1 flex flex-col">
-        <div className="w-full max-w-2xl px-4">
+        <div className="w-full max-w-2xl ">
           {/* Back & Title */}
           <div className="flex items-center gap-x-2 mb-6">
             <button

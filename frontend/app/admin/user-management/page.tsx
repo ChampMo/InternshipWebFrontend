@@ -120,11 +120,7 @@ function UserManagement() {
                   userId: user.userId,
                   roleId: user.roleId,
                   roleName: user.roleName,
-                  createDate: new Date(user.createdAt).toLocaleDateString('en-GB', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: '2-digit'
-                  })
+                  createDate: setFormatDate(new Date(user.createdAt))
                 }));
                 const sortedRoleremoved = users.filter(user => user.roleName === 'Role has been removed');
                 const sortedCompanyremoved = users.filter(user => user.roleName === 'Company has been removed');
@@ -378,18 +374,24 @@ function UserManagement() {
         }
     }
 
+    const setFormatDate = (date: Date) => {
+      const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+      return date.toLocaleDateString('en-GB', options).replace(',', '');
+    }
+  
+
     if (permissions === 'no_permissions' || permissions === null) {
       return <NotFound/>;
     }
 
   return (
     <>
-        <div className='w-full flex flex-col overflow-auto h-screen px-4 py-4 md:px-10 md:py-10'>
+        <div className='w-full flex flex-col overflow-auto h-full px-4 py-4 md:px-10 md:py-10'>
             <div className=' font-bold text-xl md:text-2xl'>Create account</div>
-            <div className='w-auto flex flex-col p-5 mt-4 rounded-lg md:rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] border border-gray-200 max-w-[1300px]'>
+            <div className='w-auto flex flex-col p-4 md:p-5 mt-4 rounded-lg md:rounded-xl duration-500 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] border border-gray-200 max-w-[1300px]'>
                 
                 <div 
-                className=' flex gap-5 z-40 md:flex-nowrap flex-wrap'>
+                className=' flex gap-4 md:gap-5 z-40 md:flex-nowrap flex-wrap'>
                     <input 
                     type='email'
                     value={createEmail}

@@ -91,7 +91,7 @@ function CyberNewsManagement() {
   }
 
   return (
-    <div className="w-full min-h-screen px-4 py-4 sm:px-6 md:px-10 md:py-10 flex flex-col">
+    <div className="w-full h-full px-4 py-4 sm:px-6 md:px-10 md:py-10 flex flex-col">
       <div className="w-full">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
@@ -116,7 +116,7 @@ function CyberNewsManagement() {
             {/* Add Button */}
             <button 
               onClick={() => handleClick()}
-              className='bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0'>
+              className='bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 cursor-pointer'>
               Add news
             </button>
           </div>

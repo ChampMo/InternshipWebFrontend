@@ -157,11 +157,7 @@ function JiraDashboard() {
                 category: categoryValue,
                 statusTicket: ticket.status,
                 customFields: ticket.customFields,
-                createDate: new Date(ticket.created).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-                }),
+                createDate: setFormatDate(new Date(ticket.created))
               };
             })
           );
@@ -185,11 +181,7 @@ function JiraDashboard() {
                 category: categoryValue, // <-- ส่ง array ไป
                 statusTicket: ticket.status,
                 customFields: ticket.customFields,
-                createDate: new Date(ticket.created).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                }),
+                createDate: setFormatDate(new Date(ticket.created))
               };
             })
           );
@@ -213,6 +205,8 @@ function JiraDashboard() {
     }
     
   }, [selectBarDate]);
+
+  console.log('data--', data);
 
 
 
@@ -402,6 +396,8 @@ console.log('ticket',ticket);
   };
 
   const handleSetDataBarChart = (startDate: Date, endDate: Date) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
     if (allData.length !== 0) {
       const filteredData = allData.filter((item: any) => {
         // กรณี created เป็น ISO string (เช่น 2025-08-06T16:57:04.986+0700)
@@ -466,13 +462,17 @@ console.log('ticket',ticket);
     return <NotFound/>;
   }
 
+  const setFormatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+    return date.toLocaleDateString('en-GB', options).replace(',', '');
+  }
 
 
 
 
 
   return (
-    <div className='w-full flex flex-col overflow-auto h-screen px-4 py-4 md:px-10 md:py-10'>
+    <div className='w-full flex flex-col overflow-auto h-full px-4 py-4 md:px-10 md:py-10'>
       {viewDetail
       ? <> 
         <div className='flex items-center'>
@@ -518,13 +518,13 @@ console.log('ticket',ticket);
             <div className='flex gap-4 mt-4 shrink-0'>
               <div className='grid grid-cols-2 gap-4'>
                 {priorityItem.map((item, index) => (
-                  <div key={index} className={`w-26 md:w-30 aspect-square bg-gradient-to-br rounded-xl flex flex-col items-center justify-center text-white font-bold ${item.color}`}>
+                  <div key={index} className={`w-26 md:w-30 aspect-square bg-gradient-to-br rounded-lg md:rounded-xl flex flex-col items-center justify-center text-white font-bold ${item.color}`}>
                     <div className='text-4xl'>{item.count}</div>
                     <div className='text-lg font-bold'>{item.name}</div>
                   </div>
                 ))}
               </div>
-              <div className={`h-full w-26 md:w-30 bg-gradient-to-br from-total to-blue-600 rounded-xl flex flex-col items-center justify-center text-white font-bold `}>
+              <div className={`h-full w-26 md:w-30 bg-gradient-to-br from-total to-blue-600 rounded-lg md:rounded-xl flex flex-col items-center justify-center text-white font-bold `}>
                 <div className='text-4xl'>{priorityItem.reduce((total, item) => total + item.count, 0)}</div>
                 <div className='text-lg font-bold'>Total</div>
               </div>
@@ -532,13 +532,13 @@ console.log('ticket',ticket);
             <div className='mt-4 w-full relative'>
               {barChartData.length === 0 &&
                 (isDataGraphNotFound ?
-                <div className='absolute top-0 left-0 w-full h-full rounded-xl z-10 flex flex-col items-center justify-center pointer-events-none'>
+                <div className='absolute top-0 left-0 w-full h-full rounded-lg md:rounded-xl z-10 flex flex-col items-center justify-center pointer-events-none'>
                   <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-200">
                     <Search className="w-6 h-6 text-gray-400" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-600 mb-2">No data found</h3>
                   </div>
-                :<div className='absolute top-0 left-0 w-full h-full rounded-xl z-10 flex flex-col items-center justify-center bg-gray-100/40'>
+                :<div className='absolute top-0 left-0 w-full h-full rounded-lg md:rounded-xl z-10 flex flex-col items-center justify-center bg-gray-100/40'>
                   <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-200 p-1.5">
                     <Icon icon="ic:round-hourglass-top" width="45" height="45" className="text-gray-300 animate-spin" />
                   </div>
@@ -546,11 +546,18 @@ console.log('ticket',ticket);
                   </div>)}
 
               <BarGraph data={barChartData} setSelectBarDate={setSelectBarDate}/>
-              <Icon icon="mdi:calendar" width="24" height="24" 
-              className={`text-gray-400 absolute top-3 right-4 cursor-pointer hover:text-primary1`} 
-              onClick={() => setPopupSelectDate(true)}
-              />
-              <div ref={popupRef} className={`absolute text-sm top-3 right-0 md:right-10 z-40 w-full md:w-80 rounded-xl border border-gray-400 bg-white flex flex-col ${popupSelectDate ? 'block' : 'hidden'}`}>
+              
+              <div className={`text-gray-400 absolute top-3 right-4 flex`} >
+                <div className='mr-2 flex items-center gap-1 text-xs md:text-sm'>
+                  <div>{startDate ? setFormatDate(startDate) : ''}</div>
+                -
+                  <div>{endDate ? setFormatDate(endDate) : ''}</div>
+                </div>
+                <Icon icon="mdi:calendar" width="24" height="24" 
+                className={`text-gray-400 cursor-pointer hover:text-primary1`} 
+                onClick={() => setPopupSelectDate(true)}/>
+              </div>
+              <div ref={popupRef} className={`absolute text-sm top-3 right-0 md:right-10 z-40 w-full md:w-80 rounded-lg md:rounded-xl border border-gray-400 bg-white flex flex-col ${popupSelectDate ? 'block' : 'hidden'}`}>
                 <div className='flex justify-between items-center px-4 pt-1'>
                   <div 
                   onClick={() => {setPeriod('Last 7D'), handleSetBarChart('Last 7D'), setPopupSelectDate(false)}}
@@ -582,7 +589,7 @@ console.log('ticket',ticket);
                       type='text'
                       value={startDate ? new Date(startDate).toLocaleDateString('en-GB') : ''}
                       readOnly
-                      className={` border bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${startDate?'border-primary1':'border-gray-300'}`}
+                      className={` border bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${startDate?'border-primary1':'border-gray-300'}`}
                       placeholder='Select date'
                       onClick={() => setShowCalendar(true)}
                       />
@@ -592,7 +599,7 @@ console.log('ticket',ticket);
                       className="absolute -top-3 -left-1 z-50 w-70"
                       onClick={(e) => e.stopPropagation()} // Prevent click propagation to parent elements
                       >
-                      <div className="rounded-2xl border border-gray-200 bg-white shadow-xl p-3 animate-fade-in">
+                      <div className="rounded-lg md:rounded-2xl border border-gray-200 bg-white shadow-xl p-3 animate-fade-in">
                         <Calendar
                         className="custom-calendar"
                         onChange={(e) => {
@@ -619,12 +626,12 @@ console.log('ticket',ticket);
                       <div className='h-5 w-1 rounded-2xl bg-gradient-to-t from-[rgb(0,94,170)] to-[#007EE5]'/>
                       End date
                     </div>
-                    <div className='relative mt-4 rounded-xl cursor-pointer'>
+                    <div className='relative mt-4 rounded-lg md:rounded-xl cursor-pointer'>
                       <input 
                       type='text'
                       value={endDate ? new Date(endDate).toLocaleDateString('en-GB') : ''}
                       readOnly
-                      className={` border bg-white rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${endDate?'border-primary1':'border-gray-300'}`}
+                      className={` border bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${endDate?'border-primary1':'border-gray-300'}`}
                       placeholder='Select date'
                       onClick={() => setShowCalendarEnd(true)}
                       />
@@ -634,7 +641,7 @@ console.log('ticket',ticket);
                       className="absolute -top-3 -left-1 z-50 w-70"
                       onClick={(e) => e.stopPropagation()} // Prevent click propagation to parent elements
                       >
-                      <div className="rounded-2xl border border-gray-200 bg-white shadow-xl p-3 animate-fade-in">
+                      <div className="rounded-lg md:rounded-2xl border border-gray-200 bg-white shadow-xl p-3 animate-fade-in">
                         <Calendar
                         className="custom-calendar"
                         onChange={(e) => {

@@ -33,9 +33,9 @@ export default function RootLayout({
       >
         <ToastProvider>
           <PermissionsProvider>
-          <div className='flex w-full h-screen md:flex-row flex-col'>
+          <div className='flex-1 flex md:flex-row flex-col'>
             <Sidebar/>
-            <div className='flex-1 overflow-auto'>
+            <div className='flex-1'>
               {children}
             </div>
           </div>

@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react';
 import { fetchCyberNewsDetail } from '@/src/modules/cyber-news';
 import NotFound from '@/app/not-found';
 
+
 export default function CyberNewsDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -76,15 +77,15 @@ export default function CyberNewsDetailPage() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col px-4 py-4 sm:px-6 md:px-10 md:py-10 max-w-4xl">
+    <div className="w-full h-full flex flex-col px-4 py-4 md:px-10 md:py-10">
       <div className="w-full pt-2 sm:pt-6">
         {/* Back & Title */}
         <div className="flex items-center gap-x-2 mb-2">
           <div
             onClick={() => router.back()}
-            className="cursor-pointer hover:opacity-70 w-fit"
+            className="cursor-pointer hover:opacity-70 w-fit flex"
           >
-            <Icon icon="famicons:arrow-back" width="30" height="30" />
+            <Icon icon="famicons:arrow-back" className='w-6 h-6 md:w-8 md:h-8' />
           </div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 break-all">
             {newsDetail.title}
@@ -92,7 +93,7 @@ export default function CyberNewsDetailPage() {
         </div>
 
         {/* Date & Tag */}
-        <div className="flex flex-wrap items-center text-xs sm:text-sm text-gray-500 gap-2 mb-2 ml-10">
+        <div className="flex flex-wrap items-center text-xs sm:text-sm text-gray-500 gap-2 mb-2 justify-end">
           <span>
             {formatDate(newsDetail.createdAt)}
           </span>

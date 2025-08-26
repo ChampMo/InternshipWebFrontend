@@ -89,11 +89,11 @@ function TokenManagement() {
             status: item.status?'In use': 'Not used',
             token: item.token,
             type: item.type,
-            expiryDate: item.expiryDate ? new Date(item.expiryDate).toLocaleDateString('en-GB') : 'N/A', // Format expiry date
-            updatedAt: new Date(item.updatedAt).toLocaleDateString()
+            expiryDate: item.expiryDate ? setFormatDate(new Date(item.expiryDate)) : '',
+            updatedAt: setFormatDate(new Date(item.updatedAt))
           })))
           // แปลงค่าอะไรก็ได้ -> Date (local) เฉพาะวันที่ (00:00:00)
-          const toLocalDateOnly = (input: unknown): Date | null => {
+            const toLocalDateOnly = (input: unknown): Date | null => {
             if (!input) return null;
 
             // ถ้าเป็น Date อยู่แล้ว
@@ -106,21 +106,31 @@ function TokenManagement() {
 
               // กรณี dd/mm/yyyy
               if (s.includes('/')) {
-                const [dd, mm, yyyy] = s.split('/').map(Number);
-                if (!dd || !mm || !yyyy) return null;
-                return new Date(yyyy, mm - 1, dd);
+              const [dd, mm, yyyy] = s.split('/').map(Number);
+              if (!dd || !mm || !yyyy) return null;
+              return new Date(yyyy, mm - 1, dd);
+              }
+
+              // กรณี dd MMM yyyy (e.g., 20 Aug 2025)
+              const dateParts = s.split(' ');
+              if (dateParts.length === 3) {
+              const [day, month, year] = dateParts;
+              const monthIndex = new Date(`${month} 1`).getMonth();
+              if (!isNaN(Number(day)) && monthIndex >= 0 && !isNaN(Number(year))) {
+                return new Date(Number(year), monthIndex, Number(day));
+              }
               }
 
               // กรณี ISO/อื่น ๆ ให้ปล่อยให้ Date parse
               const d = new Date(s);
               if (!isNaN(d.getTime())) {
-                return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+              return new Date(d.getFullYear(), d.getMonth(), d.getDate());
               }
               return null;
             }
 
             return null;
-          };
+            };
 
           const today = (() => {
             const t = new Date();
@@ -274,16 +284,16 @@ function TokenManagement() {
           key: 'expiryDate',
           sortable: true,
           render: (value: string) => {
-            // แปลง dd/mm/yyyy → Date
-            const [day, month, year] = value.split('/');
-            const expiry = new Date(Number(year), Number(month) - 1, Number(day));
+          // แปลง dd MMM yyyy → Date
+          const [day, month, year] = value.split(' ');
+          const expiry = new Date(`${month} ${day}, ${year}`);
         
-            // เอาเวลาของ today เป็น 00:00:00 เพื่อเปรียบเทียบแค่วันที่
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+          // เอาเวลาของ today เป็น 00:00:00 เพื่อเปรียบเทียบแค่วันที่
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
         
-            const isExpired = expiry < today; // เลยวันแล้ว
-            const isToday = expiry.getTime() === today.getTime(); // วันเดียวกัน
+          const isExpired = expiry < today; // เลยวันแล้ว
+          const isToday = expiry.getTime() === today.getTime(); // วันเดียวกัน
         
             return (
               <span
@@ -357,8 +367,9 @@ function TokenManagement() {
   const handleEditAccount = async () => {
     setLoading(true);
     try {
-      const [day, month, year] = (editToken?.expiryDate || '').split('/');
-      const formattedExpiryDate = new Date(Number(year), Number(month) - 1, Number(day)).toISOString();
+      const [day, month, year] = (editToken?.expiryDate || '').split(' ');
+      const monthIndex = new Date(`${month} 1`).getMonth();
+      const formattedExpiryDate = new Date(Number(year), monthIndex, Number(day)).toISOString();
       const result = await UpdateToken({ 
         tokenId: editToken?.tokenId, 
         name: editToken?.name, 
@@ -434,6 +445,11 @@ function TokenManagement() {
     return expiryDate < today;
   };
   
+  
+  const setFormatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+    return date.toLocaleDateString('en-GB', options).replace(',', '');
+  }
 
   if (permissions === 'no_permissions' || permissions === null) {
     return <NotFound/>;
@@ -442,7 +458,7 @@ function TokenManagement() {
 
 
   return (
-      <div className='w-full flex flex-col overflow-auto h-screen px-4 py-4 md:px-10 md:py-10'>
+      <div className='w-full flex flex-col overflow-auto h-full px-4 py-4 md:px-10 md:py-10'>
       <div className=' font-bold text-xl md:text-2xl'>Token in use</div>
       <div className='p-4 md:p-8 mt-4 rounded-xl duration-500 border border-gray-200 bg-gradient-to-r from-[#F2F9FE] to-[#ebf6fd] shadow-sm md:w-fit flex md:flex-row flex-col gap-8 justify-between'>
         <div className='gap-6 flex flex-col'>
@@ -565,7 +581,7 @@ function TokenManagement() {
                 <div className='relative mt-3 rounded-xl cursor-pointer'>
                   <input 
                   type='text'
-                  value={createToken?.expiryDate ? new Date(createToken.expiryDate).toLocaleDateString('en-GB') : ''}
+                  value={createToken?.expiryDate ? setFormatDate(new Date(createToken.expiryDate)) : ''}
                   readOnly
                   className={` border bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${createToken?.expiryDate?'border-primary1':'border-gray-300'}`}
                   placeholder='Select date'
@@ -715,18 +731,17 @@ function TokenManagement() {
                     className="custom-calendar"
                     onChange={(e) => {
                     if (e && e instanceof Date) {
-                    const day = e.getDate().toString().padStart(2, '0');
-                    const month = (e.getMonth() + 1).toString().padStart(2, '0');
-                    const year = e.getFullYear();
-                    const formattedDate = `${day}/${month}/${year}`;
+                    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+                    const formattedDate = e.toLocaleDateString('en-GB', options).replace(',', '');
                     setEditToken(editToken ? { ...editToken, expiryDate: formattedDate } : null);
                     }
                     setShowCalendar(false);
                     }}
                     value={(() => {
                     if (editToken?.expiryDate && editToken.expiryDate !== 'N/A') {
-                      const [day, month, year] = editToken.expiryDate.split('/');
-                      return new Date(Number(year), Number(month) - 1, Number(day));
+                      const [day, month, year] = editToken.expiryDate.split(' ');
+                      const monthIndex = new Date(`${month} 1`).getMonth();
+                      return new Date(Number(year), monthIndex, Number(day));
                     }
                     return new Date();
                     })()}
@@ -771,7 +786,7 @@ function TokenManagement() {
             <div className='flex flex-col px-4 md:px-8 pt-4 md:pt-8 pb-4 md:pb-6'>
               <div className='max-h-66 md:max-h-85 overflow-y-auto gap-4 flex flex-col'>
                 {deleteToken && deleteToken.map((item:TokenItem, index:number) => (
-                <div className='flex flex-col gap-3 border border-gray-300 rounded-xl md:rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
+                <div key={index} className='flex flex-col gap-3 border border-gray-300 rounded-xl md:rounded-2xl bg-gradient-to-r from-[#f3f6f9] to-[#e5eaf1] p-4'>
                   <div className='flex justify-between items-center'>
                     <div className='text-sm text-gray-500'>Name</div>
                     <div className=''>{item?.name}</div>

@@ -55,7 +55,7 @@ export default function CyberNews() {
   }
 
   return (
-    <div className="w-full flex flex-col overflow-auto min-h-screen px-4 py-4 sm:px-6 md:px-10 md:py-10">
+    <div className="w-full flex flex-col overflow-auto h-full px-4 py-4 md:px-10 md:py-10">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-3">
         <h1 className="text-xl md:text-2xl font-bold">CyberNews</h1>
 
