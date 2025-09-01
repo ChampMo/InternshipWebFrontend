@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastProvider } from '@/src/context/toast-context'
 import { PermissionsProvider } from '@/src/context/permission-context';
 import Sidebar from '@/src/components/sidebar'
+import { Orbitron } from "next/font/google";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,14 +21,22 @@ export const metadata: Metadata = {
   description: "",
 };
 
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"], // เลือกตามที่ใช้จริง เพื่อลดขนาด
+  display: "swap",
+  variable: "--font-orbitron",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
 
   return (
-    <html lang="en">
+    <html lang="en" className={orbitron.variable}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
