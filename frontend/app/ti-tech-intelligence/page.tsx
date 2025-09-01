@@ -45,7 +45,7 @@ export default function TechIntelligence() {
   const handleExport = () => {
     if (!results.length) return;
     // สร้าง header
-    const header = ['No.', 'IP', 'Country', 'Network Owner', 'Reputation'];
+    const header = ['No.', 'IP', 'Country', 'Network Owner', 'Reputation', 'Status'];
     // สร้าง rows
     const rows = results.map((row, idx) => [
       idx + 1,
@@ -53,6 +53,7 @@ export default function TechIntelligence() {
       row.country,
       row.owner,
       row.reputation,
+      row.status,
     ]);
     // รวม header กับ rows
     const csvContent = [header, ...rows]
