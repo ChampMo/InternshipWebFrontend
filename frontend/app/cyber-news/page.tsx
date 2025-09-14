@@ -56,7 +56,7 @@ export default function CyberNews() {
 
   return (
     <div className="w-full flex flex-col overflow-auto h-full px-4 py-4 md:px-10 md:py-10">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-3">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-3 md:mb-6 gap-3">
         <h1 className="text-xl md:text-2xl font-bold">CyberNews</h1>
 
         <div className={` border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
@@ -69,8 +69,8 @@ export default function CyberNews() {
           placeholder='Search by date, title, tag'/>
         </div>
       </div>
-      <div className="border-t border-gray-300 mb-5 w-full"></div>
-      <div className="flex flex-col gap-4">
+      <div className="border-t border-gray-300 mb-2 md:mb-5 w-full"></div>
+      <div className="flex flex-col gap-2 md:gap-4">
         {filteredNews.length > 0 ? (
           filteredNews.map(news => (
             <CyberNewsCard

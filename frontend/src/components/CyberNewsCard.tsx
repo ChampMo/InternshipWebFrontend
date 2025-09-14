@@ -39,16 +39,16 @@ const CyberNewsCard: React.FC<CyberNewsCardProps> = ({
       data-news-id={NewsID}
       onClick={handleClick}
     >
-      <div className="w-full h-48 md:w-56 md:h-40 flex-shrink-0 overflow-hidden">
+      <div className="w-full md:w-56 h-32 md:h-40 flex-shrink-0 overflow-hidden">
         <img
           src={imageUrl}
           alt="news visual"
           className="object-cover w-full h-full hover:scale-105 transition-transform duration-200"
         />
       </div>
-      <div className="px-4 py-3 flex flex-col justify-between flex-1">
-        <div className="mb-3">
-          <h2 className="font-bold text-base md:text-lg text-gray-800 leading-tight mb-2 line-clamp-2">{title}</h2>
+      <div className="px-2 md:px-4 py-2 md:py-3 flex flex-col justify-between flex-1">
+        <div className="mb-1 md:mb-3">
+          <h2 className="font-bold text-sm md:text-lg text-gray-800 leading-tight mb-2 line-clamp-2">{title}</h2>
         </div>
         <div className="flex items-center justify-between text-xs mt-auto">
           <div className="flex items-center gap-1 text-gray-600 bg-gray-50 px-2 py-1 rounded-full">

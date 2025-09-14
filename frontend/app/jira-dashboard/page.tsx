@@ -547,7 +547,7 @@ console.log('ticket',ticket);
 
               <BarGraph data={barChartData} setSelectBarDate={setSelectBarDate}/>
               
-              <div className={`text-gray-400 absolute top-3 right-4 flex`} >
+              <div className={`text-gray-400 absolute top-4 right-4 flex`} >
                 <div className='mr-2 flex items-center gap-1 text-xs md:text-sm'>
                   <div>{startDate ? setFormatDate(startDate) : ''}</div>
                 -
