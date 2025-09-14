@@ -70,12 +70,12 @@ function Navbar({ isSignin }: { isSignin: boolean }) {
   return (
     <div className="sticky top-0 z-50 border-b border-white/10 bg-white/50 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <a href="#" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <Image src="/apple-icon.png" alt="Logo" width={40} height={40} />
-          <span className="text-2xl tracking-tight [font-family:var(--font-orbitron)]">Cyber Command</span>
-        </a>
+          <span className="text-xl md:text-2xl tracking-tight [font-family:var(--font-orbitron)]">Cyber Command</span>
+        </Link>
         <div className="flex items-center gap-2">
-        {isSignin && <a href="/signin" className="rounded-lg md:rounded-xl bg-primary1 px-6 py-2 text-sm font-medium text-white shadow hover:bg-[#0071cd] flex gap-2">Sign In</a>}
+        {isSignin && <a href="/signin" className="rounded-lg md:rounded-xl bg-primary1 px-4 md:px-6 py-2 text-sm font-medium text-white shadow hover:bg-[#0071cd] flex gap-2">Sign In</a>}
         </div>
       </div>
     </div>
@@ -89,7 +89,7 @@ function Hero() {
         <GridBG />
       </div>
 
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:py-20">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-10 md:py-20">
         <div>
         <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary1/90 px-3 py-1 text-xs font-medium text-white shadow">
             <Icon icon="mdi:lightning-bolt" width="16" height="16" /> Live cyber updates
@@ -152,7 +152,7 @@ function Features() {
   const topThree = filteredNews.slice(0, 3);
 
   return (
-    <section id="features" className="py-16">
+    <section id="features" className="py-10 md:py-16">
       <div className="mx-auto max-w-6xl px-4">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight md:text-4xl [font-family:var(--font-orbitron)]">
@@ -217,7 +217,7 @@ function Features() {
 
 function Showcase() {
   return (
-    <section className="py-14 md:py-20">
+    <section className="py-10 md:py-20">
       <div className="mx-auto grid max-w-6xl items-center gap-14 px-4 md:grid-cols-2">
         <div className="relative md:flex hidden">
           <div className=" overflow-hidden rounded-xl md:rounded-2xl border border-gray-200/70 bg-white shadow-sm">
@@ -230,9 +230,7 @@ function Showcase() {
           <div className="pointer-events-none absolute -right-3 -top-3 rounded-full bg-primary1 px-3 py-1 text-xs font-medium text-white shadow">Example</div>
         </div>
         <div>
-          <div className="">
-            <div className=" inline-flex ml-auto items-center rounded-full bg-primary1/90 px-3 py-1 text-xs font-medium text-white">✨ Special privileges for customers</div>
-          </div>
+          <div className="mb-4 inline-flex ml-auto items-center rounded-full bg-primary1/90 px-3 py-1 text-xs font-medium text-white">✨ Special privileges for customers</div>
           <h1 className="mb-4 text-4xl font-bold leading-tight tracking-tight md:text-5xl [font-family:var(--font-orbitron)]">
           Jira Dashboard
           </h1>
@@ -272,7 +270,7 @@ function Showcase() {
 
 function Cta() {
   return (
-    <section id="get-started" className="py-16">
+    <section id="get-started" className="py-10 md:py-16">
       <div className="mx-auto max-w-6xl px-4">
         <div className="rounded-xl md:rounded-2xl border border-gray-200/70 bg-white/70 backdrop-blur p-6 md:p-10 shadow-sm">
           <div className="grid gap-10 md:grid-cols-2">
