@@ -116,31 +116,23 @@ function Hero() {
   )
 }
 
-// function Logos() {
-//   return (
-//     <section className="py-8">
-//       <div className="mx-auto max-w-6xl px-4">
-//         <div className="mx-auto grid max-w-4xl grid-cols-2 items-center gap-6 opacity-70 md:grid-cols-3">
-//           {['Cyber news', 'Jira Dashboard', 'Tech intelligence'].map((name) => (
-//             <div key={name} className="flex items-center justify-center rounded-lg md:rounded-xl border border-dashed border-gray-300/70 p-4 text-sm">
-//               {name}
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   )
-// }
 
 function Features() {
   const [newsDetail, setNewsDetail] = useState<any[]>([]);
   const [filteredNews, setFilteredNews] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchNews = async () => {
-      const data = await getAllCyberNews();
-      setNewsDetail(data);
+      try {
+        const data = await getAllCyberNews();
+        setNewsDetail(data);
+      } catch (err) {
+        console.error("Error fetching news:", err);
+      } finally {
+        setLoading(false); // โหลดเสร็จ (สำเร็จหรือ fail ก็ตาม)
+      }
     };
     fetchNews();
   }, []);
@@ -171,7 +163,12 @@ function Features() {
           </p>
         </div>
 
-        {topThree.length > 0 ? (
+        {/* Loading state */}
+        {loading ? (
+          <div className="flex justify-center items-center py-12 text-gray-500">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary1 border-t-transparent"></div>
+          </div>
+        ) : topThree.length > 0 ? (
           <div className="grid gap-8 md:grid-cols-3">
             {topThree.map((news) => (
               <Link
@@ -179,7 +176,6 @@ function Features() {
                 href={`/cyber-news/${news.NewsID}`}
                 className="flex flex-col overflow-hidden group rounded-lg md:rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white"
               >
-                {/* รูปข่าว */}
                 {news.imgUrl && (
                   <img
                     src={news.imgUrl}
@@ -187,12 +183,9 @@ function Features() {
                     className="h-40 w-full object-cover"
                   />
                 )}
-                {/* เนื้อหา */}
                 <div className="flex flex-1 flex-col p-4">
-                  <div className='flex'>
-                    <div className="mb-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-primary1">
+                  <div className="mb-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-primary1">
                     {news.tag}
-                  </div>
                   </div>
                   <h3 className="mb-2 text-lg font-semibold text-gray-800 line-clamp-2">
                     {news.title}
@@ -201,10 +194,11 @@ function Features() {
                     {new Date(news.createdAt).toLocaleDateString()}
                   </p>
                   <div className="mt-auto pt-4">
-                    <div
-                      className="text-sm font-medium text-primary1 flex gap-1"
-                    >
-                      Read more <div className=' overflow-hidden duration-500 w-0 group-hover:w-10 flex items-center'><Icon icon="lucide:move-right" width="18" height="18" /></div>
+                    <div className="text-sm font-medium text-primary1 flex gap-1">
+                      Read more{" "}
+                      <div className="overflow-hidden duration-500 w-0 group-hover:w-10 flex items-center">
+                        <Icon icon="lucide:move-right" width="18" height="18" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -218,6 +212,7 @@ function Features() {
     </section>
   );
 }
+
 
 
 function Showcase() {
