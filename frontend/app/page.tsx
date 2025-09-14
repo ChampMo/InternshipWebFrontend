@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react'
 import Image from "next/image";
 import { ToastContainer, toast } from 'react-toastify';
 import Link from 'next/link'
+import { Icon } from '@iconify/react'
+
 
 
 
@@ -39,7 +41,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[radial-gradient(60%_80%_at_50%_-10%,rgba(0,126,229,0.20),transparent),linear-gradient(180deg,rgba(255,255,255,0.08),transparent)] text-gray-900">
       <Navbar />
       <Hero />
-      <Logos />
+      {/* <Logos /> */}
       <Features />
       <Showcase />
       <Metrics />
@@ -56,17 +58,11 @@ function Navbar() {
     <div className="sticky top-0 z-50 border-b border-white/10 bg-white/50 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <a href="#" className="flex items-center gap-2">
-          <div className="size-8 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-400 shadow" />
-          <span className="text-xl font-semibold tracking-tight [font-family:var(--font-orbitron)]">InternshipWeb</span>
+          <Image src="/apple-icon.png" alt="Logo" width={40} height={40} />
+          <span className="text-2xl tracking-tight [font-family:var(--font-orbitron)]">Cyber Command</span>
         </a>
-        <div className="hidden items-center gap-6 md:flex">
-          <a href="#features" className="text-sm text-gray-700 hover:text-gray-900">ฟีเจอร์</a>
-          <a href="#pricing" className="text-sm text-gray-700 hover:text-gray-900">ราคา</a>
-          <a href="#faq" className="text-sm text-gray-700 hover:text-gray-900">ถามบ่อย</a>
-        </div>
         <div className="flex items-center gap-2">
-          <a href="https://github.com/ChampMo/InternshipWebFrontend" target="_blank" className="hidden rounded-lg border px-3 py-2 text-sm md:inline-block hover:bg-gray-50">GitHub</a>
-          <a href="#get-started" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-blue-700">เริ่มใช้งาน →</a>
+          <a href="/signin" className="rounded-xl bg-primary1 px-6 py-2 text-sm font-medium text-white shadow hover:bg-[#0071cd] flex gap-2">Sign In</a>
         </div>
       </div>
     </div>
@@ -82,20 +78,19 @@ function Hero() {
 
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 md:grid-cols-2">
         <div>
-          <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-blue-600/90 px-3 py-1 text-xs font-medium text-white">✨ เวอร์ชันทดลองพร้อมใช้งาน</span>
-          <h1 className="mb-4 text-4xl font-bold leading-tight tracking-tight md:text-5xl [font-family:var(--font-orbitron)]">
-            แดชบอร์ดบริหารการฝึกงาน & การจัดการโครงการแบบรวมศูนย์
-          </h1>
+          {/* <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary1/90 px-3 py-1 text-xs font-medium text-white">✨ Special privileges for customers</span> */}
+            <h1 className="mb-4 text-4xl font-bold leading-tight tracking-tight md:text-5xl [font-family:var(--font-orbitron)]">
+            Cyber ​​News Center
+            </h1>
           <p className="mb-6 text-base leading-relaxed text-gray-700 md:text-lg">
-            จัดการนักศึกษาฝึกงาน โครงการ เอกสาร และสถิติ—all‑in‑one. เชื่อมต่อข้อมูลได้จริง
-            พร้อมวิเคราะห์ด้วยกราฟสวย เข้าใจง่าย และทำงานร่วมกันได้แบบเรียลไทม์
+            A centralized and easy-to-navigate hub that brings together the latest cybersecurity news, expert insights, and practical analysis — designed to help readers stay informed, understand key threats, and explore trends shaping the digital world.
+            {/* Jira Cybersecurity Intelligence Management System and Dashboard for IT and Cybersecurity Teams in Enterprises */}
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <a href="#get-started" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-blue-700">ลองเดโมทันที</a>
-            <a href="https://github.com/ChampMo/InternshipWebFrontend" target="_blank" className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50">ดูซอร์สโค้ด</a>
+            <a href="/cyber-news" className="rounded-xl bg-primary1 px-6 py-2 text-sm font-medium text-white shadow hover:bg-[#0071cd]">Get Started</a>
           </div>
-          <ul className="mt-6 grid grid-cols-2 gap-3 text-sm text-gray-600 md:grid-cols-3">
-            {['ติดตั้งง่าย','รองรับ Next.js 15','Tailwind อย่างเดียว','เชื่อมต่อ API ได้','Responsive เต็มรูปแบบ','Dark‑mode พร้อม'].map((item) => (
+          <ul className="mt-6 grid grid-cols-2 gap-3 text-sm text-gray-600 md:grid-cols-2">
+            {['Up-to-date cyber coverage','Clear topic summaries','Categorized by tags','Continuous updates'].map((item) => (
               <li key={item} className="flex items-center gap-2">✔️ {item}</li>
             ))}
           </ul>
@@ -108,21 +103,21 @@ function Hero() {
   )
 }
 
-function Logos() {
-  return (
-    <section className="py-8">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mx-auto grid max-w-4xl grid-cols-2 items-center gap-6 opacity-70 md:grid-cols-4">
-          {['Next.js', 'Tailwind', 'MongoDB', 'Supabase'].map((name) => (
-            <div key={name} className="flex items-center justify-center rounded-xl border border-dashed border-gray-300/70 p-4 text-sm">
-              {name}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
+// function Logos() {
+//   return (
+//     <section className="py-8">
+//       <div className="mx-auto max-w-6xl px-4">
+//         <div className="mx-auto grid max-w-4xl grid-cols-2 items-center gap-6 opacity-70 md:grid-cols-3">
+//           {['Cyber news', 'Jira Dashboard', 'Tech intelligence'].map((name) => (
+//             <div key={name} className="flex items-center justify-center rounded-xl border border-dashed border-gray-300/70 p-4 text-sm">
+//               {name}
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </section>
+//   )
+// }
 
 function Features() {
   const data = [
@@ -131,11 +126,11 @@ function Features() {
     { title: 'เชื่อมระบบภายนอก', desc: 'ต่อ API/Jira/LINE/Teams ได้ยืดหยุ่น พร้อมเว็บฮุคและคิวงาน' },
   ]
   return (
-    <section id="features" className="py-16">
+    <section id="features" className="py-10 p-16">
       <div className="mx-auto max-w-6xl px-4">
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl [font-family:var(--font-orbitron)]">ฟีเจอร์เด่น</h2>
-          <p className="mt-3 text-gray-600">ออกแบบมาเพื่อทีมมหาวิทยาลัยและองค์กรที่ต้องการความเรียบง่าย แต่ครบเครื่อง</p>
+          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl [font-family:var(--font-orbitron)]">Popular cyber news</h2>
+          {/* <p className="mt-3 text-gray-600">ออกแบบมาเพื่อทีมมหาวิทยาลัยและองค์กรที่ต้องการความเรียบง่าย แต่ครบเครื่อง</p> */}
         </div>
         <div className="grid gap-6 md:grid-cols-3">
           {data.map((f) => (
@@ -153,17 +148,8 @@ function Features() {
 
 function Showcase() {
   return (
-    <section className="py-16">
+    <section className="py-20">
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 md:grid-cols-2">
-        <div>
-          <h3 className="text-2xl font-semibold tracking-tight md:text-3xl [font-family:var(--font-orbitron)]">หน้าจอแสดงผลที่อ่านง่าย</h3>
-          <p className="mt-3 text-gray-600">ใช้คอมโพเนนต์มาตรฐานจาก Tailwind พร้อมโทนสีที่สบายตา ใครก็เริ่มได้เร็ว และปรับแต่งได้เอง โยกย้ายโมดูล/วิดเจ็ตได้ตามบทบาทงานจริง</p>
-          <ul className="mt-5 space-y-2 text-gray-700">
-            {['แดชบอร์ดภาพรวม', 'ตารางงาน/ตั๋ว', 'ปฏิทินกิจกรรม', 'สรุปสถิติรายเดือน'].map((t) => (
-              <li key={t} className="flex items-center gap-2">✔️ {t}</li>
-            ))}
-          </ul>
-        </div>
         <div className="relative">
           <div className="overflow-hidden rounded-2xl border border-gray-200/70 bg-white shadow-sm">
             <div className="border-b bg-gray-50/50 p-4 text-base font-medium">ภาพรวมการฝึกงาน</div>
@@ -195,8 +181,26 @@ function Showcase() {
               </div>
             </div>
           </div>
-          <div className="pointer-events-none absolute -right-3 -top-3 rounded-full bg-blue-600 px-3 py-1 text-xs font-medium text-white shadow">ตัวอย่าง</div>
+          <div className="pointer-events-none absolute -right-3 -top-3 rounded-full bg-primary1 px-3 py-1 text-xs font-medium text-white shadow">Example</div>
         </div>
+        <div>
+          <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary1/90 px-3 py-1 text-xs font-medium text-white">✨ Special privileges for customers</span>
+          <h1 className="mb-4 text-4xl font-bold leading-tight tracking-tight md:text-5xl [font-family:var(--font-orbitron)]">
+          Jira Dashboard
+          </h1>
+          <p className="mb-6 text-base leading-relaxed text-gray-700 md:text-lg">
+            Jira Cybersecurity Intelligence Management System and Dashboard for IT and Cybersecurity Teams in Enterprises
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <a href="/cyber-news" className="rounded-xl bg-primary1 px-6 py-2 text-sm font-medium text-white shadow hover:bg-[#0071cd]">Get Started</a>
+          </div>
+          <ul className="mt-5 space-y-2 text-gray-700">
+            {['แดชบอร์ดภาพรวม', 'ตารางงาน/ตั๋ว', 'ปฏิทินกิจกรรม', 'สรุปสถิติรายเดือน'].map((t) => (
+              <li key={t} className="flex items-center gap-2">✔️ {t}</li>
+            ))}
+          </ul>
+        </div>
+        
       </div>
     </section>
   )
@@ -269,7 +273,7 @@ function Pricing() {
                   <li key={f} className="flex items-center gap-2">✔️ {f}</li>
                 ))}
               </ul>
-              <a href="#get-started" className="block rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-700">{t.cta}</a>
+              <a href="#get-started" className="block rounded-lg bg-primary1 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-700">{t.cta}</a>
             </div>
           ))}
         </div>
@@ -287,7 +291,7 @@ function Cta() {
           <p className="mt-2 text-gray-700">ติดตั้งง่าย แก้ไขได้ไว และขยายต่อยอดได้ทุกเมื่อ</p>
         </div>
         <div className="flex gap-3 md:justify-end">
-          <a href="https://github.com/ChampMo/InternshipWebFrontend" target="_blank" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">ไปที่ GitHub</a>
+          <a href="https://github.com/ChampMo/InternshipWebFrontend" target="_blank" className="rounded-lg bg-primary1 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">ไปที่ GitHub</a>
           <a href="#" className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50">ดูเอกสาร</a>
         </div>
       </div>
@@ -345,7 +349,7 @@ function DashboardMock() {
           </div>
         </div>
       </div>
-      <div className="pointer-events-none absolute -right-3 -top-3 rounded-full bg-blue-600 px-3 py-1 text-xs font-medium text-white shadow">ตัวอย่าง</div>
+      <div className="pointer-events-none absolute -right-3 -top-3 rounded-full bg-primary1 px-3 py-1 text-xs font-medium text-white shadow">Example</div>
     </div>
   )
 }
