@@ -516,15 +516,15 @@ console.log('ticket',ticket);
           <div className=' font-bold text-xl md:text-2xl'>Priority</div>
           <div className='w-full flex gap-4 md:flex-row flex-col'>
             <div className='flex h-full gap-4 mt-4 shrink-0'>
-              <div className='grid grid-cols-2 gap-4'>
+              <div className='grid grid-cols-2 gap-4 h-56 md:h-64'>
                 {priorityItem.map((item, index) => (
                   <div key={index} className={`w-26 md:w-30 aspect-square bg-gradient-to-br rounded-lg md:rounded-xl flex flex-col items-center justify-center text-white font-bold ${item.color}`}>
-                    <div className='text-xl md:text-2xl'>{item.count}</div>
+                    <div className='text-4xl'>{item.count}</div>
                     <div className='text-lg font-bold'>{item.name}</div>
                   </div>
                 ))}
               </div>
-              <div className={`self-stretch w-26 md:w-30 bg-gradient-to-br from-total to-blue-600 rounded-lg md:rounded-xl flex flex-col items-center justify-center text-white font-bold `}>
+              <div className={`self-stretch w-26 md:w-30 md:h-64 bg-gradient-to-br from-total to-blue-600 rounded-lg md:rounded-xl flex flex-col items-center justify-center text-white font-bold `}>
                 <div className='text-xl md:text-2xl'>{priorityItem.reduce((total, item) => total + item.count, 0)}</div>
                 <div className='text-lg font-bold'>Total</div>
               </div>
