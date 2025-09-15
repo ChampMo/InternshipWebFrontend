@@ -7,6 +7,7 @@ import { checkIPsFromCSVBackend, ResultRow } from '@/src/modules/ti';
 import DataTable from '@/src/components/dataTable'; 
 import NotFound from '@/app/not-found';
 import ClipLoader from "react-spinners/ClipLoader";
+import { useToast } from '@/src/context/toast-context';
 
 
 export default function TechIntelligence() {
@@ -16,6 +17,7 @@ export default function TechIntelligence() {
   const [loading, setLoading] = useState(false)
   const [showResult, setShowResult] = useState(false)
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const { notifySuccess, notifyError, notifyInfo } = useToast()
 
 
 
@@ -36,7 +38,7 @@ export default function TechIntelligence() {
       setShowResult(true);
       setUploadedFileName(file.name); // ใช้ชื่อไฟล์ที่เลือก
     } catch (e) {
-      alert('เกิดข้อผิดพลาด');
+      notifyError('Something went wrong');
     }
     setLoading(false);
   };
@@ -99,8 +101,19 @@ export default function TechIntelligence() {
         e.preventDefault();
         e.stopPropagation();
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-          setFile(e.dataTransfer.files[0]);
-          setUploadedFileName(e.dataTransfer.files[0].name);
+          const droppedFile = e.dataTransfer.files[0];
+          const allowedTypes = ['.xlsx', '.xls', '.csv'];
+          const fileName = droppedFile.name.toLowerCase();
+          const isAllowed = allowedTypes.some(type => fileName.endsWith(type));
+          console.log({'isAllowed': isAllowed})
+          if (isAllowed) {
+            setFile(droppedFile);
+            setUploadedFileName(droppedFile.name);
+          } else {
+            setFile(null);
+            setUploadedFileName(null);
+            notifyError('Only .xlsx, .xls, .csv files are allowed');
+          }
         }
           }}
         >

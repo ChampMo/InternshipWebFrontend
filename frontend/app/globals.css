@@ -50,6 +50,10 @@
     --primary2: #D2ECFF;
   }
 } */
+ 
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   background: var(--background);

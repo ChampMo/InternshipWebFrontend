@@ -177,10 +177,10 @@ const Sidebar: React.FC = () => {
     return (
         <>
             {/* Desktop Sidebar */}
-            <div className='w-70 md:flex hidden shrink-0'/>
-            <aside ref={asideRef} style={{zIndex: 101}} className={`bg-primary3 md:w-70 h-screen shadow-lg rounded-r-xl md:rounded-r-3xl flex-col pb-5 md:pb-10 shrink-0 fixed left-0 z-50 flex duration-300 ${isMenuOpen?'':'md:translate-x-0 translate-x-[-100%]'}`}>
+            <div className='w-64 md:flex hidden shrink-0'/>
+            <aside ref={asideRef} style={{zIndex: 101}} className={`bg-primary3 md:w-64 h-screen shadow-lg rounded-r-xl md:rounded-r-3xl flex-col pb-5 md:pb-10 shrink-0 fixed left-0 z-50 flex duration-300 ${isMenuOpen?'':'md:translate-x-0 translate-x-[-100%]'}`}>
                 <header className='p-4 md:h-40 md:items-center flex justify-center'>
-                    <div className='text-xl md:text-4xl orbitron text-center text-wrap' >Cyber Command</div>
+                    <div className='text-xl md:text-3xl orbitron text-center text-wrap' >Cyber<br/>Command</div>
                 </header>
                 <div className='px-4 py-2'>
                     <div className='text-sm text-gray-400'>Product</div>
@@ -193,7 +193,7 @@ const Sidebar: React.FC = () => {
                                 <Link
                                     href={item.path}
                                     onClick={() => setIsMenuOpen(false)}
-                                    className={`md:text-lg px-8 py-3 rounded-r-lg duration-200 ${pathname.startsWith(item.path) ? 'bg-primary1 text-white' : ' hover:bg-primary2'}`}>
+                                    className={`text-sm px-8 py-3 rounded-r-lg duration-200 ${pathname.startsWith(item.path) ? 'bg-primary1 text-white' : ' hover:bg-primary2'}`}>
                                     {item.name}
                                 </Link>
                                 {index !== menuItems.length - 1 && (
@@ -216,7 +216,7 @@ const Sidebar: React.FC = () => {
                                     <Link
                                     href={item.path}
                                     onClick={() => setIsMenuOpen(false)}
-                                    className={`md:text-lg px-8 py-3 rounded-r-lg duration-200 ${pathname === item.path ? 'bg-primary1 text-white' : ' hover:bg-primary2'}`}>
+                                    className={`text-sm px-8 py-3 rounded-r-lg duration-200 ${pathname === item.path ? 'bg-primary1 text-white' : ' hover:bg-primary2'}`}>
                                         {item.name}
                                     </Link>
                                     {index !== menuAdmin.length - 1 && (
@@ -231,15 +231,15 @@ const Sidebar: React.FC = () => {
                 <div className='flex flex-col mt-auto px-4 py-2 sticky bottom-0'>
                     <div 
                     onClick={()=>{setResetPassPopUp(true)}}
-                    className='md:text-lg w-50 px-4 py-3 text-gray-400 cursor-pointer hover:text-primary1'>Reset Password</div>
+                    className='text-sm w-50 px-4 py-3 text-gray-400 cursor-pointer hover:text-primary1'>Reset Password</div>
                     <div 
                     onClick={()=>{setIsMenuOpen(false), localStorage.removeItem('token'),localStorage.removeItem('userId') , window.location.href = '/'}}
-                    className='md:text-lg w-40 px-4 py-3 text-red-400 cursor-pointer'>Log out</div>
+                    className='text-sm w-40 px-4 py-3 text-red-400 cursor-pointer'>Log out</div>
                 </div>
                 :<div className='flex flex-col mt-auto px-4 py-2 sticky bottom-0'>
                     <div 
                     onClick={()=>{ window.location.href = '/signin'}}
-                    className='md:text-lg w-40 px-4 py-3 text-primary1 cursor-pointer'>Sign In</div>
+                    className='text-sm w-40 px-4 py-3 text-primary1 cursor-pointer'>Sign In</div>
                 </div>}
                 
             </aside>
