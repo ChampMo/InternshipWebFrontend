@@ -152,7 +152,7 @@ function Features() {
   const topThree = filteredNews.slice(0, 3);
 
   return (
-    <section id="features" className="py-10 md:py-16">
+    <section id="features" className="pt-10 pb-10 md:pt-0 md:pb-16">
       <div className="mx-auto max-w-6xl px-4">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight md:text-4xl [font-family:var(--font-orbitron)]">
@@ -184,9 +184,12 @@ function Features() {
                   />
                 )}
                 <div className="flex flex-1 flex-col p-4">
-                  <div className="mb-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-primary1">
-                    {news.tag}
+                  <div className='flex'>
+                    <div className="mb-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-primary1">
+                      {news.tag}
+                    </div>
                   </div>
+                  
                   <h3 className="mb-2 text-lg font-semibold text-gray-800 line-clamp-2">
                     {news.title}
                   </h3>
@@ -525,8 +528,6 @@ function Footer() {
         <div className="mx-auto max-w-6xl px-4 py-4 flex flex-col gap-3 text-xs text-slate-600 md:flex-row md:items-center md:justify-between ">
           <div>© {new Date().getFullYear()} Cyber Command. All rights reserved.</div>
           <div className="flex items-center gap-4">
-            <a href="/terms" className="hover:text-slate-900 ">Terms</a>
-            <a href="/privacy" className="hover:text-slate-900 ">Privacy</a>
             <a href="#top" className="inline-flex items-center gap-1 hover:text-slate-900 ">
               <Icon icon="mdi:arrow-up" width="16" height="16" />
               Back to top
