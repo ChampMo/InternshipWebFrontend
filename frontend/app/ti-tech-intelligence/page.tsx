@@ -19,26 +19,129 @@ export default function TechIntelligence() {
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const { notifySuccess, notifyError, notifyInfo } = useToast()
 
+  // ฟังก์ชันตรวจสอบ IP address
+  const isValidIP = (ip: string): boolean => {
+    const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    return ipRegex.test(ip.trim());
+  };
+
+  // ฟังก์ชันตรวจสอบไฟล์ CSV และหา IP address
+  const validateCSVFile = async (file: File): Promise<{isValid: boolean, message: string, ips?: string[]}> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const text = e.target?.result as string;
+          if (!text) {
+            resolve({isValid: false, message: 'File is empty. Please upload a file with IP addresses.'});
+            return;
+          }
+
+          // แยกบรรทัดและตัดบรรทัดว่างออก
+          const lines = text.split('\n').filter(line => line.trim());
+          if (lines.length === 0) {
+            resolve({isValid: false, message: 'File contains no data. Please upload a file with IP addresses.'});
+            return;
+          }
+
+          // หา IP address ที่ถูกต้องทั้งหมด
+          const validIPs: string[] = [];
+
+          lines.forEach((line, lineIndex) => {
+            // รองรับทั้ง comma และ semicolon และ tab
+            const columns = line.split(/[,;\t]/).map(col => col.trim().replace(/"/g, ''));
+            
+            // ตรวจสอบทุกคอลัมน์ในแต่ละบรรทัดเพื่อหา IP ทั้งหมด
+            columns.forEach((col, colIndex) => {
+              if (isValidIP(col)) {
+                validIPs.push(col);
+                console.log(`Found IP "${col}" at line ${lineIndex + 1}, column ${colIndex + 1}`);
+              }
+            });
+          });
+
+          if (validIPs.length === 0) {
+            resolve({
+              isValid: false, 
+              message: 'No valid IP addresses found in the file.'
+            });
+            return;
+          }
+
+          resolve({
+            isValid: true, 
+            message: `Found ${validIPs.length} valid IP addresses`,
+            ips: validIPs
+          });
+
+        } catch (error) {
+          resolve({isValid: false, message: 'Unable to read the file.'});
+        }
+      };
+      reader.readAsText(file);
+    });
+  };
+
 
 
 
   // Mock handle file upload
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-      setUploadedFileName(e.target.files[0].name); // เพิ่มบรรทัดนี้
+      const selectedFile = e.target.files[0];
+      
+      // ตรวจสอบนามสกุลไฟล์
+      if (!selectedFile.name.toLowerCase().endsWith('.csv')) {
+        notifyError('Please select a valid CSV file.');
+        setFile(null);
+        setUploadedFileName(null);
+        return;
+      }
+
+      // ตรวจสอบเนื้อหาไฟล์
+      const validation = await validateCSVFile(selectedFile);
+      if (!validation.isValid) {
+        notifyError(validation.message);
+        setFile(null);
+        setUploadedFileName(null);
+        return;
+      }
+
+      // ไฟล์ถูกต้อง
+      setFile(selectedFile);
+      setUploadedFileName(selectedFile.name);
     }
   };
   const handleSubmit = async () => {
-    if (!file) return;
+    if (!file) {
+      notifyError('Please select a CSV file with IP address data.');
+      return;
+    }
+
+    // ตรวจสอบไฟล์อีกครั้งก่อนส่ง
+    const validation = await validateCSVFile(file);
+    if (!validation.isValid) {
+      notifyError(validation.message);
+      return;
+    }
+
     setLoading(true);
     try {
-      const results = await checkIPsFromCSVBackend(file);
-      setResults(results);
+      const backendResults = await checkIPsFromCSVBackend(file);
+      // กรองเฉพาะ IP address ที่ถูกต้องเท่านั้น
+      const filteredResults = backendResults.filter(result => isValidIP(result.ip));
+      
+      if (filteredResults.length === 0) {
+        notifyError('No valid IP addresses found in the processed results.');
+        setLoading(false);
+        return;
+      }
+      
+      setResults(filteredResults);
       setShowResult(true);
-      setUploadedFileName(file.name); // ใช้ชื่อไฟล์ที่เลือก
+      setUploadedFileName(file.name);
     } catch (e) {
-      notifyError('Something went wrong');
+      notifyError('An error occurred while processing the file.');
     }
     setLoading(false);
   };
@@ -48,8 +151,9 @@ export default function TechIntelligence() {
     if (!results.length) return;
     // สร้าง header
     const header = ['No.', 'IP', 'Country', 'Network Owner', 'Reputation', 'Status'];
-    // สร้าง rows
-    const rows = results.map((row, idx) => [
+    // สร้าง rows - กรองเฉพาะ IP ที่ถูกต้องเท่านั้น
+    const validResults = results.filter(row => isValidIP(row.ip));
+    const rows = validResults.map((row, idx) => [
       idx + 1,
       row.ip,
       row.country,
@@ -97,23 +201,32 @@ export default function TechIntelligence() {
         e.preventDefault();
         e.stopPropagation();
           }}
-          onDrop={e => {
+          onDrop={async e => {
         e.preventDefault();
         e.stopPropagation();
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
           const droppedFile = e.dataTransfer.files[0];
-          const allowedTypes = ['.xlsx', '.xls', '.csv'];
-          const fileName = droppedFile.name.toLowerCase();
-          const isAllowed = allowedTypes.some(type => fileName.endsWith(type));
-          console.log({'isAllowed': isAllowed})
-          if (isAllowed) {
-            setFile(droppedFile);
-            setUploadedFileName(droppedFile.name);
-          } else {
+          
+          // ตรวจสอบนามสกุลไฟล์
+          if (!droppedFile.name.toLowerCase().endsWith('.csv')) {
+            notifyError('Please select a valid CSV file.');
             setFile(null);
             setUploadedFileName(null);
-            notifyError('Only .xlsx, .xls, .csv files are allowed');
+            return;
           }
+
+          // ตรวจสอบเนื้อหาไฟล์
+          const validation = await validateCSVFile(droppedFile);
+          if (!validation.isValid) {
+            notifyError(validation.message);
+            setFile(null);
+            setUploadedFileName(null);
+            return;
+          }
+
+          // ไฟล์ถูกต้อง
+          setFile(droppedFile);
+          setUploadedFileName(droppedFile.name);
         }
           }}
         >
@@ -121,7 +234,7 @@ export default function TechIntelligence() {
           <p className="text-blue-400 mb-2 text-xs sm:text-base text-center px-2">Drag and drop csv file to upload</p>
           <input
         type="file"
-        accept=".xlsx,.xls,.csv"
+        accept=".csv"
         onChange={handleFileChange}
         className="hidden"
         id="fileUpload"
