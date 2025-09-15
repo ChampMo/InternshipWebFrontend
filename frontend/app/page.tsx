@@ -272,6 +272,19 @@ function Showcase() {
 
 
 function Cta() {
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+
+  const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log('Form data submitted:', formData);
+    // Here you would typically handle form submission, e.g., send data to your server
+  };
+
   return (
     <section id="get-started" className="py-10 md:py-16">
       <div className="mx-auto max-w-6xl px-4">
@@ -302,7 +315,7 @@ function Cta() {
                   target="_blank"
                   className="flex items-center gap-3 rounded-lg md:rounded-xl border border-gray-200/70 bg-white px-4 py-3 hover:bg-gray-50"
                 >
-                  <Icon icon="ic:baseline-line-axis" width="20" height="20" className="text-primary1" />
+                  <Icon icon="lineicons:line" width="20" height="20" className="text-primary1" />
                   <span className="text-sm text-gray-800">LINE: @yourlineid</span>
                 </a>
 
@@ -335,8 +348,7 @@ function Cta() {
             <form
               className="flex flex-col gap-3 w-full"
               onSubmit={(e) => {
-                // prevent default here if you plan to wire an API later
-                // e.preventDefault()
+                handleSendMessage(e);
               }}
             >
               <label className="flex flex-col text-sm">
@@ -345,6 +357,8 @@ function Cta() {
                   type="text"
                   className="rounded-lg md:rounded-xl border border-gray-300 px-3 py-2 text-gray-800 focus:border-primary1 focus:outline-none"
                   placeholder="Your name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                 />
               </label>
@@ -355,6 +369,8 @@ function Cta() {
                   type="email"
                   className="rounded-lg md:rounded-xl border border-gray-300 px-3 py-2 text-gray-800 focus:border-primary1 focus:outline-none"
                   placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
                 />
               </label>
@@ -365,6 +381,8 @@ function Cta() {
                   rows={4}
                   className="rounded-lg md:rounded-xl border border-gray-300 px-3 py-2 text-gray-800 focus:border-primary1 focus:outline-none resize-none"
                   placeholder="Tell us what you’re looking for…"
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   required
                 />
               </label>
@@ -515,7 +533,7 @@ function Footer() {
                 className="group inline-flex items-center gap-2 rounded-lg md:rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
                 title="LINE"
               >
-                <Icon icon="ic:baseline-line-axis" width="18" height="18" />
+                <Icon icon="lineicons:line" width="18" height="18" />
                 <span className="text-xs opacity-80 group-hover:opacity-100">LINE</span>
               </a>
             </div>
@@ -528,10 +546,14 @@ function Footer() {
         <div className="mx-auto max-w-6xl px-4 py-4 flex flex-col gap-3 text-xs text-slate-600 md:flex-row md:items-center md:justify-between ">
           <div>© {new Date().getFullYear()} Cyber Command. All rights reserved.</div>
           <div className="flex items-center gap-4">
-            <a href="#top" className="inline-flex items-center gap-1 hover:text-slate-900 ">
+            <div onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-1 hover:text-slate-900 cursor-pointer">
               <Icon icon="mdi:arrow-up" width="16" height="16" />
               Back to top
-            </a>
+            </div>
           </div>
         </div>
       </div>

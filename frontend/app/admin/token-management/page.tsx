@@ -259,7 +259,7 @@ function TokenManagement() {
           key: 'token',
           sortable: true,
           render: (value) => (
-            <div className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-xs md:text-sm w-fit max-w-96 break-words">
+            <div className="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md font-mono text-xs w-fit max-w-70 break-words">
               {value}
             </div>
           )
@@ -501,7 +501,7 @@ function TokenManagement() {
           </DefultButton>
         </div>}
       </div>
-      <div className='flex w-full gap-3 md:flex-row flex-col justify-between md:items-center mt-8'>
+      <div className='flex gap-3 md:flex-row flex-col justify-between md:items-center mt-8'>
         <div className=' font-bold text-xl md:text-2xl'>Token Management</div>
         <div className='flex gap-4 items-center'>
           <div className='w-48 z-20 relative'>

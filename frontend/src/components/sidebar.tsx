@@ -180,7 +180,7 @@ const Sidebar: React.FC = () => {
             <div className='w-64 md:flex hidden shrink-0'/>
             <aside ref={asideRef} style={{zIndex: 101}} className={`bg-primary3 md:w-64 h-screen shadow-lg rounded-r-xl md:rounded-r-3xl flex-col pb-5 md:pb-10 shrink-0 fixed left-0 z-50 flex duration-300 ${isMenuOpen?'':'md:translate-x-0 translate-x-[-100%]'}`}>
                 <header className='p-4 md:h-40 md:items-center flex justify-center'>
-                    <div className='text-xl md:text-3xl orbitron text-center text-wrap' >Cyber<br/>Command</div>
+                    <div className='text-xl md:text-3xl orbitron text-center text-wrap' >Cyber <br className='hidden md:block'/>Command</div>
                 </header>
                 <div className='px-4 py-2'>
                     <div className='text-sm text-gray-400'>Product</div>
