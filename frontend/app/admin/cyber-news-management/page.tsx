@@ -17,7 +17,7 @@ import NotFound from '@/app/not-found'
 interface CyberNewsItem {
   id: number
   name: string
-  tag: string
+  tags: string[] // เปลี่ยนจาก tag (string) เป็น tags (array of tag names)
   createDate: string
 }
 
@@ -46,9 +46,7 @@ function CyberNewsManagement() {
         const formattedData: CyberNewsItem[] = data.map((item: any, index: number) => ({
           id: item.NewsID,
           name: item.title || '-',
-          tag: typeof item.tag === 'object' && item.tag !== null
-            ? item.tag.tagId // หรือ item.tag.tagName ถ้าอยากใช้ชื่อ
-            : item.tag || '-',
+          tags: Array.isArray(item.tags) ? item.tags : [], // รับ array ของ tagNames จาก backend
           createDate: item.createdAt || '-'
         }));
         setNewsDetailadmin(data);
@@ -145,12 +143,23 @@ function CyberNewsManagement() {
               ),
             },
             {
-              label: 'Tag',
-              key: 'tag',
-              render: (value: string) => (
-                <span className="text-xs sm:text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                  {value}
-                </span>
+              label: 'Tags',
+              key: 'tags',
+              render: (value: string[]) => (
+                <div className="max-w-70 flex flex-wrap gap-2">
+                  {value.length > 0 ? (
+                    value.map((tagName, index) => (
+                      <span
+                        key={index}
+                        className="text-xs sm:text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full "
+                      >
+                        {tagName}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-xs sm:text-sm text-gray-400">No tags</span>
+                  )}
+                </div>
               ),
             },
             {
@@ -164,7 +173,7 @@ function CyberNewsManagement() {
             },
           ]}
           data={allNews}
-          searchKeys={['name', 'tag', 'createDate']}
+          searchKeys={['name', 'tags', 'createDate']}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           showSearch={false}

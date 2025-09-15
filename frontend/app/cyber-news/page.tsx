@@ -19,28 +19,33 @@ export default function CyberNews() {
 
   const { permissions } = usePermissions()
 
-
   useEffect(() => {
     const fetchNews = async () => {
       const data = await getAllCyberNews();
       setNewsDetail(data);
       setLoading(false);
       setDetailID(data[0]?.NewsID);
-      console.log(data);
+      console.log('Fetched news data:', data); // เพิ่ม log เพื่อดูข้อมูล
     };
     fetchNews();
   }, []);
 
   useEffect(() => {
     const lowerCaseTerm = searchTerm.toLowerCase();
-    const filtered = newsDetail.filter((news) =>
-      news.title?.toLowerCase().includes(lowerCaseTerm) ||
-      news.date?.toLowerCase().includes(lowerCaseTerm) ||
-      news.category?.toLowerCase().includes(lowerCaseTerm)
-    );
+    const filtered = newsDetail.filter((news) => {
+      // ค้นหาใน title และ date
+      const titleMatch = news.title?.toLowerCase().includes(lowerCaseTerm);
+      const dateMatch = news.date?.toLowerCase().includes(lowerCaseTerm);
+      
+      // ค้นหาใน tags array
+      const tagsMatch = news.tags && Array.isArray(news.tags) 
+        ? news.tags.some((tag: string) => tag.toLowerCase().includes(lowerCaseTerm))
+        : false;
+      
+      return titleMatch || dateMatch || tagsMatch;
+    });
     setFilteredNews(filtered);
   }, [searchTerm, newsDetail]);
-
 
   if ((permissions && permissions !== 'no_permissions' && permissions !== null && !permissions.cyberNews)|| permissions === null) {
     return <NotFound/>;
@@ -79,7 +84,7 @@ export default function CyberNews() {
               imageUrl={news.imgUrl}
               title={news.title}
               date={news.createdAt}
-              category={news.tag}
+              tags={news.tags || []} // เปลี่ยนจาก category เป็น tags
             />
           ))
         ) : (

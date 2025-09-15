@@ -6,7 +6,6 @@ import { Icon } from '@iconify/react';
 import { fetchCyberNewsDetail } from '@/src/modules/cyber-news';
 import NotFound from '@/app/not-found';
 
-
 export default function CyberNewsDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -40,6 +39,7 @@ export default function CyberNewsDetailPage() {
         }
         setNewsDetail(data);
         setLoading(false);
+        console.log('Detail data:', data); // เพิ่ม log เพื่อดูข้อมูล tags
       } catch (err) {
         console.error(err);
         setNotFound(true);
@@ -76,6 +76,20 @@ export default function CyberNewsDetailPage() {
     return `${day}/${month}/${year}`;
   };
 
+  // ดึง tags จาก newsDetail
+  const getTags = () => {
+    if (newsDetail.tagNames && Array.isArray(newsDetail.tagNames)) {
+      return newsDetail.tagNames;
+    } else if (newsDetail.tags && Array.isArray(newsDetail.tags)) {
+      return newsDetail.tags;
+    } else if (newsDetail.tag) {
+      return [newsDetail.tag];
+    }
+    return [];
+  };
+
+  const tags = getTags();
+
   return (
     <div className="w-full h-full flex flex-col px-4 py-4 md:px-10 md:py-10">
       <div className="w-full pt-2 sm:pt-6">
@@ -92,15 +106,26 @@ export default function CyberNewsDetailPage() {
           </h1>
         </div>
 
-        {/* Date & Tag */}
+        {/* Date & Tags */}
         <div className="flex flex-wrap items-center text-xs sm:text-sm text-gray-500 gap-2 mb-2 justify-end">
           <span>
             {formatDate(newsDetail.createdAt)}
           </span>
-          <span className="mx-1 hidden sm:inline">|</span>
-          <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-xs break-all">
-            {newsDetail.tag?.tagName || newsDetail.tagName || newsDetail.tag}
-          </span>
+          {tags.length > 0 && (
+            <>
+              <span className="mx-1 hidden sm:inline">|</span>
+              <div className="flex flex-wrap gap-1 items-center">
+                {tags.map((tag: string, index: number) => (
+                  <span
+                    key={index}
+                    className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs font-medium"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Image */}

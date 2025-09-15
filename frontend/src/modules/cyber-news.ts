@@ -34,7 +34,7 @@ export const uploadNewsImage = async (file: File): Promise<string | null> => {
 // สร้างข่าวใหม่
 export const createCyberNews = async (newsData: {
   title: string;
-  tag: string;
+  tags: any[]; // เปลี่ยนจาก tag (string) เป็น tags (array)
   Summary: string;
   Detail: string;
   Impact: string;

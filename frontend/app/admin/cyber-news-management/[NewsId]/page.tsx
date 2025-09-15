@@ -49,7 +49,7 @@ export default function CyberNewsManagement() {
   // State
   const [file, setFile] = useState<File | null>(null)
   const [name, setName] = useState('');
-  const [tag, setTag] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [summary, setSummary] = useState('');
   const [details, setDetails] = useState('');
   const [impact, setImpact] = useState('');
@@ -59,20 +59,58 @@ export default function CyberNewsManagement() {
   const [imageUrl, setImageUrl] = useState('');
   const [notFound, setNotFound] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [showTagDropdown, setShowTagDropdown] = useState(false);
   const summaryRef = useRef<HTMLTextAreaElement>(null);
   const detailsRef = useRef<HTMLTextAreaElement>(null);
   const impactRef  = useRef<HTMLTextAreaElement>(null);
   const adviceRef  = useRef<HTMLTextAreaElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  
   useAutosizeTextArea(summaryRef.current, summary);
   useAutosizeTextArea(detailsRef.current,  details);
   useAutosizeTextArea(impactRef.current,   impact);
   useAutosizeTextArea(adviceRef.current,   advice);
+
+  // Handle outside click to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowTagDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Handle tag selection
+  const handleTagSelect = (tagName: string) => {
+    if (!selectedTags.includes(tagName)) {
+      setSelectedTags([...selectedTags, tagName]);
+    }
+    setShowTagDropdown(false);
+  };
+
+  // Handle tag removal
+  const handleTagRemove = (tagName: string) => {
+    setSelectedTags(selectedTags.filter(tag => tag !== tagName));
+  };
+
+  // Get tagIds from selected tagNames
+  const getSelectedTagIds = () => {
+    return selectedTags.map(tagName => {
+      const tag = tags.find(t => t.tagName === tagName);
+      return tag ? tag.tagId : null;
+    }).filter(Boolean);
+  };
   
 
 // Store the original data for change detection
 const [originalData, setOriginalData] = useState({
   name: '',
-  tag: '',
+  selectedTags: [] as string[],
   summary: '',
   details: '',
   impact: '',
@@ -84,7 +122,7 @@ const [originalData, setOriginalData] = useState({
 const hasChanges = () => {
   return (
     name !== originalData.name ||
-    tag !== originalData.tag ||
+    JSON.stringify(selectedTags.sort()) !== JSON.stringify(originalData.selectedTags.sort()) ||
     summary !== originalData.summary ||
     details !== originalData.details ||
     impact !== originalData.impact ||
@@ -113,9 +151,19 @@ const hasChanges = () => {
             setDataLoaded(true);
             return;
           }
+          // Convert tags from backend format to tag names array
+          let tagNames: string[] = [];
+          if (data.tagNames && Array.isArray(data.tagNames)) {
+            tagNames = data.tagNames;
+          } else if (data.tags && Array.isArray(data.tags)) {
+            tagNames = data.tags;
+          } else if (data.tag) {
+            tagNames = [data.tag];
+          }
+          
           const initialData = {
             name: data.title || '',
-            tag: data.tag || data.category || '',
+            selectedTags: tagNames,
             summary: data.Summary || '',
             details: data.Detail || '',
             impact: data.Impact || '',
@@ -124,7 +172,7 @@ const hasChanges = () => {
           };
           
           setName(initialData.name);
-          setTag(initialData.tag);
+          setSelectedTags(initialData.selectedTags);
           setSummary(initialData.summary);
           setDetails(initialData.details);
           setImpact(initialData.impact);
@@ -153,16 +201,16 @@ const hasChanges = () => {
 
   // Update handler
   const handleUpdate = async () => {
-    // ตรวจสอบว่ากรอกครบทุกช่อง
+    // ตรวจสอบว่ากรอกครับทุกช่อง
     if (
       !name.trim() ||
-      !tag.trim() ||
+      selectedTags.length === 0 ||
       !summary.trim() ||
       !details.trim() ||
       !impact.trim() ||
       !advice.trim()
     ) {
-      alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+      alert('กรุณากรอกข้อมูลให้ครบทุกช่อง และเลือกอย่างน้อย 1 แท็ก');
       return;
     }
 
@@ -174,7 +222,7 @@ const hasChanges = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: name,
-          tag,
+          tags: getSelectedTagIds(), // ส่งเป็น array ของ tagId
           Summary: summary,
           Detail: details,
           Impact: impact,
@@ -183,6 +231,25 @@ const hasChanges = () => {
         }),
       });
       if (res.ok) {
+        const updatedData = await res.json();
+      
+        if (updatedData.tagNames && Array.isArray(updatedData.tagNames)) {
+          // อัปเดต selectedTags ด้วยข้อมูลใหม่จาก backend
+          setSelectedTags(updatedData.tagNames);
+          
+          // อัปเดต originalData เพื่อให้ change detection ทำงานถูกต้อง
+          const newOriginalData = {
+            name: updatedData.title || name,
+            selectedTags: updatedData.tagNames,
+            summary: updatedData.Summary || summary,
+            details: updatedData.Detail || details,
+            impact: updatedData.Impact || impact,
+            advice: updatedData.Advice || advice,
+            imageUrl: updatedData.imgUrl || imageUrl
+          };
+          setOriginalData(newOriginalData);
+        }
+        
         router.push('/admin/cyber-news-management');
       } else {
         alert('เกิดข้อผิดพลาดในการอัปเดตข้อมูล');
@@ -315,21 +382,66 @@ useEffect(() => {
               onChange={e => setName(e.target.value)}
             />
           </div>
-            <div>
-            <label className="font-medium">Tag</label>
-            <div className='grow-0 z-30 w-full mt-2'>
-              <Dropdown 
-              items={tags.map(item => item.tagName)} 
-              placeholder='Select Tag' 
-              setValue={setTag} 
-              value={
-                // แสดง tagName แทน tagId
-                tags.find(t => t.tagId === tag)?.tagName || tag
-              }
-              haveIcon={false}
-              />
+          <div>
+            <label className="text-base sm:text-lg font-medium">Tags</label>
+            <div ref={dropdownRef} className='grow-0 z-30 w-full mt-2 relative'>
+              {/* Selected Tags Display */}
+              <div className="min-h-[42px] w-full border border-gray-300 rounded-lg md:rounded-xl px-3 py-2 flex flex-wrap gap-2 items-center cursor-pointer"
+                   onClick={() => setShowTagDropdown(!showTagDropdown)}>
+                {selectedTags.length > 0 ? (
+                  selectedTags.map((tagName, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-lg text-sm"
+                    >
+                      {tagName}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleTagRemove(tagName);
+                        }}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        <Icon icon="mdi:close" width="14" height="14" />
+                      </button>
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-gray-400">Select Tags</span>
+                )}
+                <div className="ml-auto">
+                  <Icon icon={showTagDropdown ? "mdi:chevron-up" : "mdi:chevron-down"} width="20" height="20" />
+                </div>
+              </div>
+
+              {/* Dropdown */}
+              {showTagDropdown && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border cursor-pointer border-gray-300 rounded-lg md:rounded-xl shadow-lg max-h-48 overflow-y-auto z-40">
+                  {tags.map((tag, index) => {
+                    const isSelected = selectedTags.includes(tag.tagName);
+                    return (
+                      <div
+                        key={index}
+                        className={`px-3 py-2 cursor-pointer hover:bg-gray-100 flex items-center justify-between ${
+                          isSelected ? 'bg-blue-50 text-blue-700' : ''
+                        }`}
+                        onClick={() => handleTagSelect(tag.tagName)}
+                      >
+                        <span>{tag.tagName}</span>
+                        {isSelected && (
+                          <Icon icon="mdi:check" width="16" height="16" className="text-blue-600 cursor-pointer" />
+                        )}
+                      </div>
+                    );
+                  })}
+                  {tags.length === 0 && (
+                    <div className="px-3 py-2 text-gray-500">No tags available</div>
+                  )}
+                </div>
+              )}
             </div>
-            </div>
+          </div>
         </div>
       </div>
 
@@ -452,8 +564,10 @@ useEffect(() => {
                 <div className='pl-2 text-sm md:text-base text-wrap'>{name}</div>
               </div>
               <div className='flex justify-between items-center'>
-                <div className='text-sm text-gray-500'>Tag:</div>
-                <div className='py-1 px-2 md:px-3 rounded-lg bg-gray-300 text-sm md:text-base max-w-[280px] overflow-x-auto whitespace-nowrap'>{tag}</div>
+                <div className='text-sm text-gray-500'>Tags:</div>
+                <div className='py-1 px-2 md:px-3 rounded-lg bg-gray-300 text-sm md:text-base max-w-[280px] overflow-x-auto whitespace-nowrap'>
+                  {selectedTags.length > 0 ? selectedTags.join(', ') : 'ไม่มีแท็ก'}
+                </div>
               </div>
             </div>
             <div className='border-b border-gray-200 mt-4 md:mt-10 mb-2 md:mb-5'/>
