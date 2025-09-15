@@ -16,6 +16,7 @@ import NotFound from '@/app/not-found'
 
 interface CyberNewsItem {
   id: number
+  index: number
   name: string
   tags: string[] // เปลี่ยนจาก tag (string) เป็น tags (array of tag names)
   createDate: string
@@ -45,6 +46,7 @@ function CyberNewsManagement() {
         const data = await getAllCyberNews();
         const formattedData: CyberNewsItem[] = data.map((item: any, index: number) => ({
           id: item.NewsID,
+          index: index + 1, // เพิ่ม index สำหรับลำดับที่
           name: item.title || '-',
           tags: Array.isArray(item.tags) ? item.tags : [], // รับ array ของ tagNames จาก backend
           createDate: item.createdAt || '-'
@@ -52,7 +54,8 @@ function CyberNewsManagement() {
         setNewsDetailadmin(data);
         setAllNews(formattedData);
         setDetailIDadmin(data[0]?.NewsID);
-        console.log(data);
+        console.log('Original data:', data);
+        console.log('Formatted data:', formattedData);
 
         // Fetch tags
         const tagList = await GetTag();
@@ -125,13 +128,17 @@ function CyberNewsManagement() {
           headers={[
             {
               label: 'No.',
-              key: 'id',
+              key: 'autoIndex',
               width: '60px',
-              render: (value: number) => (
-                <span className="font-mono text-sm md:text flex items-center justify-center">
-                  {value}
-                </span>
-              ),
+              render: (value: any, item: any) => {
+                // หาลำดับของ item ใน allNews array
+                const index = allNews.findIndex(news => news.id === item.id);
+                return (
+                  <span className="font-mono text-sm md:text-base flex items-center justify-center">
+                    {index + 1}
+                  </span>
+                );
+              },
             },
             {
               label: 'Name',
