@@ -149,7 +149,7 @@ function Features() {
   }, [searchTerm, newsDetail]);
 
   // ใช้เฉพาะ 3 ข่าวล่าสุด
-  const topThree = filteredNews.slice(0, 3);
+  const topThree = filteredNews.slice(-3);
 
   return (
     <section id="features" className="pt-10 pb-10 md:pt-0 md:pb-16">
@@ -185,8 +185,19 @@ function Features() {
                 )}
                 <div className="flex flex-1 flex-col p-4">
                   <div className='flex'>
-                    <div className="mb-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-primary1">
-                      {news.tag}
+                    <div className="flex flex-wrap gap-1 items-center">
+                      {/* TypeScript interfaces should not be declared inside JSX. Remove these interface definitions. */}
+
+                      {news.tags && news.tags.length > 0 && (
+                        news.tags.map((tag: string, index: number) => (
+                          <div
+                            key={index}
+                            className="mb-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-primary1"
+                          >
+                            {tag}
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
                   
