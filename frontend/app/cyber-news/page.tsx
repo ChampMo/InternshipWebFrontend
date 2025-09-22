@@ -43,7 +43,7 @@ export default function CyberNews() {
 
   useEffect(() => {
     const lowerCaseTerm = searchTerm.toLowerCase();
-    const filtered = newsDetail.filter((news) => {
+    let filtered = newsDetail.filter((news) => {
       // ค้นหาใน title และ date
       const titleMatch = news.title?.toLowerCase().includes(lowerCaseTerm);
       const dateMatch = news.date?.toLowerCase().includes(lowerCaseTerm);
@@ -55,8 +55,38 @@ export default function CyberNews() {
       
       return titleMatch || dateMatch || tagsMatch;
     });
+
+    // Filter by date range using createdAt
+    if (dateSelect.start || dateSelect.end) {
+      filtered = filtered.filter((news) => {
+        const newsDate = new Date(news.createdAt);
+        
+        if (dateSelect.start && dateSelect.end) {
+          // Both start and end dates are selected
+          const startOfDay = new Date(dateSelect.start);
+          startOfDay.setHours(0, 0, 0, 0);
+          const endOfDay = new Date(dateSelect.end);
+          endOfDay.setHours(23, 59, 59, 999);
+          
+          return newsDate >= startOfDay && newsDate <= endOfDay;
+        } else if (dateSelect.start) {
+          // Only start date is selected
+          const startOfDay = new Date(dateSelect.start);
+          startOfDay.setHours(0, 0, 0, 0);
+          return newsDate >= startOfDay;
+        } else if (dateSelect.end) {
+          // Only end date is selected
+          const endOfDay = new Date(dateSelect.end);
+          endOfDay.setHours(23, 59, 59, 999);
+          return newsDate <= endOfDay;
+        }
+        
+        return true;
+      });
+    }
+
     setFilteredNews(filtered);
-  }, [searchTerm, newsDetail]);
+  }, [searchTerm, newsDetail, dateSelect]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
