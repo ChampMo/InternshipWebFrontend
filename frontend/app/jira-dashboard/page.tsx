@@ -74,8 +74,19 @@ function JiraDashboard() {
   const [showCalendarEnd, setShowCalendarEnd] = useState(false);
   const [barChartData, setBarChartData] = useState<any[]>([]);
   const [infoPopUp, setInfoPopUp] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   console.log('infoPopUp--', infoPopUp);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setRefresh(prev => !prev);
+    }, 5 * 60 * 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+
   useEffect(() => {
     
     const fetchData = async () => {
@@ -115,7 +126,7 @@ function JiraDashboard() {
     };
     fetchData();
     
-  }, []);
+  }, [refresh]);
   
   useEffect(() => {
     setPeriod('Last 7D');
@@ -210,7 +221,7 @@ function JiraDashboard() {
 
 
 
-    useEffect(() => {
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
         setPopupSelectDate(false);
@@ -587,7 +598,7 @@ console.log('ticket',ticket);
                     <div className='relative mt-4 rounded-xl cursor-pointer'>
                       <input 
                       type='text'
-                      value={startDate ? new Date(startDate).toLocaleDateString('en-GB') : ''}
+                      value={startDate ? setFormatDate(new Date(startDate)) : ''}
                       readOnly
                       className={` border bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${startDate?'border-primary1':'border-gray-300'}`}
                       placeholder='Select date'
@@ -629,7 +640,7 @@ console.log('ticket',ticket);
                     <div className='relative mt-4 rounded-lg md:rounded-xl cursor-pointer'>
                       <input 
                       type='text'
-                      value={endDate ? new Date(endDate).toLocaleDateString('en-GB') : ''}
+                      value={endDate ? setFormatDate(new Date(endDate)) : ''}
                       readOnly
                       className={` border bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder cursor-pointer ${endDate?'border-primary1':'border-gray-300'}`}
                       placeholder='Select date'
