@@ -7,7 +7,7 @@ import GlareHover from '@/src/lib/GlareHover/GlareHover' // 🔁 แก้ path 
 interface DefultButtonProps {
   active: boolean
   loading: boolean
-  onClick?: () => void
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   iconHover?: boolean
   highCustom?: string
   children?: React.ReactNode

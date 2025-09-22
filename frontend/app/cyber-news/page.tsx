@@ -27,7 +27,7 @@ export default function CyberNews() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showCalendarEnd, setShowCalendarEnd] = useState(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date >(new Date());
   const [dateSelect, setDateSelect] = useState<{ start: Date | null; end: Date | null }>({ start: null, end: null });
 
   useEffect(() => {
@@ -106,13 +106,17 @@ export default function CyberNews() {
     <div className="w-full flex flex-col overflow-auto h-full px-4 py-4 md:px-10 md:py-10">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-3 md:mb-6 gap-3">
         <h1 className="text-xl md:text-2xl font-bold">CyberNews</h1>
-        <div className='flex gap-4'>
-          {(dateSelect.start !== null || dateSelect.end !== null || searchTerm !== '') && <Icon icon="maki:cross" width="30" height="30" className='h-10 text-red-500 cursor-pointer' onClick={()=>{setDateSelect({ start: null, end: null }), setStartDate(null), setEndDate(null), setSearchTerm('')}} />}
-          <div className=' z-20 relative cursor-pointer' onClick={() => setPopupSelectDate(true)}>
+        <div className={`flex gap-4 md:flex-row  ${dateSelect.start !== null || dateSelect.end !== null || searchTerm !== '' ? 'flex-col' : 'flex-row'  }`}>
+          <div className='flex gap-4'>
+          {(dateSelect.start !== null || dateSelect.end !== null || searchTerm !== '') && <Icon icon="maki:cross" width="30" height="30" className='h-10 text-red-500 cursor-pointer' onClick={()=>{setDateSelect({ start: null, end: null }), setStartDate(null), setEndDate(new Date()), setSearchTerm('')}} />}
+          <div className=' z-20 relative cursor-pointer overflow-visible' onClick={() => setPopupSelectDate(true)}>
             <Icon icon="mingcute:filter-line" width="24" height="24" className={` absolute left-2 top-2 z-40 ${(dateSelect.start === null && dateSelect.end === null )?'text-gray-400':'text-primary1'}`}/>
-            <div className={` rounded-lg md:rounded-xl h-10 flex items-center border pl-10 ${(dateSelect.start === null && dateSelect.end === null )?'border-gray-300 text-gray-400 w-8':' border-primary1 text-primary1 w-64'}`}>{(dateSelect.start === null && dateSelect.end === null ) ? '' : (dateSelect.start ? setFormatDate(dateSelect.start) : '') + ' - ' + (dateSelect.end ? setFormatDate(dateSelect.end) : '')}</div>
-            <div ref={popupRef} className={`absolute text-sm top-0 -right-10 md:right-10 z-40 w-full md:w-80 rounded-lg md:rounded-xl border border-gray-400 bg-white flex flex-col ${popupSelectDate ? 'block' : 'hidden'}`}>
-              <div className={`h-74 opacity-100 duration-300 px-6`}>
+            <div className={` rounded-lg md:rounded-xl h-10 flex items-center border ${(dateSelect.start === null && dateSelect.end === null )?'border-gray-300 text-gray-400 w-10':'pl-10 border-primary1 text-primary1 w-64'}`}>{(dateSelect.start === null && dateSelect.end === null ) ? '' : (dateSelect.start ? setFormatDate(dateSelect.start) : '') + ' - ' + (dateSelect.end ? setFormatDate(dateSelect.end) : '')}</div>
+            <div
+              ref={popupRef}
+              className={`fixed md:absolute text-sm top-28 md:top-0 left-1/2 md:left-auto md:right-0 transform md:transform-none -translate-x-1/2 md:translate-x-0 shrink-0 z-50 w-[95vw] max-w-[400px] md:w-80 rounded-lg md:rounded-xl border border-gray-400 bg-white flex flex-col px-2 md:px-0 ${popupSelectDate ? 'block' : 'hidden'}`}
+            >
+              <div className={`h-74 opacity-100 duration-300 px-2 md:px-6`}>
                 <div className=' mt-3 flex flex-col'>
                   <div className='font-semibold text-gray-500 text-lg mb-4'>Filter by date</div>
                   <div className='text-sm text-gray-500 flex items-end gap-2'>
@@ -201,7 +205,7 @@ export default function CyberNews() {
                   </div>
                   <div className='mt-4 mb-4 flex justify-end'>
                     <DefultButton 
-                      onClick={endDate !== null && startDate !== null ?()=>{handleSetNews()}:()=>{}} 
+                      onClick={endDate !== null && startDate !== null ? (e: React.MouseEvent<HTMLButtonElement>) => { e.stopPropagation(); handleSetNews(); } : () => {}} 
                       active={endDate !== null && startDate !== null} loading={false}>
                         Select
                     </DefultButton>
@@ -210,13 +214,14 @@ export default function CyberNews() {
               </div>
             </div>
           </div>
+        </div>
           <div className={` border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
             <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
             <input 
             type='text'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' 
+            className='outline-none w-full h-full pr-2 pl-10 z-10 rounded-xl' 
             placeholder='Search by title, tag'/>
           </div>
         </div>
