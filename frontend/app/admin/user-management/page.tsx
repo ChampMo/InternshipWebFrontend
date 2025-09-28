@@ -171,7 +171,7 @@ function UserManagement() {
     const handleCreateAccount = async () => {
         try {
             setLoading(true)
-            const result: { message: string; sendMail?: boolean } = await CreateAccount({ email: createEmail, role: createRole, company: createCompany, host: window.location.hostname })
+            const result: { message: string; sendMail?: boolean } = await CreateAccount({ email: createEmail, role: createRole, company: createCompany, host: window.location.hostname+'/signin' })
             console.log('Create account result:', result)
             if (result && result.message === 'Email already registered') {
                 notifyError('Email already registered')
@@ -220,7 +220,7 @@ function UserManagement() {
     const handleResendEmail = async () => {
         try {
             setLoading2(true)
-            const result: { message: string; sendMail?: boolean } = await ReCreateAccount({ email: accounts.email, role: accounts.role, company: accounts.company, host: window.location.hostname })
+            const result: { message: string; sendMail?: boolean } = await ReCreateAccount({ email: accounts.email, role: accounts.role, company: accounts.company, host: window.location.hostname+'/signin' })
             
             if (result && result.message === 'User registered successfully') {
                 setStatusCreateAccount('Email sent successfully')
