@@ -109,9 +109,9 @@ export default function CyberNews() {
         <div className={`flex gap-4 md:flex-row  ${dateSelect.start !== null || dateSelect.end !== null || searchTerm !== '' ? 'flex-col' : 'flex-row'  }`}>
           <div className='flex gap-4'>
           {(dateSelect.start !== null || dateSelect.end !== null || searchTerm !== '') && <Icon icon="maki:cross" width="30" height="30" className='h-10 text-red-500 cursor-pointer' onClick={()=>{setDateSelect({ start: null, end: null }), setStartDate(null), setEndDate(new Date()), setSearchTerm('')}} />}
-          <div className=' z-20 relative cursor-pointer overflow-visible' onClick={() => setPopupSelectDate(true)}>
+          <div className={` z-20 relative cursor-pointer overflow-visible ${(dateSelect.start === null && dateSelect.end === null )?' w-10':' w-full md:w-64'}`} onClick={() => setPopupSelectDate(true)}>
             <Icon icon="mingcute:filter-line" width="24" height="24" className={` absolute left-2 top-2 z-40 ${(dateSelect.start === null && dateSelect.end === null )?'text-gray-400':'text-primary1'}`}/>
-            <div className={` rounded-lg md:rounded-xl h-10 flex items-center border ${(dateSelect.start === null && dateSelect.end === null )?'border-gray-300 text-gray-400 w-10':'pl-10 border-primary1 text-primary1 w-64'}`}>{(dateSelect.start === null && dateSelect.end === null ) ? '' : (dateSelect.start ? setFormatDate(dateSelect.start) : '') + ' - ' + (dateSelect.end ? setFormatDate(dateSelect.end) : '')}</div>
+            <div className={` rounded-lg md:rounded-xl h-10 flex items-center border ${(dateSelect.start === null && dateSelect.end === null )?'border-gray-300 text-gray-400':'pl-10 border-primary1 text-primary1 w-full '}`}>{(dateSelect.start === null && dateSelect.end === null ) ? '' : (dateSelect.start ? setFormatDate(dateSelect.start) : '') + ' - ' + (dateSelect.end ? setFormatDate(dateSelect.end) : '')}</div>
             <div
               ref={popupRef}
               className={`fixed md:absolute text-sm top-28 md:top-0 left-1/2 md:left-auto md:right-0 transform md:transform-none -translate-x-1/2 md:translate-x-0 shrink-0 z-50 w-[95vw] max-w-[400px] md:w-80 rounded-lg md:rounded-xl border border-gray-400 bg-white flex flex-col px-2 md:px-0 ${popupSelectDate ? 'block' : 'hidden'}`}

@@ -1,7 +1,7 @@
 import Port from '@/port';
 
 export const CreateAccount = async (
-  data: { email: string, role: string, company: string }
+  data: { email: string, role: string, company: string, host: string }
 ): Promise<{ message: string }> => {
   const response = await fetch(`${Port.BASE_URL}/signup`, {
     method: 'POST',

@@ -48,6 +48,7 @@ function Settings() {
         }
         if (result && Array.isArray(result)) {
           setRoleItems(result)
+          console.log(result)
         }
         if (companyResult && Array.isArray(companyResult)) {
           setCompanyItems(companyResult)
@@ -264,7 +265,10 @@ function Settings() {
                   <span className="font-medium text-gray-800 text-sm group-hover:text-blue-700 transition">
                     {role.name || role.roleName || '-'}
                   </span>
-                    <button
+                  <div className=' flex items-center gap-2 '>
+                    {role.roleName === 'Admin' 
+                    ?<Icon icon="si:lock-line" className='m-2 shrink-0 text-red-400' width="20" height="20" />
+                    :<button
                     onClick={() => {
                       const roleId = role.roleId || role.id || role._id;
                       if (roleId) {
@@ -276,8 +280,9 @@ function Settings() {
                     className="group relative p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-green-200 hover:shadow-md"
                     title="Edit Role"
                     >
-                    <Edit className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
-                    </button>
+                      <Edit className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+                    </button>}
+                  </div>
                 </div>
               ))}
             </div>
