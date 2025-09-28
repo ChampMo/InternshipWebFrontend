@@ -16,7 +16,7 @@ export const CreateAccount = async (
 }
 
 export const ReCreateAccount = async (
-  data: { email: string, role: string, company: string }
+  data: { email: string, role: string, company: string, host: string }
 ): Promise<{ message: string }> => {
   const response = await fetch(`${Port.BASE_URL}/resignup`, {
     method: 'POST',

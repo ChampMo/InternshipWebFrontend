@@ -219,7 +219,7 @@ function UserManagement() {
     const handleResendEmail = async () => {
         try {
             setLoading2(true)
-            const result: { message: string; sendMail?: boolean } = await ReCreateAccount({ email: accounts.email, role: accounts.role, company: accounts.company })
+            const result: { message: string; sendMail?: boolean } = await ReCreateAccount({ email: accounts.email, role: accounts.role, company: accounts.company, host: window.location.hostname+'/signin' })
             
             if (result && result.message === 'User registered successfully') {
                 setStatusCreateAccount('Email sent successfully')
