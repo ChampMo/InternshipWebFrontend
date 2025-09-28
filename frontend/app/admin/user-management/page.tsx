@@ -94,7 +94,6 @@ function UserManagement() {
 
 
     useEffect(() => {
-      console.log('window.location.hostname', window.location.hostname);
         const handleResize = () => {
             if (contentRef.current) {
                 setWidth(contentRef.current.scrollWidth);
@@ -172,7 +171,7 @@ function UserManagement() {
     const handleCreateAccount = async () => {
         try {
             setLoading(true)
-            const result: { message: string; sendMail?: boolean } = await CreateAccount({ email: createEmail, role: createRole, company: createCompany, host: window.location.hostname })
+            const result: { message: string; sendMail?: boolean } = await CreateAccount({ email: createEmail, role: createRole, company: createCompany, host: window.location.hostname+'/signin' })
 
             if (result && result.message === 'Email already registered') {
                 notifyError('Email already registered')
