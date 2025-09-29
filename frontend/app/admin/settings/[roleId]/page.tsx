@@ -56,7 +56,8 @@ export default function AddRolePage() {
     const [loading2, setLoading2] = useState(false)
     const { notifySuccess, notifyError, notifyInfo } = useToast()
     
-
+    const [existingRoles, setExistingRoles] = useState<string[]>([])
+    const [roleNameError, setRoleNameError] = useState('')
     const [roleName, setRoleName] = useState('')
     const [permissions, setPermissions] = useState({
     cyberNews: false,
@@ -87,10 +88,40 @@ export default function AddRolePage() {
     )
   }
 
+  // Check if form is valid (simplified - no real-time error checking)
+  const isFormValid = () => {
+    return hasChanges() && roleName.trim() !== ''
+  }
+
 
   const handleToggle = (key: string) => {
     setPermissions(prev => ({ ...prev, [key]: !prev[key as keyof typeof prev] }))
   }
+
+  // Fetch existing roles for duplicate checking
+  useEffect(() => {
+    const fetchExistingRoles = async () => {
+      try {
+        const response = await GetRole();
+        // Check if response has data array
+        const roles = Array.isArray(response) ? response : ((response as any).data || []);
+        const roleNames = roles
+          .filter((role: any) => role._id !== roleId) // Exclude current role
+          .map((role: any) => role.roleName.toLowerCase());
+        setExistingRoles(roleNames);
+      } catch (error) {
+        console.error('Failed to fetch existing roles:', error);
+      }
+    };
+    fetchExistingRoles();
+  }, [roleId]);
+
+  // Handle role name change (simple without real-time validation)
+  const handleRoleNameChange = (value: string) => {
+    setRoleName(value);
+    // Clear any previous error when user starts typing
+    setRoleNameError('');
+  };
 
   useEffect(() => {
     if (!roleId) {
@@ -132,24 +163,39 @@ export default function AddRolePage() {
   }, [roleId]);
 
   const handleSave = async () => {
-    setLoading(true);
     // Validate role name
     if (!roleName.trim()) {
-      alert('Please enter a role name.');
+      notifyError('Please enter a role name');
       return;
     }
 
+    // Check for duplicate before saving
+    if (existingRoles.includes(roleName.toLowerCase())) {
+      notifyError('This role name already exists');
+      return;
+    }
+
+    setLoading(true);
     try {
-      await PutRole(roleId, {
+      const res = await PutRole(roleId, {
         roleName: roleName,
         ...permissions
       });
-      notifySuccess(`Role ${roleName} updated successfully`);
-      router.push('/admin/settings');
-    } catch (error) {
-      notifyError('An error occurred while updating the role');
+      if (res.message === 'Role updated successfully') {
+        notifySuccess(`Role ${roleName} updated successfully`);
+        router.push('/admin/settings');
+      } else {
+        notifyError(res.message || 'Failed to update role');
+      }
+    } catch (error: any) {
+      // Handle specific error messages from backend
+      if (error.message && error.message.includes('already exists')) {
+        notifyError('This role name already exists');
+      } else {
+        notifyError('An error occurred while updating the role');
+      }
       console.error(error);
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -217,7 +263,7 @@ export default function AddRolePage() {
               placeholder="Enter role name"
               className="w-full border border-blue-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-200"
               value={roleName}
-              onChange={e => setRoleName(e.target.value)}
+              onChange={e => handleRoleNameChange(e.target.value)}
             />
           </div>
 
@@ -329,12 +375,12 @@ export default function AddRolePage() {
             </PopUp>
             <button
               className={`px-8 py-2 rounded-lg gap-1 md:rounded-xl transition-colors duration-200 flex items-center ${
-                hasChanges() 
+                isFormValid()
                   ? 'bg-primary1 text-white hover:bg-[#0071cd] cursor-pointer' 
                   : 'bg-gray-400 text-white cursor-not-allowed'
               }`}
-              onClick={hasChanges() ? handleSave : undefined}
-              disabled={!hasChanges()}
+              onClick={handleSave}
+              disabled={loading}
             >
               Update
               {loading && <ClipLoader

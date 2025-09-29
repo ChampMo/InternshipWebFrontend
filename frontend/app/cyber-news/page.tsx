@@ -33,10 +33,15 @@ export default function CyberNews() {
   useEffect(() => {
     const fetchNews = async () => {
       const data = await getAllCyberNews();
-      setNewsDetail(data);
+      // เรียงจากใหม่สุดไปเก่าสุด (descending order)
+      const sortedData = data.sort((a: any, b: any) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+      
+      setNewsDetail(sortedData);
       setLoading(false);
-      setDetailID(data[0]?.NewsID);
-      console.log('Fetched news data:', data); // เพิ่ม log เพื่อดูข้อมูล
+      setDetailID(sortedData[0]?.NewsID);
+      console.log('Fetched news data:', sortedData);
     };
     fetchNews();
   }, []);

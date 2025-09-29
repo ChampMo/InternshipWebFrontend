@@ -65,11 +65,24 @@ function Settings() {
   const [isTagLoading, setIsTagLoading] = React.useState(false)
 
   const handleAddTag = async () => {
-    if (!newTag.trim()) return
+    if (!newTag.trim()) {
+      notifyError('Please enter a tag name')
+      return
+    }
+
+    // Check for duplicate tag name (case insensitive)
+    const existingTag = tagItems.find(tag => 
+      tag.tagName.toLowerCase() === newTag.toLowerCase()
+    )
+    if (existingTag) {
+      notifyError('This tag name already exists')
+      return
+    }
+
     setIsTagLoading(true)
     try {
       const result = await PostTag({ tagName: newTag })
-      if (result) {
+      if (result.message === 'Tag created successfully') {
         const tagResult = await GetTag()
         if (tagResult && Array.isArray(tagResult)) {
           setTagItems(tagResult)
@@ -77,9 +90,15 @@ function Settings() {
         notifySuccess(`Tag "${newTag}" added successfully`)
         setNewTag('')
         setIsAddingTag(false)
+      } else {
+        notifyError(result.message || 'Failed to create tag')
       }
-    } catch (error) {
-      notifyError('Failed to add tag. Please check your network connection and try again.')
+    } catch (error: any) {
+      if (error.message && error.message.includes('already exists')) {
+        notifyError('This tag name already exists')
+      } else {
+        notifyError('An error occurred while creating the tag')
+      }
       console.error('Error adding tag:', error)
     } finally {
       setIsTagLoading(false)
@@ -89,11 +108,37 @@ function Settings() {
   const [newCompany, setNewCompany] = React.useState('')
   const [isCompanyLoading, setIsCompanyLoading] = React.useState(false)
   const handleAddCompany = async () => {
-    if (!newCompany.trim() || !newCompanyKey.trim()) return
+    if (!newCompany.trim()) {
+      notifyError('Please enter a company name')
+      return
+    }
+    if (!newCompanyKey.trim()) {
+      notifyError('Please enter a company key')
+      return
+    }
+
+    // Check for duplicate company name (case insensitive)
+    const existingCompany = companyItems.find(company => 
+      company.companyName.toLowerCase() === newCompany.toLowerCase()
+    )
+    if (existingCompany) {
+      notifyError('This company name already exists')
+      return
+    }
+
+    // Check for duplicate company key (case insensitive)
+    const existingCompanyKey = companyItems.find(company => 
+      company.companyKey.toLowerCase() === newCompanyKey.toLowerCase()
+    )
+    if (existingCompanyKey) {
+      notifyError('This company key already exists')
+      return
+    }
+
     setIsCompanyLoading(true)
     try {
       const result = await PostCompany({ companyName: newCompany, companyKey: newCompanyKey })
-      if (result) {
+      if (result.message === 'Company created successfully') {
         const companyResult = await GetCompany()
         if (companyResult && Array.isArray(companyResult)) {
           setCompanyItems(companyResult)
@@ -102,10 +147,16 @@ function Settings() {
         setNewCompany('')
         setNewCompanyKey('')
         setIsAddingCompany(false)
+      } else {
+        notifyError(result.message || 'Failed to create company')
       }
-    } catch (e) {
-      notifyError('Failed to add company. Please check your network connection and try again.')
-      console.error('Error adding company:', e)
+    } catch (error: any) {
+      if (error.message && error.message.includes('already exists')) {
+        notifyError('This company name or key already exists')
+      } else {
+        notifyError('An error occurred while creating the company')
+      }
+      console.error('Error adding company:', error)
     } finally {
       setIsCompanyLoading(false)
     }
@@ -116,35 +167,67 @@ function Settings() {
   const [editingTagIdx, setEditingTagIdx] = React.useState<number | null>(null)
   const [editingTagName, setEditingTagName] = React.useState('')
   const handleEditTag = async (idx: number) => {
-    if (!editingTagName.trim()) return
+    if (!editingTagName.trim()) {
+      notifyError('Please enter a tag name')
+      return
+    }
+
+    // Check for duplicate tag name (exclude current tag)
+    const existingTag = tagItems.find((tag, index) => 
+      index !== idx && tag.tagName.toLowerCase() === editingTagName.toLowerCase()
+    )
+    if (existingTag) {
+      notifyError('This tag name already exists')
+      return
+    }
+
     setIsTagLoading(true)
     try {
       const tag = tagItems[idx]
       const tagId = tag.tagId || tag.id || tag._id
       if (!tagId) {
-        alert('Tag ID not found. Cannot update tag.')
+        notifyError('Tag ID not found. Cannot update tag.')
         setIsTagLoading(false)
         return
       }
       const result = await PutTag(tagId, { tagName: editingTagName })
-      if (result) {
+      if (result.message === 'Tag updated successfully') {
         const tagResult = await GetTag()
         if (tagResult && Array.isArray(tagResult)) {
           setTagItems(tagResult)
         }
+        setEditingTagIdx(null)
+        setEditingTagName('')
+        notifySuccess('Tag updated successfully')
+      } else {
+        notifyError(result.message || 'Failed to update tag')
       }
-      setEditingTagIdx(null)
-      setEditingTagName('')
-      notifySuccess('Tag updated successfully')
-    } catch (error) {
-      notifyError('Failed to update tag. Please check your network connection and try again.')
+    } catch (error: any) {
+      if (error.message && error.message.includes('already exists')) {
+        notifyError('This tag name already exists')
+      } else {
+        notifyError('An error occurred while updating the tag')
+      }
       console.error('Error updating tag:', error)
     } finally {
       setIsTagLoading(false)
     }
   }
   const handleEditCompany = async (idx: number) => {
-    if (!editingCompanyName.trim()) return
+    if (!editingCompanyName.trim()) {
+      notifyError('Please enter a company name')
+      return
+    }
+
+    // Check for duplicate company name (exclude current company)
+    const existingCompany = companyItems.find((company, index) => 
+      index !== idx && company.companyName.toLowerCase() === editingCompanyName.toLowerCase()
+    )
+    if (existingCompany) {
+      notifyError('This company name already exists')
+      return
+    }
+
     setIsCompanyLoading(true)
     try {
       const company = companyItems[idx]
@@ -155,17 +238,23 @@ function Settings() {
         return
       }
       const result = await PutCompany({ companyId, companyName: editingCompanyName })
-      if (result) {
+      if (result.message === 'Company updated successfully') {
         const companyResult = await GetCompany()
         if (companyResult && Array.isArray(companyResult)) {
           setCompanyItems(companyResult)
         }
+        setEditingCompanyIdx(null)
+        setEditingCompanyName('')
+        notifySuccess('Company updated successfully')
+      } else {
+        notifyError(result.message || 'Failed to update company')
       }
-      setEditingCompanyIdx(null)
-      setEditingCompanyName('')
-      notifySuccess('Company updated successfully')
-    } catch (error) {
-      notifyError('Failed to update company. Please check your network connection and try again.')
+    } catch (error: any) {
+      if (error.message && error.message.includes('already exists')) {
+        notifyError('This company name already exists')
+      } else {
+        notifyError('An error occurred while updating the company')
+      }
       console.error('Error updating company:', error)
     } finally {
       setIsCompanyLoading(false)

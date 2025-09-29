@@ -189,11 +189,26 @@ function CyberNewsManagement() {
             <p className="text-gray-600 text-sm">Manage and organize cyber news articles</p>
           </div>
 
-          {/* Controls Section */}
-          <div className={`flex gap-4 md:flex-row  ${dateSelect.start !== null || dateSelect.end !== null || searchTerm !== '' ? 'flex-col' : 'flex-row'  }`}>
-            <div className='flex gap-4'>
-            {(dateSelect.start !== null || dateSelect.end !== null || searchTerm !== '') && <Icon icon="maki:cross" width="30" height="30" className='h-10 text-red-500 cursor-pointer' onClick={()=>{setDateSelect({ start: null, end: null }), setStartDate(null), setEndDate(new Date()), setSearchTerm('')}} />}
-            <div className=' z-20 relative cursor-pointer overflow-visible' onClick={() => setPopupSelectDate(true)}>
+          {/* Controls Section - Responsive layout */}
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
+            {/* Clear Filter Button - only show when filters are active */}
+            {(dateSelect.start !== null || dateSelect.end !== null || searchTerm !== '') && (
+              <div className="flex justify-center md:justify-start">
+                <Icon 
+                  icon="maki:cross" 
+                  width="30" 
+                  height="30" 
+                  className='h-10 text-red-500 cursor-pointer shrink-0' 
+                  onClick={()=>{setDateSelect({ start: null, end: null }), setStartDate(null), setEndDate(new Date()), setSearchTerm('')}} 
+                />
+              </div>
+            )}
+
+            {/* Filter and Search Row - Same line on mobile */}
+            <div className="flex items-center gap-3 justify-between">
+              <div className="flex items-center gap-3">
+              {/* Date Filter Button */}
+              <div className='z-20 relative cursor-pointer overflow-visible shrink-0' onClick={() => setPopupSelectDate(true)}>
               <Icon icon="mingcute:filter-line" width="24" height="24" className={` absolute left-2 top-2 z-40 ${(dateSelect.start === null && dateSelect.end === null )?'text-gray-400':'text-primary1'}`}/>
               <div className={` rounded-lg md:rounded-xl h-10 flex items-center border ${(dateSelect.start === null && dateSelect.end === null )?'border-gray-300 text-gray-400 w-10':'pl-10 border-primary1 text-primary1 w-64'}`}>{(dateSelect.start === null && dateSelect.end === null ) ? '' : (dateSelect.start ? setFormatDate(dateSelect.start) : '') + ' - ' + (dateSelect.end ? setFormatDate(dateSelect.end) : '')}</div>
               <div
@@ -298,25 +313,27 @@ function CyberNewsManagement() {
                 </div>
               </div>
             </div>
-          </div>
-            <div className={` border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 ${searchTerm?'border-primary1':'border-gray-300'}`}>
-              <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
-              <input 
-              type='text'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className='outline-none w-full h-full pr-2 pl-10 z-10 rounded-xl' 
-              placeholder='Search by title, tag'/>
-            </div>
-          </div>
 
-          {/* Add Button - Separate on mobile */}
-          <div className="flex justify-end">
-            <button 
-              onClick={() => handleClick()}
-              className='bg-primary1 hover:bg-[#0071cd] text-white px-8 py-2 rounded-lg transition-colors duration-200 flex items-center shrink-0 cursor-pointer'>
-              Add news
-            </button>
+              {/* Search Bar - keep original UI */}
+              <div className={`border rounded-lg md:rounded-xl h-10 w-full md:w-96 relative flex items-center md:gap-2 flex-1 ${searchTerm?'border-primary1':'border-gray-300'}`}>
+                <Icon icon="ic:round-search" width="30" height="30" className={`absolute left-2 ${searchTerm?'text-primary1':'text-gray-400'}`}/>
+                <input 
+                  type='text'
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className='outline-none w-full h-full pr-2 pl-10 z-10 rounded-xl' 
+                  placeholder='Search by title, tag'
+                />
+                </div>
+              </div>
+
+              {/* Add Button - smaller on mobile, no stretch */}
+              <button 
+                onClick={() => handleClick()}
+                className='bg-primary1 hover:bg-[#0071cd] text-white px-4 py-2 md:px-8 rounded-lg md:rounded-xl transition-colors duration-200 flex items-center shrink-0 cursor-pointer text-sm md:text-base'>
+                Add news
+              </button>
+            </div>
           </div>
         </div>
 
