@@ -177,7 +177,7 @@ export default function TechIntelligence() {
     URL.revokeObjectURL(url);
   };
 
-  if (permissions === 'no_permissions' || permissions === null) {
+  if ((permissions && permissions !== 'no_permissions' && permissions !== null && !permissions.ti) || permissions === null) {
     return <NotFound/>;
   }
 

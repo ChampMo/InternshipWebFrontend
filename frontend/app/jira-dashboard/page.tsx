@@ -469,8 +469,8 @@ console.log('ticket',ticket);
 
 
 
-  if (permissions === 'no_permissions' || permissions === null) {
-    return <NotFound/>;
+  if ((permissions && permissions !== 'no_permissions' && permissions !== null && !permissions.jira) || permissions === null) {
+    return <NotFound />;
   }
 
   const setFormatDate = (date: Date) => {

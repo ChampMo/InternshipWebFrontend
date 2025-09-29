@@ -451,7 +451,7 @@ function TokenManagement() {
     return date.toLocaleDateString('en-GB', options).replace(',', '');
   }
 
-  if (permissions === 'no_permissions' || permissions === null) {
+  if ((permissions && permissions !== 'no_permissions' && permissions !== null && !permissions.admin) || permissions === null) {
     return <NotFound/>;
   }
 

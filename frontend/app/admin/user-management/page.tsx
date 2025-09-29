@@ -383,7 +383,7 @@ function UserManagement() {
     }
   
 
-    if (permissions === 'no_permissions' || permissions === null) {
+    if ((permissions && permissions !== 'no_permissions' && permissions !== null && !permissions.admin) || permissions === null) {
       return <NotFound/>;
     }
 
