@@ -1,8 +1,9 @@
-import { env } from "process";
+
 
 const Port = {
   //  BASE_URL: 'http://localhost:8000/api',
-  BASE_URL: env.BASE_URL,
+  BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+  // BASE_URL: 'https://internship-web-backend.vercel.app/api'
 
 };
 
