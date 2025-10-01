@@ -50,7 +50,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         setPermissions(result)
         console.log("Permissions refreshed:", result)
       } else {
-        console.log('---------------------------------error------------------------------')
         if (typeof result === 'object' && result !== null && 'message' in result && (result as any).message === 'User not found') {
           localStorage.removeItem("userId")
           localStorage.removeItem("token")
