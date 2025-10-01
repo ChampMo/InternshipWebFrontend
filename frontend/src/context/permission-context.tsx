@@ -50,10 +50,20 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         setPermissions(result)
         console.log("Permissions refreshed:", result)
       } else {
-        setPermissions('no_permissions')
-        console.warn("Permissions not available:", result)
+        console.log('---------------------------------error------------------------------')
+        if (typeof result === 'object' && result !== null && 'message' in result && (result as any).message === 'User not found') {
+          localStorage.removeItem("userId")
+          localStorage.removeItem("token")
+          setPermissions(null)
+          console.warn("User not found, cleared userId and token from localStorage")
+        }else{
+          setPermissions('no_permissions')
+          console.warn("Permissions not available:", result)
+        }
+        
       }
     } catch (err) {
+      
       setPermissions('no_permissions')
       console.error("Failed to fetch permissions:", err)
     }
