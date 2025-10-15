@@ -86,13 +86,18 @@ function JiraDashboard() {
     return () => clearTimeout(timer);
   }, []);
 
+  const setFormatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+    return date.toLocaleDateString('en-GB', options).replace(',', '');
+  }
+
 
   useEffect(() => {
     
     const fetchData = async () => {
       const userId = localStorage.getItem('userId') || '';
       const tickets = await getAllJiraTickets(userId);
-      console.log('Fetched tickets:', tickets.message);
+      console.log('Fetched tickets:', tickets);
       if( tickets.message === "Company not found" || tickets.message === "Jira token has expired" || tickets.message === "Jira token not found" || tickets.message === "Failed to fetch Jira issues" || tickets.message === "Failed to fetch Jira field metadata" ){ 
         setInfoPopUp(true);
         return;
@@ -211,9 +216,8 @@ function JiraDashboard() {
       setLoading(false);
     };
 
-    if (permissions !== null && permissions !== 'no_permissions' && permissions.jira) {
-      fetchData();
-    }
+    fetchData();
+    
     
   }, [selectBarDate]);
 
@@ -473,10 +477,6 @@ console.log('ticket',ticket);
     return <NotFound />;
   }
 
-  const setFormatDate = (date: Date) => {
-    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
-    return date.toLocaleDateString('en-GB', options).replace(',', '');
-  }
 
 
 

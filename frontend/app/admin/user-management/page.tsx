@@ -400,7 +400,7 @@ function UserManagement() {
                     value={createEmail}
                     onChange={(e) => setCreateEmail(e.target.value)}
                     className={` border  bg-white rounded-lg md:rounded-xl h-10 pl-4 pr-1 grow-0 outline-none w-full placeholder ${createEmail?'border-primary1':'border-gray-300'}`}
-                    placeholder='Enter email'/>
+                    placeholder='Enter Email'/>
                     <div className=' grow-0 z-40 w-full'>
                         <Dropdown items={roleItems.map(item => item.roleName)} placeholder='Select Role' setValue={setCreateRole} value={createRole} haveIcon={false}/>
                     </div>
@@ -481,7 +481,7 @@ function UserManagement() {
                       type='text'
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' placeholder='Search by email, company, user id'/>
+                      className='outline-none w-full h-full pr-2 pl-10 z-20 rounded-xl' placeholder='Search by Email, Company, User ID'/>
                     </div>
                     <div className='w-full md:w-48 z-30 relative'>
                       <Icon icon="mingcute:filter-line" width="24" height="24" className={` absolute left-2 top-2 z-30 ${roleFilter ==='All'?'text-gray-400':'text-primary1'}`}/>
